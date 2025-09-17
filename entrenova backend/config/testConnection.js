@@ -1,5 +1,5 @@
 // test.js
-const { testConnection } = require('./supabase')
+import { testConnection } from "./supabase.js";
 
 // Testar a conexão
 testConnection().then(success => {
