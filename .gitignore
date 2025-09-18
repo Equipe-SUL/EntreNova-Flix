@@ -1,1 +1,52 @@
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dados de runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cobertura de testes
+coverage/
+*.lcov
+.nyc_output/
+
+# Saídas de build
+dist/
+build/
+out/
+.cache/
+.tmp/
+tmp/
+temp/
+
+# Mapas de fonte
+*.map
+.sourcemaps/
+
+# Arquivos de ambiente
 .env
+.env.*
+!.env.example
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# SO
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Docker (opcional)
+docker-compose.override.yml
