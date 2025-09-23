@@ -1,0 +1,51 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: white;
+}
+
+.logo {
+  width: 200px;
+}
+
+nav ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin-right: 25px;
+}
+
+.login-btn {
+  background-color: #180a40;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  transition: 0.5s;
+  }
+
+  .login-btn:hover{
+    transform: scale(1.05);
+  }
+
+  #divuniao{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+
+  a{
+    text-decoration: none;
+    color: black;
+  }
+
+  header{
+    margin-left: 5em;
+    margin-right: 5em;
+  }

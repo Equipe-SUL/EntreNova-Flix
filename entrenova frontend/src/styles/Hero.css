@@ -1,0 +1,99 @@
+.start-btn{
+  width: 6em;
+ height: 2.3em;
+ margin: 0.5em;
+ background: #0f006d;
+ color: white;
+ border: none;
+ border-radius: 50px;
+ font-size: 20px;
+ font-weight: bold;
+ cursor: pointer;
+ position: relative;
+ z-index: 1;
+ overflow: hidden;
+  }
+
+  .start-btn:hover{
+    transform: scale(1.05);
+  }
+
+ /* From Uiverse.io by CristianMontoya98 */ 
+.btn {
+ width: 6em;
+ height: 2.3em;
+ margin: 0.5em;
+ background: black;
+ color: white;
+ border: none;
+ border-radius: 50px;
+ font-size: 20px;
+ font-weight: bold;
+ cursor: pointer;
+ position: relative;
+ z-index: 1;
+ overflow: hidden;
+}
+
+button:hover {
+ color: black;
+}
+
+button:after {
+ content: "";
+ background: white;
+ position: absolute;
+ z-index: -1;
+ left: -20%;
+ right: -20%;
+ top: 0;
+ bottom: 0;
+ transform: skewX(-45deg) scale(0, 1);
+ transition: all 0.5s;
+}
+
+button:hover:after {
+ transform: skewX(-45deg) scale(1, 1);
+ -webkit-transition: all 0.5s;
+ transition: all 0.5s;
+}
+
+
+  h1{
+    color: #0f006d;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 90px;
+  }
+
+  #artsec1{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .hero{
+    margin-left: 11em;
+    margin-right: 11em;
+    margin-top: 5em;
+  }
+
+  .videoicon{
+    width: 23em;
+    margin-right: 2em;
+  }
+
+
+  .p1{
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+
+  .p2{
+    font-size: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-right: 9em;
+    margin-bottom: 10px;
+  }
