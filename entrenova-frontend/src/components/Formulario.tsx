@@ -1,7 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import '../styles/Formulario.css';
 
-const perguntasPorDimensao = {
+// Definindo a interface para um objeto de pergunta
+interface Pergunta {
+  id: string;
+  texto: string;
+  opcoes: string[];
+}
+
+// Definindo a interface para o objeto de perguntas agrupadas por dimensão
+interface PerguntasPorDimensao {
+  pessoas: Pergunta[];
+  estrutura: Pergunta[];
+  mercado: Pergunta[];
+  direcao: Pergunta[];
+}
+
+// Definindo a interface para o objeto de respostas
+interface Respostas {
+  [key: string]: number | null;
+}
+
+const perguntasPorDimensao: PerguntasPorDimensao = {
   pessoas: [
     { id: 'p1', texto: 'Q1 – Comunicação interna', opcoes: ['Clara, frequente e bidirecional', 'Funciona, mas nem sempre chega a todos', 'Só em reuniões formais ou quando há problemas', 'Pouco estruturada'] },
     { id: 'p2', texto: 'Q2 – Postura de liderança', opcoes: ['Engajadora, dá autonomia e orienta', 'Boa, mas depende do líder individual', 'Centralizadora, pouco espaço para protagonismo', 'Inexistente, decisões sempre de cima para baixo'] },
@@ -36,15 +56,15 @@ const perguntasPorDimensao = {
   ]
 };
 
-const Formulario = () => {
-  const [dimensoesSelecionadas, setDimensoesSelecionadas] = useState([]);
-  const [perguntas, setPerguntas] = useState([]);
-  const [respostas, setRespostas] = useState({});
-  const [respostaAtual, setRespostaAtual] = useState(null);
-  const [etapa, setEtapa] = useState('selecionar');
-  const [indiceAtual, setIndiceAtual] = useState(0);
+const Formulario: React.FC = () => {
+  const [dimensoesSelecionadas, setDimensoesSelecionadas] = useState<string[]>([]);
+  const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
+  const [respostas, setRespostas] = useState<Respostas>({});
+  const [respostaAtual, setRespostaAtual] = useState<number | null>(null);
+  const [etapa, setEtapa] = useState<'selecionar' | 'perguntas' | 'finalizado'>('selecionar');
+  const [indiceAtual, setIndiceAtual] = useState<number>(0);
 
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
     if (checked) {
       if (dimensoesSelecionadas.length < 3) {
@@ -59,9 +79,9 @@ const Formulario = () => {
   };
 
   const iniciarPerguntas = () => {
-    let todas = [];
+    let todas: Pergunta[] = [];
     dimensoesSelecionadas.forEach((dim) => {
-      todas = [...todas, ...perguntasPorDimensao[dim]];
+      todas = [...todas, ...perguntasPorDimensao[dim as keyof PerguntasPorDimensao]];
     });
     setPerguntas(todas);
     setEtapa('perguntas');

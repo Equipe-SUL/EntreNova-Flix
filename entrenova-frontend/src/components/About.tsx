@@ -1,8 +1,8 @@
 import React from 'react';
 import '../styles/About.css';
 
-const About = () => (
- <section className="about">
+const About: React.FC = () => (
+  <section className="about">
     <p></p>
   </section>
 );
