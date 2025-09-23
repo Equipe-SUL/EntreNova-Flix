@@ -1,0 +1,62 @@
+.formulario-container {
+  max-width: 700px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  margin-top: 10em;
+  margin-bottom: 10em;
+}
+
+.formulario-header {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.formulario-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #15007C;
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.formulario-header p {
+  font-size: 0.95rem;
+  color: #333;
+  margin-top: 5px;
+}
+
+.formulario-header .linha {
+  height: 2px;
+  background-color: #15007C;
+  width: 30%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+h2, h3 {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin: 10px 0;
+}
+
+button {
+  padding: 10px 25px;
+  font-size: 1em;
+  border: none;
+  background-color: #57595b;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
