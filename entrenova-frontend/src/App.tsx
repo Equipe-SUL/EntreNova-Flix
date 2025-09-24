@@ -1,38 +1,37 @@
 import './styles/global.css';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Hero from './components/Hero';
-import About from './components/About';
-import Formulario from './components/Formulario';
+import LandingPage from './pages/LandingPage';
+import DiagnosticoPage from './pages/DiagnosticoPage';
+import ChatbotPage from './pages/ChatbotPage';
+import ResultadoPage from './pages/ResultadoPage';
 
-// caso n encontre a rota
-const PaginaNaoEncontrada = () => (
-  <div style={{ padding: '2rem', textAlign: 'center' }}>
-    <h1>404 - Página Não Encontrada</h1>
-  </div>
-);
+// Componente para rotas não encontradas (404)
+const NotFoundPage = () => <h1 style={{ textAlign: 'center' }}>404 - Página Não Encontrada</h1>;
 
 function App() {
   return (
     <>
-      {/* O Header fica FORA das rotas para aparecer em todas as páginas */}
+      {/* O Header é o nosso layout persistente, ele aparece em todas as páginas */}
       <Header />
 
       <main>
-        {/*  O <Routes> vai gerenciar qual componente será exibido */}
+       
         <Routes>
-          {/* Rota para a página inicial ("/") -> Mostra o componente Hero */}
-          <Route path="/" element={<Hero />} />
+          {/* Rota principal "/" -> Renderiza a LandingPage (com Hero, About, Contato) */}
+          <Route path="/" element={<LandingPage />} />
 
-          {/* Rota para a página "/quem-somos" -> Mostra o componente About */}
-          <Route path="/quem-somos" element={<About />} />
+          {/* Rota para a página de diagnóstico -> Renderiza a DiagnosticoPage (com o Formulário) */}
+          <Route path="/diagnostico" element={<DiagnosticoPage />} />
           
-          {/* Rota para a página "/diagnostico" -> Mostra o componente Formulario */}
-          {/* Lembre-se de usar "/diagnostico" nos <Link> dos seus outros componentes */}
-          <Route path="/diagnostico" element={<Formulario />} />
+          {/* Rota para a página do chatbot */}
+          <Route path="/chatbot" element={<ChatbotPage />} />
 
-          {/* Rota para "qualquer outra coisa" (*) -> Mostra a página de erro 404 */}
-          <Route path="*" element={<PaginaNaoEncontrada />} />
+          {/* Rota dinâmica para a página de resultado (o :id é um parâmetro) */}
+          <Route path="/resultado/:id" element={<ResultadoPage />} />
+          
+          {/* Rota de fallback para qualquer URL que não exista */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
     </>

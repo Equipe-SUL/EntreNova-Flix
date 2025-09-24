@@ -1,4 +1,3 @@
-// test.js
 import { testConnection } from "./supabase.js";
 
 // Testar a conexão
