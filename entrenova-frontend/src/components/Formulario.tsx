@@ -1,9 +1,10 @@
 import React, { useState, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Formulario.css';
-import api from '../services/api'; // Corrigido para importar do local correto
+import api from '../services/api'; 
 
-// 1. Importando os tipos de um arquivo central
-import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types';
+import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types'; //la na pasta types esta definido os TIPOS CRIADOS POR NÓS <-- ass.vivian
+
 
 const perguntasPorDimensao: IPerguntasPorDimensao = {
   pessoas: [
@@ -40,7 +41,9 @@ const perguntasPorDimensao: IPerguntasPorDimensao = {
   ]
 };
 
-const Formulario: React.FC = () => {
+// funçao compoinent normal (arrow function) sem parametros, só receber < -- ass. vivian
+const Formulario = () => {
+  const navigate = useNavigate();
   const [empresa, setEmpresa] = useState<IEmpresa>({ cnpj: '', nome: '', email: '', telefone: '', setor: '' });
   const [dimensoesSelecionadas, setDimensoesSelecionadas] = useState<string[]>([]);
   const [perguntas, setPerguntas] = useState<IPergunta[]>([]);
@@ -51,7 +54,7 @@ const Formulario: React.FC = () => {
   const [statusEnvio, setStatusEnvio] = useState<string>('');
 
   const handleEmpresaChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmpresa(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+    setEmpresa(prevState => ({ ...prevState, [e.target.name]: e.target.value })); // informações da empresa (CNPJ, nome, email, etc.) à medida que o usuário digita nos campos. <-- ass.vivian
   };
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -89,41 +92,40 @@ const Formulario: React.FC = () => {
   };
 
   const handleSubmitFinal = async () => {
-    setStatusEnvio('Enviando...');
+  setStatusEnvio('Enviando...');
 
-    const respostasFormatadas = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
-      const dimensaoKey = Object.keys(perguntasPorDimensao).find(key => 
-        perguntasPorDimensao[key as keyof IPerguntasPorDimensao].some(p => p.id === perguntaId)
-      );
-      
-      if (dimensaoKey && respostaIndex !== null) {
-        const perguntaOriginal = perguntasPorDimensao[dimensaoKey as keyof IPerguntasPorDimensao].find(p => p.id === perguntaId);
-        if (perguntaOriginal) {
-          return {
-            pergunta: perguntaId,
-            resposta: perguntaOriginal.opcoes[respostaIndex - 1]
-          };
-        }
-      }
-      return null;
-    }).filter(Boolean); // Filtra qualquer resultado nulo
-
-    const payload = {
-      dadosEmpresa: empresa,
-      dadosQuiz: respostasFormatadas
+  // Nós pegamos o objeto de respostas (ex: { p1: 2, e3: 1 }) e o transformamos
+  // em uma lista, mantendo o NÚMERO da resposta.
+  const respostasFormatadas = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
+    return {
+      pergunta: perguntaId,
+      resposta: respostaIndex // Enviamos o número (1, 2, 3 ou 4) diretamente
     };
+  });
 
-    try {
-      const response = await api.post('/diagnostico', payload);
-      setStatusEnvio(response.data.mensagem);
-    } catch (error) {
-      console.error("Erro ao enviar diagnóstico:", error);
-      setStatusEnvio('Ocorreu um erro ao salvar. Tente novamente.');
-    }
+  
+  const payload = {
+    dadosEmpresa: empresa,
+    dadosQuiz: respostasFormatadas
   };
 
+  try {
+    const response = await api.post('/diagnostico', payload);
+    const reportId = response.data.reportId;
+    
+  
+    navigate(`/resultado/${reportId}`);
+
+  } catch (error) {
+    console.error("Erro ao enviar diagnóstico:", error);
+    setStatusEnvio('Ocorreu um erro ao salvar. Tente novamente.');
+  }
+};
+
+
   return (
-    <div className="formulario-container">
+    // id="questionario" para ser a âncora do scroll <-- NAO É ROTA, SÓ SCROLL <-- ass.vivian
+    <div id="questionario" className="formulario-container">
       <div className="formulario-header">
         <div className="linha" />
         <h1>Diagnóstico Empresarial</h1>

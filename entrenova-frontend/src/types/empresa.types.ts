@@ -1,4 +1,4 @@
-// --- Tipos para a Empresa ---
+// INPUTS DA EMPRESA
 export interface IEmpresa {
   cnpj: string;
   nome: string;
@@ -7,13 +7,14 @@ export interface IEmpresa {
   setor: string;
 }
 
-// --- Tipos para o Formulário/Quiz ---
+// Formulário/Quiz 
 export interface IPergunta {
   id: string;
   texto: string;
   opcoes: string[];
 }
 
+// Perguntas organizadas por dimensão
 export interface IPerguntasPorDimensao {
   pessoas: IPergunta[];
   estrutura: IPergunta[];
@@ -21,6 +22,17 @@ export interface IPerguntasPorDimensao {
   direcao: IPergunta[];
 }
 
+
 export interface IRespostas {
   [key: string]: number | null;
+}
+
+export interface IRelatorio {
+  id: number;
+  resumo_ia: string;
+  maior_problema: string;
+  sugestoes: string[];
+  tom_analise: string;
+  emocoes_identificadas: string[];
+  created_at: string;
 }

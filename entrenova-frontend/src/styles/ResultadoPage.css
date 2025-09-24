@@ -1,0 +1,54 @@
+.resultado-container {
+  padding: 2rem;
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+}
+
+.relatorio-card {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  margin-top: 1rem;
+}
+
+.relatorio-secao {
+  margin-top: 1.5rem;
+}
+
+.relatorio-secao strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.relatorio-secao p,
+.relatorio-secao li {
+  line-height: 1.6;
+  color: #555;
+}
+
+.relatorio-secao ul {
+  padding-left: 20px;
+}
+
+.relatorio-dados-flex {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.relatorio-dados-flex p {
+  text-transform: capitalize;
+  margin-top: 0.25rem;
+}
+
+.loading-error-container {
+    padding: 2rem;
+    text-align: center;
+}
+
+.error-message {
+    color: red;
+}
