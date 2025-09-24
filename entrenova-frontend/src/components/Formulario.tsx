@@ -1,27 +1,11 @@
 import React, { useState, ChangeEvent } from 'react';
 import '../styles/Formulario.css';
+import api from '../services/api'; // Corrigido para importar do local correto
 
-// Definindo a interface para um objeto de pergunta
-interface Pergunta {
-  id: string;
-  texto: string;
-  opcoes: string[];
-}
+// 1. Importando os tipos de um arquivo central
+import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types';
 
-// Definindo a interface para o objeto de perguntas agrupadas por dimensão
-interface PerguntasPorDimensao {
-  pessoas: Pergunta[];
-  estrutura: Pergunta[];
-  mercado: Pergunta[];
-  direcao: Pergunta[];
-}
-
-// Definindo a interface para o objeto de respostas
-interface Respostas {
-  [key: string]: number | null;
-}
-
-const perguntasPorDimensao: PerguntasPorDimensao = {
+const perguntasPorDimensao: IPerguntasPorDimensao = {
   pessoas: [
     { id: 'p1', texto: 'Q1 – Comunicação interna', opcoes: ['Clara, frequente e bidirecional', 'Funciona, mas nem sempre chega a todos', 'Só em reuniões formais ou quando há problemas', 'Pouco estruturada'] },
     { id: 'p2', texto: 'Q2 – Postura de liderança', opcoes: ['Engajadora, dá autonomia e orienta', 'Boa, mas depende do líder individual', 'Centralizadora, pouco espaço para protagonismo', 'Inexistente, decisões sempre de cima para baixo'] },
@@ -57,12 +41,18 @@ const perguntasPorDimensao: PerguntasPorDimensao = {
 };
 
 const Formulario: React.FC = () => {
+  const [empresa, setEmpresa] = useState<IEmpresa>({ cnpj: '', nome: '', email: '', telefone: '', setor: '' });
   const [dimensoesSelecionadas, setDimensoesSelecionadas] = useState<string[]>([]);
-  const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
-  const [respostas, setRespostas] = useState<Respostas>({});
+  const [perguntas, setPerguntas] = useState<IPergunta[]>([]);
+  const [respostas, setRespostas] = useState<IRespostas>({});
   const [respostaAtual, setRespostaAtual] = useState<number | null>(null);
-  const [etapa, setEtapa] = useState<'selecionar' | 'perguntas' | 'finalizado'>('selecionar');
+  const [etapa, setEtapa] = useState<'empresa' | 'selecionar' | 'perguntas' | 'finalizado'>('empresa');
   const [indiceAtual, setIndiceAtual] = useState<number>(0);
+  const [statusEnvio, setStatusEnvio] = useState<string>('');
+
+  const handleEmpresaChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmpresa(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+  };
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -79,9 +69,9 @@ const Formulario: React.FC = () => {
   };
 
   const iniciarPerguntas = () => {
-    let todas: Pergunta[] = [];
+    let todas: IPergunta[] = [];
     dimensoesSelecionadas.forEach((dim) => {
-      todas = [...todas, ...perguntasPorDimensao[dim as keyof PerguntasPorDimensao]];
+      todas = [...todas, ...perguntasPorDimensao[dim as keyof IPerguntasPorDimensao]];
     });
     setPerguntas(todas);
     setEtapa('perguntas');
@@ -98,37 +88,79 @@ const Formulario: React.FC = () => {
     }
   };
 
+  const handleSubmitFinal = async () => {
+    setStatusEnvio('Enviando...');
+
+    const respostasFormatadas = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
+      const dimensaoKey = Object.keys(perguntasPorDimensao).find(key => 
+        perguntasPorDimensao[key as keyof IPerguntasPorDimensao].some(p => p.id === perguntaId)
+      );
+      
+      if (dimensaoKey && respostaIndex !== null) {
+        const perguntaOriginal = perguntasPorDimensao[dimensaoKey as keyof IPerguntasPorDimensao].find(p => p.id === perguntaId);
+        if (perguntaOriginal) {
+          return {
+            pergunta: perguntaId,
+            resposta: perguntaOriginal.opcoes[respostaIndex - 1]
+          };
+        }
+      }
+      return null;
+    }).filter(Boolean); // Filtra qualquer resultado nulo
+
+    const payload = {
+      dadosEmpresa: empresa,
+      dadosQuiz: respostasFormatadas
+    };
+
+    try {
+      const response = await api.post('/diagnostico', payload);
+      setStatusEnvio(response.data.mensagem);
+    } catch (error) {
+      console.error("Erro ao enviar diagnóstico:", error);
+      setStatusEnvio('Ocorreu um erro ao salvar. Tente novamente.');
+    }
+  };
+
   return (
     <div className="formulario-container">
       <div className="formulario-header">
         <div className="linha" />
-        <h1>Formulário</h1>
+        <h1>Diagnóstico Empresarial</h1>
         <div className="linha" />
-        <p>Nos conte sobre sua empresa.</p>
       </div>
+
+      {etapa === 'empresa' && (
+        <>
+          <h2>Primeiro, nos conte sobre sua empresa.</h2>
+          <div className="empresa-form">
+            <input type="text" name="cnpj" placeholder="CNPJ" value={empresa.cnpj} onChange={handleEmpresaChange} required />
+            <input type="text" name="nome" placeholder="Nome da Empresa" value={empresa.nome} onChange={handleEmpresaChange} required />
+            <input type="email" name="email" placeholder="Email de Contato" value={empresa.email} onChange={handleEmpresaChange} required />
+            <input type="text" name="telefone" placeholder="Telefone" value={empresa.telefone} onChange={handleEmpresaChange} />
+            <input type="text" name="setor" placeholder="Setor de Atuação" value={empresa.setor} onChange={handleEmpresaChange} />
+          </div>
+          <button onClick={() => setEtapa('selecionar')}>Avançar</button>
+        </>
+      )}
 
       {etapa === 'selecionar' && (
         <>
-          <h2>Escolha até 3 dimensões para responder:</h2>
+          <h2>Escolha até 3 dimensões para o diagnóstico:</h2>
           {Object.keys(perguntasPorDimensao).map((key) => (
             <label key={key}>
-              <input
-                type="checkbox"
-                value={key}
-                onChange={handleCheckboxChange}
-              />
-              {' '}
-              {key.charAt(0).toUpperCase() + key.slice(1).replace('&', ' & ')}
+              <input type="checkbox" value={key} onChange={handleCheckboxChange} />
+              {' '} {key.charAt(0).toUpperCase() + key.slice(1)}
             </label>
           ))}
           <br />
           <button onClick={iniciarPerguntas} disabled={dimensoesSelecionadas.length === 0}>
-            Iniciar
+            Iniciar Perguntas
           </button>
         </>
       )}
 
-      {etapa === 'perguntas' && (
+      {etapa === 'perguntas' && perguntas[indiceAtual] && (
         <div className="pergunta-bloco">
           <h3>{perguntas[indiceAtual].texto}</h3>
           {perguntas[indiceAtual].opcoes.map((op, idx) => (
@@ -140,8 +172,7 @@ const Formulario: React.FC = () => {
                 checked={respostaAtual === idx + 1}
                 onChange={() => setRespostaAtual(idx + 1)}
               />
-              {' '}
-              {op}
+              {' '} {op}
             </label>
           ))}
           <button onClick={confirmarResposta} disabled={respostaAtual === null}>
@@ -152,8 +183,12 @@ const Formulario: React.FC = () => {
 
       {etapa === 'finalizado' && (
         <div>
-          <h2>Respostas concluídas!</h2>
-          <pre>{JSON.stringify(respostas, null, 2)}</pre>
+          <h2>Diagnóstico concluído!</h2>
+          <p>Tudo pronto para salvar e gerar sua análise.</p>
+          <button onClick={handleSubmitFinal}>
+            Salvar e ver resultado
+          </button>
+          {statusEnvio && <p>{statusEnvio}</p>}
         </div>
       )}
     </div>
