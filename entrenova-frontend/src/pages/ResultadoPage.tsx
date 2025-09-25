@@ -24,29 +24,33 @@ const ResultadoPage = () => {
   const [error, setError] = useState('');
 
 
-  useEffect(() => {
-    // Só tentamos buscar os dados se o 'id' existir na URL
-    if (id) {
-      // Usamos nosso 'api' service para fazer uma requisição GET para o backend.
-      // A URL final será, por exemplo, 'http://localhost:3001/api/relatorio/123'
-      api.get(`/relatorio/${id}`)
-        .then(response => {
-          // .then() é executado se a requisição for um SUCESSO.
-          // Guardamos os dados recebidos do backend na nossa memória 'relatorio'.
-          setRelatorio(response.data);
-        })
-        .catch(err => {
-          // .catch() é executado se a requisição FALHAR.
-          // Guardamos uma mensagem de erro na nossa memória 'error'.
-          setError('Não foi possível carregar o relatório. Verifique o ID e tente novamente.');
-        })
-        .finally(() => {
-          // .finally() é executado SEMPRE, independentemente de sucesso ou falha.
-          // Desligamos o interruptor de 'loading', pois a espera acabou.
-          setLoading(false);
-        });
-    }
-  }, [id]); // O [id] no final diz ao useEffect: "só execute esta busca novamente se o ID na URL mudar".
+   useEffect(() => {
+  if (id) {
+   api.get(`/relatorio/${id}`)
+    .then(response => {
+     // Crie uma cópia dos dados
+     const dadosFormatados = { ...response.data };
+     
+     // Converte a string de sugestões para array
+     if (dadosFormatados.sugestoes && typeof dadosFormatados.sugestoes === 'string') {
+      dadosFormatados.sugestoes = JSON.parse(dadosFormatados.sugestoes);
+     }
+
+     // Converte a string de emoções para array
+     if (dadosFormatados.emocoes_identificadas && typeof dadosFormatados.emocoes_identificadas === 'string') {
+      dadosFormatados.emocoes_identificadas = JSON.parse(dadosFormatados.emocoes_identificadas);
+     }
+
+     setRelatorio(dadosFormatados);
+    })
+    .catch(err => {
+     setError('Não foi possível carregar o relatório. Verifique o ID e tente novamente.');
+    })
+    .finally(() => {
+     setLoading(false);
+    });
+  }
+ }, [id]);
 
 
   
@@ -88,16 +92,7 @@ const ResultadoPage = () => {
             </ul>
           </div>
 
-          <div className="relatorio-dados-flex">
-            <div>
-              <strong>Tom da Análise:</strong>
-              <p>{relatorio.tom_analise}</p>
-            </div>
-            <div>
-              <strong>Emoções Identificadas:</strong>
-              <p>{relatorio.emocoes_identificadas.join(', ')}</p>
-            </div>
-          </div>
+
         </div>
       ) : (
         <p>Nenhum relatório encontrado para este ID.</p>
