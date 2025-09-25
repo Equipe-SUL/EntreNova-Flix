@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 // instância configurada do Axios para fazer chamadas à API
 import api from '../services/api';
@@ -86,7 +86,12 @@ const ResultadoPage = () => {
    ) : (
     <p>Nenhum relatório encontrado para este ID.</p>
    )}
+
+  <Link to="/chatbot"> 
+  <button className="next-btn">Avançar</button>
+  </Link>
   </div>
+
  );
 };
 
