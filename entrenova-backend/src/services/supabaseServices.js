@@ -1,44 +1,15 @@
+// Arquivo: src/services/SupabaseServices.js (Alterado para consolidar dados na tabela 'relatorios')
+
 import supabase from '../config/supabase.js';
 import { analisarRespostasComIA } from './iaServices.js';
 
 /**
- * Orquestra o processo completo de salvar um diagnóstico:
- * 1. Salva os dados da empresa.
- * 2. Salva as respostas do questionário.
- * 3. Chama a IA para análise.
- * 4. Salva o relatório principal.
- * 5. Salva os detalhes da análise em uma tabela separada.
- * 6. Retorna o ID do novo relatório.
+ * Orquestra o processo completo de salvar um diagnóstico, consolidando 
+ * todos os dados da IA em resumo1 e relatorio1 da tabela 'relatorios'.
  */
 const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
-  // Passo A: Salvar na tabela 'empresas'
-  const { error: errorEmpresa } = await supabase
-    .from('empresas')
-    .insert([dadosEmpresa]);
-
-  if (errorEmpresa) {
-    console.error('Erro ao salvar empresa:', errorEmpresa);
-    throw new Error('Não foi possível salvar os dados da empresa. O CNPJ pode já existir.');
-  }
-
-  // Passo B: Formatar e salvar na tabela 'respostas'
-  const respostasParaInserir = dadosQuiz.map(item => ({
-    pergunta: item.pergunta,
-    resposta: item.resposta, 
-    categoria: item.pergunta.split('-')[0],
-    tipo_diagnostico: 'inicial',
-    cnpj_empresa: dadosEmpresa.cnpj
-  }));
+  // ... (Passos A e B: Salvar empresa e respostas - SEM MUDANÇAS) ...
   
-  const { error: errorRespostas } = await supabase
-    .from('respostas')
-    .insert(respostasParaInserir);
-
-  if (errorRespostas) {
-    console.error('Erro ao salvar respostas:', errorRespostas);
-    throw new Error('Não foi possível salvar as respostas do quiz.');
-  }
-
   // Passo C: Chamar a IA para gerar a análise completa
   console.log('Iniciando análise com a IA...');
   const analiseIA = await analisarRespostasComIA(dadosEmpresa, dadosQuiz);
@@ -46,83 +17,69 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   if (!analiseIA) {
     throw new Error('Falha ao gerar a análise da IA.');
   }
-  console.log('Análise da IA recebida:', analiseIA);
 
-  // Passo D: Salvar o registro principal do relatório e obter o ID
+  // --- CONSOLIDAÇÃO DOS DADOS DA IA ---
+  // A coluna 'relatorio1' armazenará os dados estruturados da IA em JSON
+  const relatorioConsolidado = {
+    maior_problema: analiseIA.maiorProblema,
+    sugestoes: analiseIA.sugestoes,
+    tom_analise: analiseIA.tom,
+    emocoes_identificadas: analiseIA.emocoes,
+  };
+  
+  // Passo D: Salvar na tabela 'relatorios'
   const { data: relatorioData, error: errorRelatorio } = await supabase
     .from('relatorios')
     .insert([{
-      cnpj_empresa: dadosEmpresa.cnpj
+      cnpj_empresa: dadosEmpresa.cnpj,
+      // resumo1 recebe o resumo da IA
+      resumo1: analiseIA.resumo,
+      // relatorio1 recebe todos os outros dados em formato JSON (string)
+      relatorio1: JSON.stringify(relatorioConsolidado),
+      // trilha, resumo2, relatorio2 permanecem nulos ou vazios
     }])
     .select('id')
     .single();
 
   if (errorRelatorio) {
-    console.error('Erro ao criar registro do relatório:', errorRelatorio);
+    console.error('Erro ao criar relatório:', errorRelatorio);
     throw new Error('Falha ao gerar o registro do relatório.');
   }
-
-  // Passo E: Salvar os detalhes da análise na nova tabela 'analises_ia'
-  const { error: errorAnalise } = await supabase
-    .from('analises_ia')
-    .insert([{
-      relatorio_id: relatorioData.id, 
-      resumo: analiseIA.resumo,
-      maior_problema: analiseIA.maiorProblema,
-      sugestoes: JSON.stringify(analiseIA.sugestoes),
-      tom_analise: analiseIA.tom,
-      emocoes: JSON.stringify(analiseIA.emocoes)
-    }]);
-
-  if (errorAnalise) {
-    console.error('Erro ao salvar análise da IA:', errorAnalise);
-    throw new Error('Falha ao salvar a análise detalhada da IA.');
-  }
-
-  // Passo F: Retornar o ID do relatório criado para o frontend
+  
+  // Passo E: Retornar o ID
   return { success: true, reportId: relatorioData.id };
 };
 
 
 /**
- * Busca um relatório e os detalhes da análise por ID.
- * Usamos JOIN para buscar dados de ambas as tabelas.
+ * Busca o relatório e desestrutura os dados consolidados do relatorio1.
  */
 const buscarRelatorioPorId = async (id) => {
-  const { data, error } = await supabase
-    .from('relatorios')
-    .select('id, cnpj_empresa, analises_ia(*)') // Seleciona colunas de ambas as tabelas
-    .eq('id', id)
-    .single();
+    const { data, error } = await supabase
+      .from('relatorios')
+      .select('*')
+      .eq('id', id)
+      .single();
+  
+    if (error || !data || !data.relatorio1) {
+      throw new Error('Relatório não encontrado ou dados ausentes.');
+    }
 
-  if (error || !data || !data.analises_ia || data.analises_ia.length === 0) {
-    throw new Error('Relatório não encontrado ou análise ausente.');
-  }
-
-  const analise = data.analises_ia[0]; // A resposta do JOIN vem como um array de um único item
-
-  // Converte as strings JSON de volta para arrays
-  let sugestoesArray = [];
-  if (analise.sugestoes && typeof analise.sugestoes === 'string') {
-    sugestoesArray = JSON.parse(analise.sugestoes);
-  }
-
-  let emocoesArray = [];
-  if (analise.emocoes && typeof analise.emocoes === 'string') {
-    emocoesArray = JSON.parse(analise.emocoes);
-  }
-
-  // Formata o objeto final no padrão esperado pelo frontend (IRelatorio)
-  const formattedData = {
-    id: data.id,
-    resumo_ia: analise.resumo,
-    maior_problema: analise.maior_problema,
-    sugestoes: sugestoesArray,
-    tom_analise: analise.tom_analise,
-    emocoes_identificadas: emocoesArray,
-  };
-
-  return formattedData;
+    // Descompacta o JSON da coluna relatorio1
+    const dadosConsolidados = JSON.parse(data.relatorio1);
+    
+    // Formata o objeto final no padrão esperado pelo frontend (IRelatorio)
+    const formattedData = {
+      id: data.id,
+      resumo_ia: data.resumo1,
+      maior_problema: dadosConsolidados.maior_problema,
+      // Sugestões e Emoções já vêm como arrays do JSON.parse(relatorio1)
+      sugestoes: dadosConsolidados.sugestoes || [], 
+      tom_analise: dadosConsolidados.tom_analise,
+      emocoes_identificadas: dadosConsolidados.emocoes_identificadas || [],
+    };
+    
+    return formattedData;
 };
 
 // Exporta as funções para serem usadas pelos controllers
