@@ -5,9 +5,9 @@ import dotenv from 'dotenv';
 // Todas as rotas que tivermos DEVRÃO ESTAR AQUI DESSA FORMA <-- ass.vivian
 import diagnosticoRoutes from './src/routes/diagnosticoRoutes.js'; 
 import relatorioRoutes from './src/routes/relatorioRoutes.js'
-  
 
-dotenv.config();
+
+dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3001; // porta do nosso backend
 
