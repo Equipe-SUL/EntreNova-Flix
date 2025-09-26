@@ -6,6 +6,26 @@ import { analisarRespostasComIA } from './iaServices.js';
  * salva o registro principal na 'relatorios' (com texto consolidado) 
  * e os detalhes estruturados na 'analises_ia'.
  */
+
+
+/**
+ * Busca todos os conteúdos (trilhas) disponíveis na tabela 'conteudos'.
+ */
+const buscarConteudos = async () => {
+  console.log('Buscando todos os conteúdos para recomendação...');
+  const { data, error } = await supabase
+    .from('conteudos')
+    .select('modelo, categoria, descricao'); // Selecionando os campos que a IA precisa
+
+  if (error) {
+    console.error('Erro ao buscar conteúdos:', error);
+    // Retorna um array vazio em caso de erro para não quebrar o fluxo principal
+    return [];
+  }
+
+  return data;
+};
+
 const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   // Passo A: Salvar na tabela 'empresas'
   const { error: errorEmpresa } = await supabase
@@ -20,12 +40,12 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   // Passo B: Formatar e salvar na tabela 'respostas'
   const respostasParaInserir = dadosQuiz.map(item => ({
     pergunta: item.pergunta,
-    resposta: item.resposta, 
+    resposta: item.resposta,
     categoria: item.pergunta.split('-')[0],
     tipo_diagnostico: 'inicial',
     cnpj_empresa: dadosEmpresa.cnpj
   }));
-  
+
   const { error: errorRespostas } = await supabase
     .from('respostas')
     .insert(respostasParaInserir);
@@ -44,7 +64,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   if (!analiseIA) {
     throw new Error('Falha ao gerar a análise da IA.');
   }
-  
+
   // --- Geração do Texto Consolidado para relatorio1 ---
   const textoConsolidadoRelatorio1 = `
     **Principal Desafio:** ${analiseIA.maiorProblema}
@@ -78,7 +98,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   const { error: errorAnalise } = await supabase
     .from('analises_ia')
     .insert([{
-      relatorio_id: relatorioData.id, 
+      relatorio_id: relatorioData.id,
       resumo: analiseIA.resumo,
       maior_problema: analiseIA.maiorProblema,
       sugestoes: JSON.stringify(analiseIA.sugestoes),
@@ -104,7 +124,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
 const buscarRelatorioPorId = async (id) => {
   const { data, error } = await supabase
     .from('relatorios')
-    .select('*, analises_ia(*)') 
+    .select('*, analises_ia(*)')
     .eq('id', id)
     .single();
 
@@ -147,20 +167,4 @@ export {
   buscarRelatorioPorId
 };
 
-/**
- * Busca todos os conteúdos (trilhas) disponíveis na tabela 'conteudos'.
- */
-const buscarConteudos = async () => {
-  console.log('Buscando todos os conteúdos para recomendação...');
-  const { data, error } = await supabase
-    .from('conteudos')
-    .select('modelo, categoria, descricao'); // Selecionando os campos que a IA precisa
 
-  if (error) {
-    console.error('Erro ao buscar conteúdos:', error);
-    // Retorna um array vazio em caso de erro para não quebrar o fluxo principal
-    return [];
-  }
-
-  return data;
-};

@@ -12,7 +12,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
  * @param {Array<object} conteudosDisponiveis - Lista dos conteudos(trilha)
  * @returns {Promise<object|null>} - O objeto JSON com a análise da IA, ou null em caso de erro.
  */
-export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
+export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz,conteudosDisponiveis) {
   if (!dadosQuiz || dadosQuiz.length === 0) {
     console.error("Nenhuma resposta foi fornecida para a análise.");
     return null;
