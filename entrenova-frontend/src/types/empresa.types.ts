@@ -21,7 +21,22 @@ export interface IPerguntasPorDimensao {
   mercado: IPergunta[];
   direcao: IPergunta[];
 }
+export interface IPerguntaLead {
+  id: string;
+  texto: string;
+  opcoes: string[];
+  pontos: number[]; 
+}
 
+export interface IRespostasLead {
+  [perguntaId: string]: number; 
+}
+
+export interface IScoreLead {
+  total: number;
+  classificacao: 'frio' | 'morno' | 'quente';
+  detalhes: { [perguntaId: string]: number }; 
+}
 
 export interface IRespostas {
   [key: string]: number | null;
