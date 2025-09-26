@@ -81,15 +81,26 @@ input[type="radio"] {
   border-radius: 8px;
 }
 
-
 button {
-  padding: 10px 25px;
-  font-size: 1em;
-  border: none;
-  background-color: #57595b;
-  color: white;
-  border-radius: 5px;
+  margin-top: 3rem;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  border-radius: 0.8em;
   cursor: pointer;
+  border: none;
+  color: ghostwhite;
+  padding: 0.8em 1.2em;
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
+  background-size: 200% 100%;
+  background-position: left;
+  transition: all 0.4s ease;
+}
+
+button:hover {
+  color: white;
+  background-position: right;
 }
 
 button:disabled {
