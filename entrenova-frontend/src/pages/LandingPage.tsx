@@ -1,6 +1,7 @@
 import Hero from '../components/Hero';
 import About from '../components/About';
-import Contato from '../components/Contato';
+import CallToAction from '../components/CallToAction';
+import Footer from '../components/Footer';
 
 
 const LandingPage = () => {
@@ -8,7 +9,8 @@ const LandingPage = () => {
     <>
       <Hero />
       <About />
-      <Contato />
+      <CallToAction />
+      <Footer />
     </>
   );
 };

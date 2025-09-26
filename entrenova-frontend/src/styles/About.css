@@ -1,0 +1,137 @@
+.about-section {
+  padding: 60px 20px;
+  background-color: #f9fafb;
+  margin-top: 8em;
+}
+
+/* Container central */
+.about-container {
+  max-width: 900px; /* largura fixa para alinhar logo e cards */
+  margin: 0 auto;
+}
+
+/* Header com logo + linha */
+.about-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.about-logo {
+  margin-right: 15px;
+  width: 350px;
+}
+
+.about-line {
+  flex: 1;
+  height: 2px;
+  background-color: #0f006d;
+}
+
+/* Título alinhado com logo */
+.about-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+/* Cards */
+.about-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+  gap: 25px;
+}
+
+.about-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.about-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.about-icon {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.about-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.about-card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+
+@media (max-width: 992px) {
+  .about-cards {
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas para tablets */
+  }
+
+  .about-logo {
+    width: 250px;
+  }
+
+  .about-title {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-cards {
+    grid-template-columns: 1fr; /* 1 coluna para celular */
+  }
+
+  .about-logo {
+    width: 200px;
+  }
+
+  .about-title {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .about-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .about-line {
+    width: 60%;
+  }
+
+  .about-card {
+    padding: 20px;
+  }
+
+  .about-icon {
+    font-size: 1.8rem;
+  }
+
+  .about-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .about-card p {
+    font-size: 0.9rem;
+  }
+
+  .about-container {
+  max-width: 270px; /* largura fixa para alinhar logo e cards */
+  margin: 0 auto;
+}
+
+}

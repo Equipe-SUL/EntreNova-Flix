@@ -5,17 +5,6 @@
   margin: auto;
 }
 
-.next-btn {
-  background-color: #180a40;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 50px;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  font-weight: bold;
-  transition: 0.5s;
-  }
-
 .relatorio-card {
   background: #f9f9f9;
   padding: 1.5rem;
@@ -62,4 +51,26 @@
 
 .error-message {
     color: red;
+}
+.next-btn {
+  margin-top: 3rem;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  border-radius: 0.8em;
+  cursor: pointer;
+  border: none;
+  color: ghostwhite;
+  padding: 0.8em 1.2em;
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
+  background-size: 200% 100%;
+  background-position: left;
+  transition: all 0.4s ease;
+  overflow: hidden;
+}
+
+.next-btn:hover {
+  color: white;
+  background-position: right; 
 }

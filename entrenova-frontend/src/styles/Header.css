@@ -1,51 +1,195 @@
+/* ======================================= */
+/* ESTILOS GERAIS */
+/* ======================================= */
+
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: white;
+    /* Adicionado position: relative para que o menu flutuante (absolute)
+       no mobile se posicione corretamente em relação a ele. */
+    position: relative; 
+}
+
+header {
+    margin-left: 5em;
+    margin-right: 5em;
 }
 
 .logo {
-  width: 200px;
+    width: 200px;
 }
 
-nav ul {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-  margin-right: 25px;
-}
-
-.login-btn {
-  background-color: #180a40;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 50px;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  font-weight: bold;
-  transition: 0.5s;
-  }
-
-  .login-btn:hover{
-    transform: scale(1.05);
-  }
-
-  #divuniao{
+#divuniao {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-  }
+}
 
+/* ======================================= */
+/* ESTILOS DE NAVEGAÇÃO (DESKTOP) */
+/* ======================================= */
 
-  a{
+nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin-right: 25px;
+}
+
+a {
     text-decoration: none;
     color: black;
-  }
+}
 
-  header{
-    margin-left: 5em;
-    margin-right: 5em;
-  }
+/* Estilo geral dos itens do menu */
+nav ul li,
+nav ul li a {
+    position: relative;
+    cursor: pointer;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+/* Linha invisível por padrão (Desktop Hover Effect) */
+nav ul li::after,
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    bottom: -5px; /* distância da linha para o texto */
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: black;
+    transition: width 0.3s ease;
+}
+
+/* Quando passa o mouse, linha aparece (Desktop Hover Effect) */
+nav ul li:hover::after,
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* ======================================= */
+/* BOTÃO FORMULÁRIO (LOGIN-BTN) */
+/* ======================================= */
+
+.login-btn {
+    background-color: #180a40;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    transition: 0.5s;
+}
+
+.login-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Menu Hamburguer (Oculto no Desktop) */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    margin-left: 1em;
+}
+
+.menu-toggle span {
+    height: 3px;
+    width: 25px;
+    background: black;
+    margin: 4px 0;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* ======================================= */
+/* MEDIA QUERY - ESTILOS MOBILE (max-width: 768px) */
+/* ======================================= */
+
+@media (max-width: 768px) {
+      .header {
+        flex-direction: column; 
+        justify-content: flex-start;
+        align-items: center; 
+        padding: 10px 20px;
+        margin: 0;
+        /* IMPORTANTE: position: relative já deve estar aqui, mas garantir não custa */
+        position: relative; 
+    }
+
+    header {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .logo {
+        width: 160px;
+        margin: 0 0 10px 0; /* Espaço entre o logo e a linha de baixo */
+    }
+
+    /* A linha de ações (botão e hambúrguer) */
+    #divuniao {
+        flex-direction: row-reverse; 
+        width: 100%; 
+        justify-content: space-between; 
+        align-items: center;
+        margin-right: 0; 
+        padding: 0 10px; 
+        /* Adiciona altura fixa, se necessário, ou padding. 
+           Vamos confiar no padding do header e nos elementos internos. */
+    }
+    
+    .login-btn {
+        display: block; 
+        margin-right: 0; 
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .menu-toggle {
+        display: flex;
+        margin: 0;
+        order: -1; 
+    }
+
+    /* AJUSTE CHAVE: Reposicionamento Responsivo do Menu Flutuante (NAV)
+    */
+    nav {
+        /* Garante que o menu flutue sobre o conteúdo */
+        position: absolute;
+        
+        /* O menu começa exatamente na borda inferior do .header (seu container relative) */
+        top: 100%; 
+        
+        /* Alinha o menu no canto direito do .header */
+        right: 20px; 
+        
+        z-index: 100;
+        width: auto;
+    }
+    nav ul{
+      display: none;
+    }
+
+    /* O menu em si quando aberto */
+    nav ul.show {
+        /* ... (Mantenha os estilos existentes) ... */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: white; 
+        padding: 15px 25px 15px 15px; 
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        min-width: 150px;
+        position: static; 
+        margin-top: 10px; /* Adiciona um pequeno espaço entre o fim do header e o menu */
+    }
+}

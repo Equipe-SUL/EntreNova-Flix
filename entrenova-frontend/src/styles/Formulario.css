@@ -1,50 +1,86 @@
+/* Container geral */
 .formulario-container {
-  max-width: 700px;
-  margin: auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  margin-top: 10em;
-  margin-bottom: 10em;
+  max-width: 900px;
+  margin: 10em auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  animation: fadeIn 0.8s ease;
 }
 
+/* Cabeçalho */
 .formulario-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   position: relative;
 }
 
 .formulario-header h1 {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 2.2rem;
+  font-weight: 900;
   color: #15007C;
-  display: inline-block;
-  margin: 0 10px;
-}
-
-.formulario-header p {
-  font-size: 0.95rem;
-  color: #333;
-  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .formulario-header .linha {
-  height: 2px;
+  height: 3px;
   background-color: #15007C;
   width: 30%;
-  display: inline-block;
-  vertical-align: middle;
+  margin: 0 auto;
+  border-radius: 4px;
 }
 
-h2, h3 {
+/* Títulos */
+.h2form, .h3form {
+  color: #000000;
+  font-weight: 600;
   margin-bottom: 20px;
 }
 
-label {
-  display: block;
+/* Inputs e Formulários */
+.empresa-form input {
+  width: 100%;
+  padding: 12px 15px;
   margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.3s ease;
 }
+
+.empresa-form input:focus {
+  border-color: #15007C;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(21, 0, 124, 0.1);
+}
+
+/* Checkboxes e Radios */
+label {
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #15007C;
+}
+
+/* Bloco de pergunta */
+.pergunta-bloco {
+  animation: slideIn 0.5s ease;
+  padding: 15px;
+  border-left: 4px solid #15007C;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
 
 button {
   padding: 10px 25px;
@@ -59,4 +95,77 @@ button {
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+/* RESPONSIVIDADE PARA TELAS PEQUENAS */
+@media (max-width: 768px) {
+  .formulario-container {
+    margin: 3em 1em;
+    padding: 20px;
+    box-shadow: none;
+    border-radius: 8px;
+  }
+
+  .formulario-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .formulario-header .linha {
+    width: 50%;
+  }
+
+  .h2form, .h3form {
+    font-size: 1.1rem;
+  }
+
+  .empresa-form input {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  label {
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+  }
+
+  .pergunta-bloco {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-top: 1em;
+  }
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
