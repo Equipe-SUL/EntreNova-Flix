@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 // Todas as rotas que tivermos DEVRÃO ESTAR AQUI DESSA FORMA <-- ass.vivian
 import diagnosticoRoutes from './src/routes/diagnosticoRoutes.js'; 
 import relatorioRoutes from './src/routes/relatorioRoutes.js'
+import chatbotRoutes from './src/routes/chatbotRoutes.js';
+
 
 
 dotenv.config()
@@ -21,8 +23,8 @@ app.use(express.json());
 
 app.use('/api/diagnostico', diagnosticoRoutes);
 app.use('/api/relatorio', relatorioRoutes);
+app.use('/api', chatbotRoutes)
 
-// entramos em acordo (celso, lincoln e vivian, de ser feito o relatorio em outra pag, portanto outra rota) <-- ass. vivian
 
 
 
