@@ -26,8 +26,8 @@ const buscarConteudos = async () => {
   return data;
 };
 
+
 const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
-  // Passo A: Salvar na tabela 'empresas'
   const { error: errorEmpresa } = await supabase
     .from('empresas')
     .insert([dadosEmpresa]);
@@ -37,7 +37,6 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
     throw new Error('Não foi possível salvar os dados da empresa. O CNPJ pode já existir.');
   }
 
-  // Passo B: Formatar e salvar na tabela 'respostas'
   const respostasParaInserir = dadosQuiz.map(item => ({
     pergunta: item.pergunta,
     resposta: item.resposta,
@@ -57,7 +56,6 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   //busca os conteudos da trilha antes de chamara a funcao da ia
   const conteudosDisponiveis = await buscarConteudos();
 
-  // Passo C: Chamar a IA para gerar a análise completa
   console.log('Iniciando análise com a IA...');
   const analiseIA = await analisarRespostasComIA(dadosEmpresa, dadosQuiz, conteudosDisponiveis);
 
@@ -65,7 +63,9 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
     throw new Error('Falha ao gerar a análise da IA.');
   }
 
+
   // --- Geração do Texto Consolidado para relatorio1 ---
+  
   const textoConsolidadoRelatorio1 = `
     **Principal Desafio:** ${analiseIA.maiorProblema}
     
@@ -76,15 +76,13 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
     
     **Emoções Identificadas:** ${analiseIA.emocoes.join(', ')}
   `.trim();
-  // ---------------------------------------------------
 
-  // Passo D-1: Salvar o registro principal na tabela 'relatorios'
   const { data: relatorioData, error: errorRelatorio } = await supabase
     .from('relatorios')
     .insert([{
       cnpj_empresa: dadosEmpresa.cnpj,
       resumo1: analiseIA.resumo,
-      relatorio1: textoConsolidadoRelatorio1, // Texto completo consolidado
+      relatorio1: textoConsolidadoRelatorio1,
     }])
     .select('id')
     .single();
@@ -94,7 +92,6 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
     throw new Error('Falha ao gerar o registro do relatório.');
   }
 
-  // Passo D-2: Salvar os detalhes estruturados na tabela 'analises_ia'
   const { error: errorAnalise } = await supabase
     .from('analises_ia')
     .insert([{
@@ -112,15 +109,9 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
     throw new Error('Falha ao salvar a análise detalhada da IA.');
   }
 
-  // Passo E: Retornar o ID
   return { success: true, reportId: relatorioData.id };
 };
 
-
-/**
- * Busca um relatório (tabela 'relatorios') e os detalhes da análise (tabela 'analises_ia') por ID.
- * Retorna apenas os campos necessários para o frontend (omite tom e emoções).
- */
 const buscarRelatorioPorId = async (id) => {
   const { data, error } = await supabase
     .from('relatorios')
@@ -132,39 +123,75 @@ const buscarRelatorioPorId = async (id) => {
     throw new Error('Relatório não encontrado ou análise detalhada ausente.');
   }
 
-  // A resposta do JOIN do Supabase vem com a sub-tabela em um array, pegamos o primeiro item
   const analise = data.analises_ia[0];
 
-  // Converte a string JSON de sugestões de volta para array
   let sugestoesArray = [];
   if (analise.sugestoes && typeof analise.sugestoes === 'string') {
     sugestoesArray = JSON.parse(analise.sugestoes);
   }
 
-  //Converte as trilhas djson pra array
+ //Converte as trilhas djson pra array
   let trilhasArray = [];
   if (analise.trilhas_recomendadas && typeof analise.trilhas_recomendadas === 'string') {
     trilhasArray = JSON.parse(analise.trilhas_recomendadas);
   }
 
   // Mapeia e consolida os dados para o formato esperado pelo frontend (IRelatorio)
+  
   const formattedData = {
     id: data.id,
     resumo_ia: analise.resumo,
     maior_problema: analise.maior_problema,
     sugestoes: sugestoesArray,
-    trilhasRecomendadas: trilhasArray
+    
+    
+  trilhasRecomendadas: trilhasArray
     // *** TOM_ANALISE e EMOCOES_IDENTIFICADAS FORAM OMITIDOS DO OBJETO DE RETORNO ***
     // Isso cumpre o requisito de não enviar esses dados ao frontend.
+    
   };
+  
 
   return formattedData;
 };
 
-// Exporta as funções
+const verificarCnpjExistente = async (cnpj) => {
+  const { data, error } = await supabase
+    .from('empresas')
+    .select('cnpj')
+    .eq('cnpj', cnpj)
+    .single();
+
+  return !error && data != null;
+};
+
+
+// função de salvar as respostas da iris <-- ass.vivian 
+const salvarRespostaChat = async (dados) => {
+  const { pergunta, resposta, cnpj } = dados;
+
+  const { error } = await supabase
+    .from('chat_iris')
+    .insert([{
+      mensagem_recebida: pergunta,
+      mensagem_enviada: resposta,
+      cnpj_empresa: cnpj
+    }]);
+
+  if (error) {
+    console.error('Erro ao salvar resposta do chat:', error);
+    throw new Error('Não foi possível salvar a resposta do chat.');
+  }
+  return { success: true };
+};
+
+// BLOCO ÚNICO DE EXPORTAÇÃO NO FINAL DO ARQUIVO
 export {
   salvarDiagnosticoCompleto,
-  buscarRelatorioPorId
+  buscarRelatorioPorId,
+  verificarCnpjExistente,
+  salvarRespostaChat
 };
+
 
 
