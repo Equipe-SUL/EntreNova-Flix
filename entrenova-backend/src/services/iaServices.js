@@ -9,10 +9,10 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 /**
  * @param {object} dadosEmpresa - Objeto com os dados da empresa (nome, cnpj, etc).
  * @param {Array<object>} dadosQuiz - Array com as respostas do quiz (ex: [{pergunta: 'p1', resposta: 'Sim'}]).
- * @param {Array<object} conteudosDisponiveis - Lista dos conteudos(trilha)
+ * @param {Array<object>} conteudosDisponiveis - Lista dos conteúdos(trilha) - PARÂMETRO OPCIONAL
  * @returns {Promise<object|null>} - O objeto JSON com a análise da IA, ou null em caso de erro.
  */
-export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz,conteudosDisponiveis) {
+export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz, conteudosDisponiveis = []) {
   if (!dadosQuiz || dadosQuiz.length === 0) {
     console.error("Nenhuma resposta foi fornecida para a análise.");
     return null;
@@ -24,10 +24,24 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz,conteudosDi
     feedbackFormatado += `\n- ${item.pergunta}: ${item.resposta}`;
   });
 
-  // Formata a lista de conteúdos para o prompt
-  const conteudosFormatados = conteudosDisponiveis.map(c =>
-    `- Modelo: ${c.modelo}, Categoria: ${c.categoria}, Descrição: ${c.descricao}`
-  ).join('\n');
+  // Formata a lista de conteúdos para o prompt (se disponível)
+  let conteudosSection = '';
+  if (conteudosDisponiveis && conteudosDisponiveis.length > 0) {
+    const conteudosFormatados = conteudosDisponiveis.map(c =>
+      `- Modelo: ${c.modelo}, Categoria: ${c.categoria}, Descrição: ${c.descricao}`
+    ).join('\n');
+    
+    conteudosSection = `
+    6. A partir da lista de conteúdos disponíveis abaixo, escolha os 3 mais relevantes para resolver o maior problema identificado.
+
+    Lista de Conteúdos Disponíveis:
+    ${conteudosFormatados}
+    `;
+  } else {
+    conteudosSection = `
+    6. Com base na sua experiência, sugira 3 áreas de conteúdo que seriam úteis para resolver o maior problema identificado.
+    `;
+  }
 
   const prompt = `
     Analise o seguinte feedback de um cliente de forma detalhada e estruturada.
@@ -42,10 +56,7 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz,conteudosDi
     3. Classifique o tom do feedback (positivo, negativo ou neutro).
     4. Liste até 3 emoções que o cliente pode estar sentindo.
     5. Forneça um resumo claro e conciso do feedback (até 40 palavras).
-    6. A partir da lista de conteúdos disponíveis abaixo, escolha os 3 mais relevantes para resolver o maior problema identificado.
-
-    Lista de Conteúdos Disponíveis:
-    ${conteudosFormatados}
+    ${conteudosSection}
     
     Formate a resposta EXATAMENTE em JSON com a seguinte estrutura, sem nenhum texto adicional antes ou depois do JSON:
     {
@@ -70,9 +81,26 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz,conteudosDi
     // Limpa o texto para garantir que ele é um JSON válido
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
-    return JSON.parse(jsonText); // Retorna o JSON parseado
+    const resultado = JSON.parse(jsonText);
+    
+    // Garante que trilhasRecomendadas sempre existe
+    if (!resultado.trilhasRecomendadas) {
+      resultado.trilhasRecomendadas = [];
+    }
+    
+    return resultado;
+
   } catch (error) {
     console.error("Erro ao gerar conteúdo com a IA:", error);
-    return null; // Retorna null em caso de erro
+    
+    // Retorna um objeto fallback em caso de erro
+    return {
+      maiorProblema: "Não foi possível analisar as respostas",
+      sugestoes: ["Verificar a conexão com o serviço de IA", "Revisar as respostas fornecidas", "Tentar novamente mais tarde"],
+      tom: "neutro",
+      emocoes: ["neutro"],
+      resumo: "Análise não disponível no momento",
+      trilhasRecomendadas: []
+    };
   }
 }
