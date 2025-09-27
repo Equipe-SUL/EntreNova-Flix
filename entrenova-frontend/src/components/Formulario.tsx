@@ -7,38 +7,39 @@ import { validarCNPJ } from '../services/api'
 import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types';
 import { IPerguntaLead, IRespostasLead, IScoreLead } from '../types/empresa.types';
 
+
 const perguntasPorDimensao: IPerguntasPorDimensao = {
   pessoas: [
-    { id: 'p1', texto: 'Q1 – Comunicação interna', opcoes: ['Clara, frequente e bidirecional', 'Funciona, mas nem sempre chega a todos', 'Só em reuniões formais ou quando há problemas', 'Pouco estruturada'] },
-    { id: 'p2', texto: 'Q2 – Postura de liderança', opcoes: ['Engajadora, dá autonomia e orienta', 'Boa, mas depende do líder individual', 'Centralizadora, pouco espaço para protagonismo', 'Inexistente, decisões sempre de cima para baixo'] },
-    { id: 'p3', texto: 'Q3 – Resolução de problemas', opcoes: ['Ideias novas e soluções conjuntas', 'Resolvem, mas reativos', 'Dependem da liderança', 'Evitam mudanças'] },
-    { id: 'p4', texto: 'Q4 – Organização do trabalho', opcoes: ['Clareza de papéis e prioridades', 'Clareza parcial, mas falta recurso', 'Confuso, apagando incêndios', 'Sem organização clara'] },
-    { id: 'p5', texto: 'Q5 – Valores e propósito', opcoes: ['Claros e aplicados', 'Conhecidos, mas pouco aplicados', 'Pouco lembrados, só em discurso', 'Não há clareza'] },
-    { id: 'p6', texto: 'Q6 – Ferramentas de desenvolvimento', opcoes: ['Plataformas estruturadas', 'Algumas iniciativas digitais', 'Recursos informais', 'Não há ferramentas'] }
+    { id: 'p1', texto: 'Questão 1 – Comunicação interna', opcoes: ['Clara, frequente e bidirecional', 'Funciona, mas nem sempre chega a todos', 'Só em reuniões formais ou quando há problemas', 'Pouco estruturada'] },
+    { id: 'p2', texto: 'Questão 2 – Postura de liderança', opcoes: ['Engajadora, dá autonomia e orienta', 'Boa, mas depende do líder individual', 'Centralizadora, pouco espaço para protagonismo', 'Inexistente, decisões sempre de cima para baixo'] },
+    { id: 'p3', texto: 'Questão 3 – Resolução de problemas', opcoes: ['Ideias novas e soluções conjuntas', 'Resolvem, mas reativos', 'Dependem da liderança', 'Evitam mudanças'] },
+    { id: 'p4', texto: 'Questão 4 – Organização do trabalho', opcoes: ['Clareza de papéis e prioridades', 'Clareza parcial, mas falta recurso', 'Confuso, apagando incêndios', 'Sem organização clara'] },
+    { id: 'p5', texto: 'Questão 5 – Valores e propósito', opcoes: ['Claros e aplicados', 'Conhecidos, mas pouco aplicados', 'Pouco lembrados, só em discurso', 'Não há clareza'] },
+    { id: 'p6', texto: 'Questão 6 – Ferramentas de desenvolvimento', opcoes: ['Plataformas estruturadas', 'Algumas iniciativas digitais', 'Recursos informais', 'Não há ferramentas'] }
   ],
   estrutura: [
-    { id: 'e1', texto: 'Q1 – Fluxo de informação entre áreas', opcoes: ['Integração constante', 'Em parte, com ruídos', 'Depende de reuniões formais', 'Áreas isoladas'] },
-    { id: 'e2', texto: 'Q2 – Delegação dos gestores', opcoes: ['Delegam com confiança', 'Delegam, mas controlam em excesso', 'Raramente delegam', 'Não delegam'] },
-    { id: 'e3', texto: 'Q3 – Ajustes de processos', opcoes: ['Equipes propõem melhorias', 'Ajustes demoram', 'Só gestão revisa', 'Nada muda'] },
-    { id: 'e4', texto: 'Q4 – Autonomia operacional', opcoes: ['Alta autonomia com responsabilidade', 'Alguma, mas depende de aprovação', 'Baixa autonomia', 'Nenhuma'] },
-    { id: 'e5', texto: 'Q5 – Qualidade e padrões', opcoes: ['Prioridade no DNA', 'Importante, mas não sempre seguida', 'Depende de cobrança externa', 'Não há padrão'] },
-    { id: 'e6', texto: 'Q6 – Ferramentas de operação', opcoes: ['ERP/CRM integrados', 'Algumas digitais, não integradas', 'Recursos básicos', 'Não há'] }
+    { id: 'e1', texto: 'Questão 1 – Fluxo de informação entre áreas', opcoes: ['Integração constante', 'Em parte, com ruídos', 'Depende de reuniões formais', 'Áreas isoladas'] },
+    { id: 'e2', texto: 'Questão 2 – Delegação dos gestores', opcoes: ['Delegam com confiança', 'Delegam, mas controlam em excesso', 'Raramente delegam', 'Não delegam'] },
+    { id: 'e3', texto: 'Questão 3 – Ajustes de processos', opcoes: ['Equipes propõem melhorias', 'Ajustes demoram', 'Só gestão revisa', 'Nada muda'] },
+    { id: 'e4', texto: 'Questão 4 – Autonomia operacional', opcoes: ['Alta autonomia com responsabilidade', 'Alguma, mas depende de aprovação', 'Baixa autonomia', 'Nenhuma'] },
+    { id: 'e5', texto: 'Questão 5 – Qualidade e padrões', opcoes: ['Prioridade no DNA', 'Importante, mas não sempre seguida', 'Depende de cobrança externa', 'Não há padrão'] },
+    { id: 'e6', texto: 'Questão 6 – Ferramentas de operação', opcoes: ['ERP/CRM integrados', 'Algumas digitais, não integradas', 'Recursos básicos', 'Não há'] }
   ],
   mercado: [
-    { id: 'm1', texto: 'Q1 – Escuta ativa', opcoes: ['Estruturada e contínua', 'Ocasional', 'Reativa', 'Não existe'] },
-    { id: 'm2', texto: 'Q2 – Integração vendas e atendimento', opcoes: ['Colaboram e compartilham', 'Trocam parcialmente', 'Trabalham em silos', 'Conflitos entre áreas'] },
-    { id: 'm3', texto: 'Q3 – Reação ao mercado', opcoes: ['Antecipamos e inovamos rápido', 'Ajustamos com atraso', 'Só reagimos a crises', 'Não há adaptação'] },
-    { id: 'm4', texto: 'Q4 – Metas de vendas', opcoes: ['Claro e revisado', 'Existe, pouco revisado', 'Informal', 'Não há'] },
-    { id: 'm5', texto: 'Q5 – Diferencial competitivo', opcoes: ['Claro e vivo', 'Existe, mas mal divulgado', 'Incerto', 'Não há'] },
-    { id: 'm6', texto: 'Q6 – Ferramentas de clientes', opcoes: ['CRM e BI estruturados', 'Planilhas/relatórios', 'Feedbacks informais', 'Nenhum'] }
+    { id: 'm1', texto: 'Questão 1 – Escuta ativa', opcoes: ['Estruturada e contínua', 'Ocasional', 'Reativa', 'Não existe'] },
+    { id: 'm2', texto: 'Questão 2 – Integração vendas e atendimento', opcoes: ['Colaboram e compartilham', 'Trocam parcialmente', 'Trabalham em silos', 'Conflitos entre áreas'] },
+    { id: 'm3', texto: 'Questão 3 – Reação ao mercado', opcoes: ['Antecipamos e inovamos rápido', 'Ajustamos com atraso', 'Só reagimos a crises', 'Não há adaptação'] },
+    { id: 'm4', texto: 'Questão 4 – Metas de vendas', opcoes: ['Claro e revisado', 'Existe, pouco revisado', 'Informal', 'Não há'] },
+    { id: 'm5', texto: 'Questão 5 – Diferencial competitivo', opcoes: ['Claro e vivo', 'Existe, mas mal divulgado', 'Incerto', 'Não há'] },
+    { id: 'm6', texto: 'Questão 6 – Ferramentas de clientes', opcoes: ['CRM e BI estruturados', 'Planilhas/relatórios', 'Feedbacks informais', 'Nenhum'] }
   ],
   direcao: [
-    { id: 'd1', texto: 'Q1 – Visão de futuro', opcoes: ['Todos conhecem', 'Só a gestão conhece', 'Pouco falada', 'Não comunicada'] },
-    { id: 'd2', texto: 'Q2 – Conexão dos líderes à estratégia', opcoes: ['Inspiram e alinham metas', 'Tentam, mas parcial', 'Pouca conexão', 'Não há'] },
-    { id: 'd3', texto: 'Q3 – Papel da inovação', opcoes: ['Prioridade central', 'Importante, sem orçamento', 'Ocasional', 'Não prioridade'] },
-    { id: 'd4', texto: 'Q4 – Atividades x objetivos', opcoes: ['Sempre clara', 'Parcial, depende do gestor', 'Raramente', 'Nunca'] },
-    { id: 'd5', texto: 'Q5 – Propósito e impacto social', opcoes: ['No centro das decisões', 'Importante, secundário', 'Falado, mas não aplicado', 'Não há preocupação'] },
-    { id: 'd6', texto: 'Q6 – Ferramentas estratégicas', opcoes: ['Dashboards, OKRs', 'Planilhas/relatórios', 'Discussões informais', 'Não há'] }
+    { id: 'd1', texto: 'Questão 1 – Visão de futuro', opcoes: ['Todos conhecem', 'Só a gestão conhece', 'Pouco falada', 'Não comunicada'] },
+    { id: 'd2', texto: 'Questão 2 – Conexão dos líderes à estratégia', opcoes: ['Inspiram e alinham metas', 'Tentam, mas parcial', 'Pouca conexão', 'Não há'] },
+    { id: 'd3', texto: 'Questão 3 – Papel da inovação', opcoes: ['Prioridade central', 'Importante, sem orçamento', 'Ocasional', 'Não prioridade'] },
+    { id: 'd4', texto: 'Questão 4 – Atividades x objetivos', opcoes: ['Sempre clara', 'Parcial, depende do gestor', 'Raramente', 'Nunca'] },
+    { id: 'd5', texto: 'Questão 5 – Propósito e impacto social', opcoes: ['No centro das decisões', 'Importante, secundário', 'Falado, mas não aplicado', 'Não há preocupação'] },
+    { id: 'd6', texto: 'Questão 6 – Ferramentas estratégicas', opcoes: ['Dashboards, OKRs', 'Planilhas/relatórios', 'Discussões informais', 'Não há'] }
   ]
 };
 
@@ -71,6 +72,23 @@ const Formulario = () => {
   const [indiceAtual, setIndiceAtual] = useState<number>(0);
   const [statusEnvio, setStatusEnvio] = useState<string>('');
   const [cnpjExistente, setCnpjExistente] = useState<boolean>(false);
+  const getDimensaoAtual = (): string | null => {
+  if (!perguntas[indiceAtual]) return null;
+
+  for (const dim in perguntasPorDimensao) {
+    if (perguntasPorDimensao[dim as keyof IPerguntasPorDimensao].some(p => p.id === perguntas[indiceAtual].id)) {
+      return nomesDimensao[dim]; // usa o nome bonito
+    }
+  }
+  return null;
+};
+    const nomesDimensao: { [key: string]: string } = {
+    pessoas: 'Pessoas & Cultura',
+    estrutura: 'Estrutura & Operações',
+    mercado: 'Mercado & Clientes',
+    direcao: 'Direção & Futuro'
+  };
+
 
   const calcularScoreLead = (respostas: IRespostasLead): IScoreLead => {
     let total = 0;
@@ -318,6 +336,7 @@ const Formulario = () => {
 
       {etapa === 'perguntas' && perguntas[indiceAtual] && (
         <>
+          <h3 className="dimensao-atual">{getDimensaoAtual()}</h3>
           <h2>{perguntas[indiceAtual].texto}</h2>
           {perguntas[indiceAtual].opcoes.map((op, idx) => (
             <label key={idx}>
@@ -331,6 +350,8 @@ const Formulario = () => {
 
       {etapa === 'lead' && perguntasLead[indiceLeadAtual] && (
         <>
+          <h3 className="h3form titulo-lead">Sobre a empresa</h3>
+
           <h2>{perguntasLead[indiceLeadAtual].texto}</h2>
           {perguntasLead[indiceLeadAtual].opcoes.map((op, idx) => (
             <label key={idx}>
@@ -345,7 +366,7 @@ const Formulario = () => {
       {etapa === 'finalizado' && (
         <>
           <h2>Parabéns! Você finalizou o diagnóstico.</h2>
-          <button onClick={handleSubmitFinal}>{statusEnvio || 'Enviar Resultado'}</button>
+          <button onClick={handleSubmitFinal}>{statusEnvio || 'Ver Resultado'}</button>
         </>
       )}
     </div>
