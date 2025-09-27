@@ -6,6 +6,26 @@ import { analisarRespostasComIA } from './iaServices.js';
  * salva o registro principal na 'relatorios' (com texto consolidado) 
  * e os detalhes estruturados na 'analises_ia'.
  */
+
+
+/**
+ * Busca todos os conteúdos (trilhas) disponíveis na tabela 'conteudos'.
+ */
+const buscarConteudos = async () => {
+  console.log('Buscando todos os conteúdos para recomendação...');
+  const { data, error } = await supabase
+    .from('conteudos')
+    .select('modelo, categoria, descricao'); // Selecionando os campos que a IA precisa
+
+  if (error) {
+    console.error('Erro ao buscar conteúdos:', error);
+    // Retorna um array vazio em caso de erro para não quebrar o fluxo principal
+    return [];
+  }
+
+  return data;
+};
+
 const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   // Passo A: Salvar na tabela 'empresas'
   const { error: errorEmpresa } = await supabase
@@ -20,12 +40,12 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   // Passo B: Formatar e salvar na tabela 'respostas'
   const respostasParaInserir = dadosQuiz.map(item => ({
     pergunta: item.pergunta,
-    resposta: item.resposta, 
+    resposta: item.resposta,
     categoria: item.pergunta.split('-')[0],
     tipo_diagnostico: 'inicial',
     cnpj_empresa: dadosEmpresa.cnpj
   }));
-  
+
   const { error: errorRespostas } = await supabase
     .from('respostas')
     .insert(respostasParaInserir);
@@ -34,15 +54,17 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
     console.error('Erro ao salvar respostas:', errorRespostas);
     throw new Error('Não foi possível salvar as respostas do quiz.');
   }
+  //busca os conteudos da trilha antes de chamara a funcao da ia
+  const conteudosDisponiveis = await buscarConteudos();
 
   // Passo C: Chamar a IA para gerar a análise completa
   console.log('Iniciando análise com a IA...');
-  const analiseIA = await analisarRespostasComIA(dadosEmpresa, dadosQuiz);
+  const analiseIA = await analisarRespostasComIA(dadosEmpresa, dadosQuiz, conteudosDisponiveis);
 
   if (!analiseIA) {
     throw new Error('Falha ao gerar a análise da IA.');
   }
-  
+
   // --- Geração do Texto Consolidado para relatorio1 ---
   const textoConsolidadoRelatorio1 = `
     **Principal Desafio:** ${analiseIA.maiorProblema}
@@ -76,12 +98,13 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
   const { error: errorAnalise } = await supabase
     .from('analises_ia')
     .insert([{
-      relatorio_id: relatorioData.id, 
+      relatorio_id: relatorioData.id,
       resumo: analiseIA.resumo,
       maior_problema: analiseIA.maiorProblema,
       sugestoes: JSON.stringify(analiseIA.sugestoes),
       tom_analise: analiseIA.tom,
-      emocoes: JSON.stringify(analiseIA.emocoes)
+      emocoes: JSON.stringify(analiseIA.emocoes),
+      trilhas_recomendadas: JSON.stringify(analiseIA.trilhasRecomendadas)
     }]);
 
   if (errorAnalise) {
@@ -101,7 +124,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz) => {
 const buscarRelatorioPorId = async (id) => {
   const { data, error } = await supabase
     .from('relatorios')
-    .select('*, analises_ia(*)') 
+    .select('*, analises_ia(*)')
     .eq('id', id)
     .single();
 
@@ -118,12 +141,19 @@ const buscarRelatorioPorId = async (id) => {
     sugestoesArray = JSON.parse(analise.sugestoes);
   }
 
+  //Converte as trilhas djson pra array
+  let trilhasArray = [];
+  if (analise.trilhas_recomendadas && typeof analise.trilhas_recomendadas === 'string') {
+    trilhasArray = JSON.parse(analise.trilhas_recomendadas);
+  }
+
   // Mapeia e consolida os dados para o formato esperado pelo frontend (IRelatorio)
   const formattedData = {
     id: data.id,
     resumo_ia: analise.resumo,
     maior_problema: analise.maior_problema,
     sugestoes: sugestoesArray,
+    trilhasRecomendadas: trilhasArray
     // *** TOM_ANALISE e EMOCOES_IDENTIFICADAS FORAM OMITIDOS DO OBJETO DE RETORNO ***
     // Isso cumpre o requisito de não enviar esses dados ao frontend.
   };
@@ -136,3 +166,5 @@ export {
   salvarDiagnosticoCompleto,
   buscarRelatorioPorId
 };
+
+
