@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 // INPUTS DA EMPRESA
 export interface IEmpresa {
   cnpj: string;
@@ -32,7 +34,17 @@ export interface IRelatorio {
   resumo_ia: string;
   maior_problema: string;
   sugestoes: string[];
+  trilhasRecomendadas: Itrilha[];
+  ///////--- sem função
   tom_analise: string;
   emocoes_identificadas: string[];
   created_at: string;
 }
+
+// interface para descrever a trilha
+export interface Itrilha {
+  descricao: string;
+  modelo: string;
+  categoria: string;
+}
+
