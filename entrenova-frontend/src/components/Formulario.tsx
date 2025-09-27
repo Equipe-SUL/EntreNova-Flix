@@ -2,9 +2,10 @@ import React, { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Formulario.css';
 import api from '../services/api'; 
+import { validarCNPJ } from '../services/api'
 
-import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types'; //la na pasta types esta definido os TIPOS CRIADOS POR NÓS <-- ass.vivian
-import { IPerguntaLead, IRespostasLead,IScoreLead } from '../types/empresa.types';
+import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types';
+import { IPerguntaLead, IRespostasLead, IScoreLead } from '../types/empresa.types';
 
 const perguntasPorDimensao: IPerguntasPorDimensao = {
   pessoas: [
@@ -28,7 +29,7 @@ const perguntasPorDimensao: IPerguntasPorDimensao = {
     { id: 'm2', texto: 'Q2 – Integração vendas e atendimento', opcoes: ['Colaboram e compartilham', 'Trocam parcialmente', 'Trabalham em silos', 'Conflitos entre áreas'] },
     { id: 'm3', texto: 'Q3 – Reação ao mercado', opcoes: ['Antecipamos e inovamos rápido', 'Ajustamos com atraso', 'Só reagimos a crises', 'Não há adaptação'] },
     { id: 'm4', texto: 'Q4 – Metas de vendas', opcoes: ['Claro e revisado', 'Existe, pouco revisado', 'Informal', 'Não há'] },
-    { id: 'm5', texto: 'Q5 – Diferencial competitivo', opcoes: ['Claro e vivo', 'Existe, mas mal divulgado', 'Incerto', 'Não há clareza'] },
+    { id: 'm5', texto: 'Q5 – Diferencial competitivo', opcoes: ['Claro e vivo', 'Existe, mas mal divulgado', 'Incerto', 'Não há'] },
     { id: 'm6', texto: 'Q6 – Ferramentas de clientes', opcoes: ['CRM e BI estruturados', 'Planilhas/relatórios', 'Feedbacks informais', 'Nenhum'] }
   ],
   direcao: [
@@ -42,76 +43,19 @@ const perguntasPorDimensao: IPerguntasPorDimensao = {
 };
 
 const perguntasLead : IPerguntaLead[] = [
-  {
-    id: 'lead1',
-    texto: 'Número de colaboradores',
-    opcoes: ['Até 10', '11 a 30', '31 a 100', '101 a 500', 'Acima de 500'],
-    pontos: [1, 2, 3, 4, 5]
-  },
-  {
-    id: 'lead2',
-    texto: 'Porte da empresa',
-    opcoes: ['Startup', 'PME', 'Grande empresa'],
-    pontos: [2, 3, 5]
-  },
-  {
-    id: 'lead3',
-    texto: 'Investimento Disponível',
-    opcoes: ['Até R$ 10 mil', 'Entre R$ 10 mil e R$ 50 mil', 'Acima de R$ 50 mil'],
-    pontos: [1, 3, 5]
-  },
-  {
-    id: 'lead4',
-    texto: 'Decisor Principal',
-    opcoes: ['CEO / Diretor', 'RH / T&D', 'Marketing / Comunicação', 'Outro'],
-    pontos: [3, 2, 1, 0]
-  },
-  {
-    id: 'lead5',
-    texto: 'De 1 a 5, abertura da empresa para ideias inovadoras em treinamentos:',
-    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
-    pontos: [0, 0, 1, 2, 3]
-  },
-  {
-    id: 'lead6',
-    texto: 'De 1 a 5, importância atribuída a investir em desenvolvimento profissional:',
-    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
-    pontos: [0, 0, 1, 2, 3]
-  },
-  {
-    id: 'lead7',
-    texto: 'De 1 a 5, importância atribuída a desenvolver soft skills (comunicação, liderança, criatividade):',
-    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
-    pontos: [0, 0, 1, 2, 3]
-  },
-  {
-    id: 'lead8',
-    texto: 'De 1 a 5, importância atribuída a incentivar cultura, arte e hobbies:',
-    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
-    pontos: [0, 0, 1, 2, 3]
-  },
-  {
-    id: 'lead9',
-    texto: 'De 1 a 5, importância atribuída a reconhecer impacto do desenvolvimento humano na performance:',
-    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
-    pontos: [0, 0, 1, 2, 3]
-  },
-  {
-    id: 'lead10',
-    texto: 'Projetos inovadores anteriores?',
-    opcoes: ['Sim', 'Não'],
-    pontos: [2, 0]
-  },
-  {
-    id: 'lead11',
-    texto: 'Urgência para implementação',
-    opcoes: ['Imediatamente', 'Até 3 meses', '6 meses ou mais'],
-    pontos: [3, 2, 1]
-  }
-]
+  { id: 'lead1', texto: 'Número de colaboradores', opcoes: ['Até 10', '11 a 30', '31 a 100', '101 a 500', 'Acima de 500'], pontos: [1, 2, 3, 4, 5] },
+  { id: 'lead2', texto: 'Porte da empresa', opcoes: ['Startup', 'PME', 'Grande empresa'], pontos: [2, 3, 5] },
+  { id: 'lead3', texto: 'Investimento Disponível', opcoes: ['Até R$ 10 mil', 'Entre R$ 10 mil e R$ 50 mil', 'Acima de R$ 50 mil'], pontos: [1, 3, 5] },
+  { id: 'lead4', texto: 'Decisor Principal', opcoes: ['CEO / Diretor', 'RH / T&D', 'Marketing / Comunicação', 'Outro'], pontos: [3, 2, 1, 0] },
+  { id: 'lead5', texto: 'De 1 a 5, abertura da empresa para ideias inovadoras em treinamentos:', opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'], pontos: [0, 0, 1, 2, 3] },
+  { id: 'lead6', texto: 'De 1 a 5, importância atribuída a investir em desenvolvimento profissional:', opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'], pontos: [0, 0, 1, 2, 3] },
+  { id: 'lead7', texto: 'De 1 a 5, importância atribuída a desenvolver soft skills (comunicação, liderança, criatividade):', opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'], pontos: [0, 0, 1, 2, 3] },
+  { id: 'lead8', texto: 'De 1 a 5, importância atribuída a incentivar cultura, arte e hobbies:', opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'], pontos: [0, 0, 1, 2, 3] },
+  { id: 'lead9', texto: 'De 1 a 5, importância atribuída a reconhecer impacto do desenvolvimento humano na performance:', opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'], pontos: [0, 0, 1, 2, 3] },
+  { id: 'lead10', texto: 'Projetos inovadores anteriores?', opcoes: ['Sim', 'Não'], pontos: [2, 0] },
+  { id: 'lead11', texto: 'Urgência para implementação', opcoes: ['Imediatamente', 'Até 3 meses', '6 meses ou mais'], pontos: [3, 2, 1] }
+];
 
-
-// funçao compoinent normal (arrow function) sem parametros, só receber < -- ass. vivian
 const Formulario = () => {
   const navigate = useNavigate();
   const [empresa, setEmpresa] = useState<IEmpresa>({ cnpj: '', nome: '', email: '', telefone: '', setor: '' });
@@ -119,7 +63,6 @@ const Formulario = () => {
   const [perguntas, setPerguntas] = useState<IPergunta[]>([]);
   const [respostas, setRespostas] = useState<IRespostas>({});
   const [respostaAtual, setRespostaAtual] = useState<number | null>(null);
-  // Novos States para o lead
   const [etapa, setEtapa] = useState<'empresa' | 'selecionar' | 'perguntas' | 'lead' | 'finalizado'>('empresa');
   const [respostasLead, setRespostasLead] = useState<IRespostasLead>({});
   const [respostaAtualLead, setRespostaAtualLead] = useState<number | null>(null);
@@ -127,15 +70,12 @@ const Formulario = () => {
   const [scoreLead, setScoreLead] = useState<IScoreLead | null>(null);
   const [indiceAtual, setIndiceAtual] = useState<number>(0);
   const [statusEnvio, setStatusEnvio] = useState<string>('');
+  const [cnpjExistente, setCnpjExistente] = useState<boolean>(false);
 
-
-  //Função para Calcular o lead Vai da linha 132 até 179
-
-    const calcularScoreLead = (respostas: IRespostasLead): IScoreLead => {
+  const calcularScoreLead = (respostas: IRespostasLead): IScoreLead => {
     let total = 0;
     const detalhes: { [key: string]: number } = {};
 
-    // Calcular pontos das perguntas 1-4, 10-11 (individuais)
     ['lead1', 'lead2', 'lead3', 'lead4', 'lead10', 'lead11'].forEach(id => {
       if (respostas[id] !== undefined) {
         const pontos = perguntasLead.find(p => p.id === id)?.pontos[respostas[id]] || 0;
@@ -144,7 +84,6 @@ const Formulario = () => {
       }
     });
 
-    // Calcular média das perguntas de cultura (lead5 a lead9)
     const perguntasCultura = ['lead5', 'lead6', 'lead7', 'lead8', 'lead9'];
     let somaCultura = 0;
     let countCultura = 0;
@@ -160,7 +99,6 @@ const Formulario = () => {
 
     const mediaCultura = countCultura > 0 ? somaCultura / countCultura : 0;
     
-    // Aplicar regra da média
     let pontosMedia = 0;
     if (mediaCultura >= 3 && mediaCultura < 4) pontosMedia = 1;
     else if (mediaCultura >= 4 && mediaCultura < 5) pontosMedia = 2;
@@ -169,7 +107,6 @@ const Formulario = () => {
     total += pontosMedia;
     detalhes['media_cultura'] = pontosMedia;
 
-    // Classificação final
     let classificacao: 'frio' | 'morno' | 'quente' = 'frio';
     if (total >= 19) classificacao = 'quente';
     else if (total >= 11) classificacao = 'morno';
@@ -177,23 +114,78 @@ const Formulario = () => {
     return { total, classificacao, detalhes };
   };
 
+ const handleEmpresaChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+
+  if (name === 'telefone') {
+    // Remove tudo que não é número
+    let digits = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos (DDD 2 + número 9)
+    if (digits.length > 11) digits = digits.slice(0, 11);
+    
+    // Formata (XX) XXXXX-XXXX
+    let formatted = digits;
+    if (digits.length > 2) {
+      formatted = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}`;
+      if (digits.length > 7) {
+        formatted += `-${digits.slice(7)}`;
+      }
+    }
+    
+    setEmpresa(prev => ({ ...prev, telefone: formatted }));
+  } else if (name === 'cnpj') {
+    // Formatação simples de CNPJ: 00.000.000/0000-00
+    let digits = value.replace(/\D/g, '');
+    if (digits.length > 14) digits = digits.slice(0, 14);
+    let formatted = digits;
+    if (digits.length > 2) formatted = digits.slice(0, 2) + '.' + digits.slice(2);
+    if (digits.length > 5) formatted = formatted.slice(0, 6) + '.' + formatted.slice(6);
+    if (digits.length > 8) formatted = formatted.slice(0, 10) + '/' + formatted.slice(10);
+    if (digits.length > 12) formatted = formatted.slice(0, 15) + '-' + formatted.slice(15);
+    
+    setEmpresa(prev => ({ ...prev, cnpj: formatted }));
+  } else {
+    setEmpresa(prev => ({ ...prev, [name]: value }));
+  }
+};
 
 
-  /*
-    handleEmpresaChange -- O QUE ELA FAZ? --->  anotar as informações da empresa (CNPJ, nome, email, etc.) à medida que o usuário digita nos campos.
-  O usuário digita uma letra no campo "Nome da Empresa".
+    const validarEmpresa = async (): Promise<boolean> => {
+  // checa se todos os campos obrigatórios foram preenchidos
+  if (!empresa.cnpj || !empresa.nome || !empresa.email || !empresa.telefone || !empresa.setor) {
+    alert('Preencha todos os campos obrigatórios: CNPJ, Nome, Email, Telefone e Setor de Atuação.');
+    return false;
+  }
 
-  -- > Essa função é chamada imediatamente.
+  // remove tudo que não é número
+  const cnpjNumeros = empresa.cnpj.replace(/\D/g, '');
 
-  
-  Ela olha duas coisas: "Em qual campo ele digitou?" (e.target.name, que seria "nome") e "Qual é o texto completo agora?" (e.target.value).
+  // valida se tem exatamente 14 dígitos
+  if (cnpjNumeros.length !== 14) {
+    alert('O CNPJ precisa ter exatamente 14 dígitos.');
+    return false;
+  }
 
-  Ela então pega a "ficha de cadastro" da empresa que está na memória do componente (o useState chamado empresa) e atualiza apenas o campo "nome" com o novo texto.
-  */
+  try {
+    const response = await validarCNPJ(cnpjNumeros); // envia só números pro backend
+    const existe = response.data.valido;
+    setCnpjExistente(existe);
 
-  const handleEmpresaChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmpresa(prevState => ({ ...prevState, [e.target.name]: e.target.value })); // informações da empresa (CNPJ, nome, email, etc.) à medida que o usuário digita nos campos. <-- ass.vivian
-  };
+    if (existe) {
+      alert('Este CNPJ já está cadastrado.');
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Erro ao validar CNPJ:', error);
+    alert('Erro ao validar CNPJ. Tente novamente.');
+    return false;
+  }
+};
+
+
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -230,19 +222,15 @@ const Formulario = () => {
   };
 
   const confirmarRespostaLead = () => {
-    // Verificar se há uma resposta selecionada antes de continuar
     if (respostaAtualLead === null) return;
     
     const pergunta = perguntasLead[indiceLeadAtual];
-    
-    // Garantir que respostaAtualLead é number, não null
     setRespostasLead({ ...respostasLead, [pergunta.id]: respostaAtualLead });
     setRespostaAtualLead(null);
     
     if (indiceLeadAtual + 1 < perguntasLead.length) {
       setIndiceLeadAtual(indiceLeadAtual + 1);
     } else {
-      // CALCULAR SCORE AO TERMINAR
       const score = calcularScoreLead({ 
         ...respostasLead, 
         [pergunta.id]: respostaAtualLead 
@@ -253,38 +241,25 @@ const Formulario = () => {
   };  
 
   const handleSubmitFinal = async () => {
-  setStatusEnvio('Enviando...');
+    setStatusEnvio('Enviando...');
 
-    // Formatando respostas das DIMENSÕES
     const respostasFormatadas = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
-      return {
-        pergunta: perguntaId,
-        resposta: respostaIndex,
-        tipo: 'dimensao'
-      };
+      return { pergunta: perguntaId, resposta: respostaIndex, tipo: 'dimensao' };
     });
 
-    // Formatando respostas do LEAD (nova parte)
     const respostasLeadFormatadas = Object.entries(respostasLead).map(([perguntaId, respostaIndex]) => {
       const pergunta = perguntasLead.find(p => p.id === perguntaId);
       const pontos = pergunta?.pontos[respostaIndex] || 0;
-      
-      return {
-        pergunta: perguntaId,
-        resposta: respostaIndex,
-        pontos: pontos,
-        tipo: 'lead'
-      };
+      return { pergunta: perguntaId, resposta: respostaIndex, pontos, tipo: 'lead' };
     });
 
-    // Juntando todas as respostas
     const todasRespostas = [...respostasFormatadas, ...respostasLeadFormatadas];
 
     const payload = {
       dadosEmpresa: empresa,
       dadosQuiz: todasRespostas,
-      scoreLead: scoreLead, // Inclui o score calculado
-      dimensoesSelecionadas: dimensoesSelecionadas
+      scoreLead,
+      dimensoesSelecionadas
     };
 
     try {
@@ -297,9 +272,7 @@ const Formulario = () => {
     }
   };
 
-
   return (
-    // id="questionario" para ser a âncora do scroll <-- NAO É ROTA, SÓ SCROLL <-- ass.vivian
     <div id="questionario" className="formulario-container">
       <div className="formulario-header">
         <div className="linha" />
@@ -312,83 +285,68 @@ const Formulario = () => {
           <h2>Primeiro, nos conte sobre sua empresa.</h2>
           <div className="empresa-form">
             <input type="text" name="cnpj" placeholder="CNPJ" value={empresa.cnpj} onChange={handleEmpresaChange} required />
+            {cnpjExistente && <p className="erro">Este CNPJ já está cadastrado.</p>}
             <input type="text" name="nome" placeholder="Nome da Empresa" value={empresa.nome} onChange={handleEmpresaChange} required />
             <input type="email" name="email" placeholder="Email de Contato" value={empresa.email} onChange={handleEmpresaChange} required />
             <input type="text" name="telefone" placeholder="Telefone" value={empresa.telefone} onChange={handleEmpresaChange} />
             <input type="text" name="setor" placeholder="Setor de Atuação" value={empresa.setor} onChange={handleEmpresaChange} />
           </div>
-          <button onClick={() => setEtapa('selecionar')}>Avançar</button>
+          <button onClick={async () => {
+            if (await validarEmpresa()) setEtapa('selecionar');
+          }}>Avançar</button>
+
         </>
       )}
 
       {etapa === 'selecionar' && (
         <>
-          <h2>Escolha até 3 dimensões para o diagnóstico:</h2>
-          {Object.keys(perguntasPorDimensao).map((key) => (
-            <label key={key}>
-              <input type="checkbox" value={key} onChange={handleCheckboxChange} />
-              {' '} {key.charAt(0).toUpperCase() + key.slice(1)}
+          <h2>Selecione até 3 dimensões para avaliação:</h2>
+          {Object.keys(perguntasPorDimensao).map(dim => (
+            <label key={dim}>
+              <input
+                type="checkbox"
+                value={dim}
+                checked={dimensoesSelecionadas.includes(dim)}
+                onChange={handleCheckboxChange}
+              />
+              {dim.charAt(0).toUpperCase() + dim.slice(1)}
             </label>
           ))}
-          <br />
-          <button onClick={iniciarPerguntas} disabled={dimensoesSelecionadas.length === 0}>
-            Iniciar Perguntas
-          </button>
+          <button onClick={iniciarPerguntas}>Iniciar Perguntas</button>
         </>
       )}
 
       {etapa === 'perguntas' && perguntas[indiceAtual] && (
-        <div className="pergunta-bloco">
-          <h3>{perguntas[indiceAtual].texto}</h3>
+        <>
+          <h2>{perguntas[indiceAtual].texto}</h2>
           {perguntas[indiceAtual].opcoes.map((op, idx) => (
             <label key={idx}>
-              <input
-                type="radio"
-                name={`resposta-${indiceAtual}`}
-                value={idx + 1}
-                checked={respostaAtual === idx + 1}
-                onChange={() => setRespostaAtual(idx + 1)}
-              />
-              {' '} {op}
+              <input type="radio" checked={respostaAtual === idx} onChange={() => setRespostaAtual(idx)} />
+              {op}
             </label>
           ))}
-          <button onClick={confirmarResposta} disabled={respostaAtual === null}>
-            Confirmar resposta
-          </button>
-        </div>
+          <button onClick={confirmarResposta} disabled={respostaAtual === null}>Próxima</button>
+        </>
       )}
 
-       {etapa === 'lead' && perguntasLead[indiceLeadAtual] && (
-        <div className="pergunta-bloco">
-          <h3>Perfil da Empresa - Lead Scoring ({indiceLeadAtual + 1}/{perguntasLead.length})</h3>
-          <h4>{perguntasLead[indiceLeadAtual].texto}</h4>
+      {etapa === 'lead' && perguntasLead[indiceLeadAtual] && (
+        <>
+          <h2>{perguntasLead[indiceLeadAtual].texto}</h2>
           {perguntasLead[indiceLeadAtual].opcoes.map((op, idx) => (
-          <label key={idx}>
-            <input
-              type="radio"
-              name={`resposta-lead-${indiceLeadAtual}`}
-              value={idx + 1} // ← MUDAR DE idx PARA idx + 1
-              checked={respostaAtualLead === idx + 1} // ← MUDAR AQUI TAMBÉM
-              onChange={() => setRespostaAtualLead(idx + 1)} // ← E AQUI
-            />
-            {' '} {op}
-          </label>
-        ))}
-          <button onClick={confirmarRespostaLead} disabled={respostaAtualLead === null}>
-            {indiceLeadAtual + 1 === perguntasLead.length ? 'Calcular Score' : 'Próxima Pergunta'}
-          </button>
-        </div>
+            <label key={idx}>
+              <input type="radio" checked={respostaAtualLead === idx} onChange={() => setRespostaAtualLead(idx)} />
+              {op}
+            </label>
+          ))}
+          <button onClick={confirmarRespostaLead} disabled={respostaAtualLead === null}>Próxima</button>
+        </>
       )}
 
       {etapa === 'finalizado' && (
-        <div>
-          <h2>Diagnóstico concluído!</h2>
-          <p>Tudo pronto para salvar e gerar sua análise.</p>
-          <button onClick={handleSubmitFinal}>
-            Salvar e ver resultado
-          </button>
-          {statusEnvio && <p>{statusEnvio}</p>}
-        </div>
+        <>
+          <h2>Parabéns! Você finalizou o diagnóstico.</h2>
+          <button onClick={handleSubmitFinal}>{statusEnvio || 'Enviar Resultado'}</button>
+        </>
       )}
     </div>
   );
