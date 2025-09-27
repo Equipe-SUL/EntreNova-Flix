@@ -4,7 +4,7 @@ import '../styles/Formulario.css';
 import api from '../services/api'; 
 
 import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types'; //la na pasta types esta definido os TIPOS CRIADOS POR NÓS <-- ass.vivian
-
+import { IPerguntaLead, IRespostasLead,IScoreLead } from '../types/empresa.types';
 
 const perguntasPorDimensao: IPerguntasPorDimensao = {
   pessoas: [
@@ -41,6 +41,76 @@ const perguntasPorDimensao: IPerguntasPorDimensao = {
   ]
 };
 
+const perguntasLead : IPerguntaLead[] = [
+  {
+    id: 'lead1',
+    texto: 'Número de colaboradores',
+    opcoes: ['Até 10', '11 a 30', '31 a 100', '101 a 500', 'Acima de 500'],
+    pontos: [1, 2, 3, 4, 5]
+  },
+  {
+    id: 'lead2',
+    texto: 'Porte da empresa',
+    opcoes: ['Startup', 'PME', 'Grande empresa'],
+    pontos: [2, 3, 5]
+  },
+  {
+    id: 'lead3',
+    texto: 'Investimento Disponível',
+    opcoes: ['Até R$ 10 mil', 'Entre R$ 10 mil e R$ 50 mil', 'Acima de R$ 50 mil'],
+    pontos: [1, 3, 5]
+  },
+  {
+    id: 'lead4',
+    texto: 'Decisor Principal',
+    opcoes: ['CEO / Diretor', 'RH / T&D', 'Marketing / Comunicação', 'Outro'],
+    pontos: [3, 2, 1, 0]
+  },
+  {
+    id: 'lead5',
+    texto: 'De 1 a 5, abertura da empresa para ideias inovadoras em treinamentos:',
+    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
+    pontos: [0, 0, 1, 2, 3]
+  },
+  {
+    id: 'lead6',
+    texto: 'De 1 a 5, importância atribuída a investir em desenvolvimento profissional:',
+    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
+    pontos: [0, 0, 1, 2, 3]
+  },
+  {
+    id: 'lead7',
+    texto: 'De 1 a 5, importância atribuída a desenvolver soft skills (comunicação, liderança, criatividade):',
+    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
+    pontos: [0, 0, 1, 2, 3]
+  },
+  {
+    id: 'lead8',
+    texto: 'De 1 a 5, importância atribuída a incentivar cultura, arte e hobbies:',
+    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
+    pontos: [0, 0, 1, 2, 3]
+  },
+  {
+    id: 'lead9',
+    texto: 'De 1 a 5, importância atribuída a reconhecer impacto do desenvolvimento humano na performance:',
+    opcoes: ['1 - Muito baixa', '2 - Baixa', '3 - Média', '4 - Alta', '5 - Muito alta'],
+    pontos: [0, 0, 1, 2, 3]
+  },
+  {
+    id: 'lead10',
+    texto: 'Projetos inovadores anteriores?',
+    opcoes: ['Sim', 'Não'],
+    pontos: [2, 0]
+  },
+  {
+    id: 'lead11',
+    texto: 'Urgência para implementação',
+    opcoes: ['Imediatamente', 'Até 3 meses', '6 meses ou mais'],
+    pontos: [3, 2, 1]
+  }
+]
+
+
 // funçao compoinent normal (arrow function) sem parametros, só receber < -- ass. vivian
 const Formulario = () => {
   const navigate = useNavigate();
@@ -49,9 +119,77 @@ const Formulario = () => {
   const [perguntas, setPerguntas] = useState<IPergunta[]>([]);
   const [respostas, setRespostas] = useState<IRespostas>({});
   const [respostaAtual, setRespostaAtual] = useState<number | null>(null);
-  const [etapa, setEtapa] = useState<'empresa' | 'selecionar' | 'perguntas' | 'finalizado'>('empresa');
+  // Novos States para o lead
+  const [etapa, setEtapa] = useState<'empresa' | 'selecionar' | 'perguntas' | 'lead' | 'finalizado'>('empresa');
+  const [respostasLead, setRespostasLead] = useState<IRespostasLead>({});
+  const [respostaAtualLead, setRespostaAtualLead] = useState<number | null>(null);
+  const [indiceLeadAtual, setIndiceLeadAtual] = useState<number>(0);
+  const [scoreLead, setScoreLead] = useState<IScoreLead | null>(null);
   const [indiceAtual, setIndiceAtual] = useState<number>(0);
   const [statusEnvio, setStatusEnvio] = useState<string>('');
+
+
+  //Função para Calcular o lead Vai da linha 132 até 179
+
+    const calcularScoreLead = (respostas: IRespostasLead): IScoreLead => {
+    let total = 0;
+    const detalhes: { [key: string]: number } = {};
+
+    // Calcular pontos das perguntas 1-4, 10-11 (individuais)
+    ['lead1', 'lead2', 'lead3', 'lead4', 'lead10', 'lead11'].forEach(id => {
+      if (respostas[id] !== undefined) {
+        const pontos = perguntasLead.find(p => p.id === id)?.pontos[respostas[id]] || 0;
+        detalhes[id] = pontos;
+        total += pontos;
+      }
+    });
+
+    // Calcular média das perguntas de cultura (lead5 a lead9)
+    const perguntasCultura = ['lead5', 'lead6', 'lead7', 'lead8', 'lead9'];
+    let somaCultura = 0;
+    let countCultura = 0;
+
+    perguntasCultura.forEach(id => {
+      if (respostas[id] !== undefined) {
+        const pontos = perguntasLead.find(p => p.id === id)?.pontos[respostas[id]] || 0;
+        detalhes[id] = pontos;
+        somaCultura += pontos;
+        countCultura++;
+      }
+    });
+
+    const mediaCultura = countCultura > 0 ? somaCultura / countCultura : 0;
+    
+    // Aplicar regra da média
+    let pontosMedia = 0;
+    if (mediaCultura >= 3 && mediaCultura < 4) pontosMedia = 1;
+    else if (mediaCultura >= 4 && mediaCultura < 5) pontosMedia = 2;
+    else if (mediaCultura >= 5) pontosMedia = 3;
+
+    total += pontosMedia;
+    detalhes['media_cultura'] = pontosMedia;
+
+    // Classificação final
+    let classificacao: 'frio' | 'morno' | 'quente' = 'frio';
+    if (total >= 19) classificacao = 'quente';
+    else if (total >= 11) classificacao = 'morno';
+
+    return { total, classificacao, detalhes };
+  };
+
+
+
+  /*
+    handleEmpresaChange -- O QUE ELA FAZ? --->  anotar as informações da empresa (CNPJ, nome, email, etc.) à medida que o usuário digita nos campos.
+  O usuário digita uma letra no campo "Nome da Empresa".
+
+  -- > Essa função é chamada imediatamente.
+
+  
+  Ela olha duas coisas: "Em qual campo ele digitou?" (e.target.name, que seria "nome") e "Qual é o texto completo agora?" (e.target.value).
+
+  Ela então pega a "ficha de cadastro" da empresa que está na memória do componente (o useState chamado empresa) e atualiza apenas o campo "nome" com o novo texto.
+  */
 
   const handleEmpresaChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmpresa(prevState => ({ ...prevState, [e.target.name]: e.target.value })); // informações da empresa (CNPJ, nome, email, etc.) à medida que o usuário digita nos campos. <-- ass.vivian
@@ -87,40 +225,77 @@ const Formulario = () => {
     if (indiceAtual + 1 < perguntas.length) {
       setIndiceAtual(indiceAtual + 1);
     } else {
-      setEtapa('finalizado');
+      setEtapa('lead');
     }
   };
+
+  const confirmarRespostaLead = () => {
+    // Verificar se há uma resposta selecionada antes de continuar
+    if (respostaAtualLead === null) return;
+    
+    const pergunta = perguntasLead[indiceLeadAtual];
+    
+    // Garantir que respostaAtualLead é number, não null
+    setRespostasLead({ ...respostasLead, [pergunta.id]: respostaAtualLead });
+    setRespostaAtualLead(null);
+    
+    if (indiceLeadAtual + 1 < perguntasLead.length) {
+      setIndiceLeadAtual(indiceLeadAtual + 1);
+    } else {
+      // CALCULAR SCORE AO TERMINAR
+      const score = calcularScoreLead({ 
+        ...respostasLead, 
+        [pergunta.id]: respostaAtualLead 
+      });
+      setScoreLead(score);
+      setEtapa('finalizado');
+    }
+  };  
 
   const handleSubmitFinal = async () => {
   setStatusEnvio('Enviando...');
 
-  // Nós pegamos o objeto de respostas (ex: { p1: 2, e3: 1 }) e o transformamos
-  // em uma lista, mantendo o NÚMERO da resposta.
-  const respostasFormatadas = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
-    return {
-      pergunta: perguntaId,
-      resposta: respostaIndex // Enviamos o número (1, 2, 3 ou 4) diretamente
+    // Formatando respostas das DIMENSÕES
+    const respostasFormatadas = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
+      return {
+        pergunta: perguntaId,
+        resposta: respostaIndex,
+        tipo: 'dimensao'
+      };
+    });
+
+    // Formatando respostas do LEAD (nova parte)
+    const respostasLeadFormatadas = Object.entries(respostasLead).map(([perguntaId, respostaIndex]) => {
+      const pergunta = perguntasLead.find(p => p.id === perguntaId);
+      const pontos = pergunta?.pontos[respostaIndex] || 0;
+      
+      return {
+        pergunta: perguntaId,
+        resposta: respostaIndex,
+        pontos: pontos,
+        tipo: 'lead'
+      };
+    });
+
+    // Juntando todas as respostas
+    const todasRespostas = [...respostasFormatadas, ...respostasLeadFormatadas];
+
+    const payload = {
+      dadosEmpresa: empresa,
+      dadosQuiz: todasRespostas,
+      scoreLead: scoreLead, // Inclui o score calculado
+      dimensoesSelecionadas: dimensoesSelecionadas
     };
-  });
 
-  
-  const payload = {
-    dadosEmpresa: empresa,
-    dadosQuiz: respostasFormatadas
+    try {
+      const response = await api.post('/diagnostico', payload);
+      const reportId = response.data.reportId;
+      navigate(`/resultado/${reportId}`);
+    } catch (error) {
+      console.error("Erro ao enviar diagnóstico:", error);
+      setStatusEnvio('Ocorreu um erro ao salvar. Tente novamente.');
+    }
   };
-
-  try {
-    const response = await api.post('/diagnostico', payload);
-    const reportId = response.data.reportId;
-    
-  
-    navigate(`/resultado/${reportId}`);
-
-  } catch (error) {
-    console.error("Erro ao enviar diagnóstico:", error);
-    setStatusEnvio('Ocorreu um erro ao salvar. Tente novamente.');
-  }
-};
 
 
   return (
@@ -179,6 +354,28 @@ const Formulario = () => {
           ))}
           <button onClick={confirmarResposta} disabled={respostaAtual === null}>
             Confirmar resposta
+          </button>
+        </div>
+      )}
+
+       {etapa === 'lead' && perguntasLead[indiceLeadAtual] && (
+        <div className="pergunta-bloco">
+          <h3>Perfil da Empresa - Lead Scoring ({indiceLeadAtual + 1}/{perguntasLead.length})</h3>
+          <h4>{perguntasLead[indiceLeadAtual].texto}</h4>
+          {perguntasLead[indiceLeadAtual].opcoes.map((op, idx) => (
+          <label key={idx}>
+            <input
+              type="radio"
+              name={`resposta-lead-${indiceLeadAtual}`}
+              value={idx + 1} // ← MUDAR DE idx PARA idx + 1
+              checked={respostaAtualLead === idx + 1} // ← MUDAR AQUI TAMBÉM
+              onChange={() => setRespostaAtualLead(idx + 1)} // ← E AQUI
+            />
+            {' '} {op}
+          </label>
+        ))}
+          <button onClick={confirmarRespostaLead} disabled={respostaAtualLead === null}>
+            {indiceLeadAtual + 1 === perguntasLead.length ? 'Calcular Score' : 'Próxima Pergunta'}
           </button>
         </div>
       )}
