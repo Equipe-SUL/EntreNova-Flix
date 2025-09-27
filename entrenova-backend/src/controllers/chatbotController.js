@@ -1,5 +1,20 @@
-import { verificarCnpjExistente, salvarRespostaChat } from '../services/supabaseServices.js';
+import { verificarCnpjExistente, salvarRespostaChat, salvarPlanoChat } from '../services/supabaseServices.js';
 
+export const salvarPlano = async (req, res) => {
+  try {
+    const { cnpj, plano } = req.body;
+
+    if (!cnpj || !plano) {
+      return res.status(400).json({ erro: 'CNPJ e plano são obrigatórios.' });
+    }
+
+    await salvarPlanoChat({ cnpj, plano });
+    res.status(201).json({ mensagem: 'Plano salvo com sucesso!' });
+
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
+};
 
 export const validarCnpj = async (req, res) => {
   try {
@@ -20,8 +35,6 @@ export const validarCnpj = async (req, res) => {
 
 // Função para o endpoint /salvar-resposta (com logs de depuração)
 export const salvarResposta = async (req, res) => {
-
-  
   try {
     const { cnpj, pergunta, resposta } = req.body;
 
@@ -32,7 +45,7 @@ export const salvarResposta = async (req, res) => {
 
     console.log("--> Dados validados. Tentando salvar no banco...");
     await salvarRespostaChat({
-      cnpj: cnpj,
+      cnpj,
       pergunta,
       resposta
     });

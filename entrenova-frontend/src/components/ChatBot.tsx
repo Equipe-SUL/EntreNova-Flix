@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import "../styles/Chatbot.css";
 import IrisAvatar from "../assets/Iris.jpg";
-import { validarCNPJ, salvarResposta } from "../services/api";
+import { validarCNPJ, salvarResposta , salvarPlano} from "../services/api";
 import { Message } from '../types/message';
 
 const mensagensIniciais = [
@@ -40,8 +40,8 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [inputDisabled, setInputDisabled] = useState(false);
   const [etapa, setEtapa] = useState<
-    "iniciais" | "nome" | "cnpj" | "confirmar" | "perguntas" | "confirmarResposta" | "fim"
-  >("iniciais");
+  "iniciais" | "nome" | "cnpj" | "confirmar" | "perguntas" | "confirmarResposta" | "plano" | "fim"
+>("iniciais");
   const [perguntaIndex, setPerguntaIndex] = useState(0);
   const [respostaTemp, setRespostaTemp] = useState("");
   const [respostaCNPJ, setRespostaCNPJ] = useState("");
@@ -127,8 +127,8 @@ export default function ChatBot() {
             setEtapa("perguntas");
           } else {
             // Se acabaram as perguntas, finaliza a conversa
-            await addBotMessage(mensagemFinal(nome));
-            setEtapa("fim");
+            await addBotMessage("Para finalizarmos, qual plano você prefere contratar?", 500, ["Básico", "Premium"]);
+            setEtapa("plano");
           }
         } catch {
           // Se deu erro ao salvar, exibe a mensagem de erro
@@ -139,6 +139,18 @@ export default function ChatBot() {
         setEtapa("perguntas");
       }
     }
+else if (etapa === "plano") {
+  try {
+    console.log("vai enviar plano:", opcao, "para o CNPJ:", respostaCNPJ); // debug
+    await salvarPlano(respostaCNPJ, opcao); // função do api.ts
+    console.log("plano enviado para o backend"); // debug
+    await addBotMessage(mensagemFinal(nome));
+    setEtapa("fim");
+  } catch (error) {
+    console.error("erro ao salvar plano:", error);
+    await addBotMessage("Erro ao salvar plano. Tente novamente.");
+  }
+}
   };
 
   const sendMessage = async () => {

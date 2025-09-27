@@ -20,6 +20,21 @@ const buscarConteudos = async () => {
 };
 
 /**
+ * Salva o plano escolhido (básico ou premium) na tabela 'relatorios'
+ */
+const salvarPlanoChat = async ({ cnpj, plano }) => {
+  const { error } = await supabase
+    .from('relatorios')
+    .update({ plano })
+    .eq('cnpj_empresa', cnpj); // tem que existir um registro com esse CNPJ
+
+  if (error) {
+    throw new Error("Não foi possível salvar o plano");
+  }
+  return { success: true };
+};
+
+/**
  * Verifica se um CNPJ já existe na base de dados
  */
 const verificarCnpjExistente = async (cnpj) => {
@@ -249,5 +264,6 @@ export {
   buscarRelatorioPorId,
   verificarCnpjExistente,
   salvarRespostaChat,
-  buscarConteudos
+  buscarConteudos,
+  salvarPlanoChat
 };

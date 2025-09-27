@@ -265,13 +265,7 @@ const Formulario = () => {
       return { pergunta: perguntaId, resposta: respostaIndex, tipo: 'dimensao' };
     });
 
-    const respostasLeadFormatadas = Object.entries(respostasLead).map(([perguntaId, respostaIndex]) => {
-      const pergunta = perguntasLead.find(p => p.id === perguntaId);
-      const pontos = pergunta?.pontos[respostaIndex] || 0;
-      return { pergunta: perguntaId, resposta: respostaIndex, pontos, tipo: 'lead' };
-    });
-
-    const todasRespostas = [...respostasFormatadas, ...respostasLeadFormatadas];
+    const todasRespostas = [...respostasFormatadas];
 
     const payload = {
       dadosEmpresa: empresa,

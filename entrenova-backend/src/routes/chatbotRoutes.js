@@ -1,5 +1,5 @@
 import express from 'express';
-import { validarCnpj, salvarResposta } from '../controllers/chatbotController.js';
+import { validarCnpj, salvarResposta, salvarPlano } from '../controllers/chatbotController.js';
 
 const router = express.Router();
 
@@ -8,5 +8,7 @@ router.post('/validar-cnpj', validarCnpj);
 
 // Rota para salvar uma resposta do questionário
 router.post('/salvar-resposta', salvarResposta);
+
+router.post('/salvar-plano', salvarPlano);
 
 export default router;
