@@ -9,6 +9,27 @@ import { perguntasLead } from '../data/quizdata.js';
  * salva o registro principal na 'relatorios' (com texto consolidado) 
  * e os detalhes estruturados na 'analises_ia'.
  */
+
+
+/**
+ * Busca todos os conteúdos (trilhas) disponíveis na tabela 'conteudos'.
+ */
+const buscarConteudos = async () => {
+  console.log('Buscando todos os conteúdos para recomendação...');
+  const { data, error } = await supabase
+    .from('conteudos')
+    .select('modelo, categoria, descricao'); // Selecionando os campos que a IA precisa
+
+  if (error) {
+    console.error('Erro ao buscar conteúdos:', error);
+    // Retorna um array vazio em caso de erro para não quebrar o fluxo principal
+    return [];
+  }
+
+  return data;
+};
+// -------------------------
+
 const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead) => { 
     // Passo A: Salvar na tabela 'empresas'
     const { error: errorEmpresa } = await supabase
@@ -44,6 +65,8 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead) => 
 
     // Passo B-2: Formatar e salvar na tabela 'respostas' (Lead Scoring)
     const respostasLead = dadosQuiz.filter(item => item.tipo === 'lead');
+
+
     
     // CORREÇÃO: Variável declarada aqui para garantir escopo global no bloco B-2/C
     let respostasLeadParaInserir = []; 
@@ -86,7 +109,8 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead) => 
     if (!analiseIA) {
         throw new Error('Falha ao gerar a análise da IA.');
     }
-    
+  
+  
     // --- Geração do Texto Consolidado para relatorio1 ---
     const textoConsolidadoRelatorio1 = `
         **Principal Desafio:** ${analiseIA.maiorProblema}
@@ -126,7 +150,9 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead) => 
             maior_problema: analiseIA.maiorProblema,
             sugestoes: JSON.stringify(analiseIA.sugestoes),
             tom_analise: analiseIA.tom,
-            emocoes: JSON.stringify(analiseIA.emocoes)
+            emocoes: JSON.stringify(analiseIA.emocoes),
+             trilhas_recomendadas: JSON.stringify
+          (analiseIA.trilhasRecomendadas)
         }]);
 
     if (errorAnalise) {
@@ -138,11 +164,6 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead) => 
     return { success: true, reportId: relatorioData.id };
 };
 
-
-/**
- * Busca um relatório (tabela 'relatorios') e os detalhes da análise (tabela 'analises_ia') por ID.
- * Retorna apenas os campos necessários para o frontend (omite tom e emoções).
- */
 const buscarRelatorioPorId = async (id) => {
     const { data, error } = await supabase
         .from('relatorios')
@@ -162,6 +183,12 @@ const buscarRelatorioPorId = async (id) => {
     if (analise.sugestoes && typeof analise.sugestoes === 'string') {
         sugestoesArray = JSON.parse(analise.sugestoes);
     }
+  
+    //Converte as trilhas djson pra array
+    let trilhasArray = [];
+    if (analise.trilhas_recomendadas && typeof analise.trilhas_recomendadas === 'string') {
+      trilhasArray = JSON.parse(analise.trilhas_recomendadas);
+    }
 
     // Mapeia e consolida os dados para o formato esperado pelo frontend (IRelatorio)
     const formattedData = {
@@ -169,15 +196,49 @@ const buscarRelatorioPorId = async (id) => {
         resumo_ia: analise.resumo,
         maior_problema: analise.maior_problema,
         sugestoes: sugestoesArray,
+        trilhasRecomendadas: trilhasArray
         // *** TOM_ANALISE e EMOCOES_IDENTIFICADAS FORAM OMITIDOS DO OBJETO DE RETORNO ***
         // Isso cumpre o requisito de não enviar esses dados ao frontend.
     };
 
     return formattedData;
+
 };
 
-// Exporta as funções
+const verificarCnpjExistente = async (cnpj) => {
+  const { data, error } = await supabase
+    .from('empresas')
+    .select('cnpj')
+    .eq('cnpj', cnpj)
+    .single();
+
+  return !error && data != null;
+};
+
+
+// função de salvar as respostas da iris <-- ass.vivian 
+const salvarRespostaChat = async (dados) => {
+  const { pergunta, resposta, cnpj } = dados;
+
+  const { error } = await supabase
+    .from('chat_iris')
+    .insert([{
+      mensagem_recebida: pergunta,
+      mensagem_enviada: resposta,
+      cnpj_empresa: cnpj
+    }]);
+
+  if (error) {
+    console.error('Erro ao salvar resposta do chat:', error);
+    throw new Error('Não foi possível salvar a resposta do chat.');
+  }
+  return { success: true };
+};
+
+// BLOCO ÚNICO DE EXPORTAÇÃO NO FINAL DO ARQUIVO
 export {
-    salvarDiagnosticoCompleto,
-    buscarRelatorioPorId
+  salvarDiagnosticoCompleto,
+  buscarRelatorioPorId,
+  verificarCnpjExistente,
+  salvarRespostaChat
 };

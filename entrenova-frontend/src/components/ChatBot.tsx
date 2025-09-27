@@ -32,11 +32,7 @@ const mensagemFinal = (nome: string) =>
 Se tiver qualquer dúvida ou precisar de mais informações, você pode entrar em contato conosco pelo e-mail: entrenovaflix@gmail.com.
 
 (Seus dados estão seguros e usados apenas para essa análise)`;
-//-tireamos type message daq
 
-
-
-//=---------------
 let iniciaisJaEnviadas = false;
 
 export default function ChatBot() {
@@ -46,7 +42,6 @@ export default function ChatBot() {
   const [etapa, setEtapa] = useState<
     "iniciais" | "nome" | "cnpj" | "confirmar" | "perguntas" | "confirmarResposta" | "fim"
   >("iniciais");
-  const [empresaId, setEmpresaId] = useState<number | null>(null);
   const [perguntaIndex, setPerguntaIndex] = useState(0);
   const [respostaTemp, setRespostaTemp] = useState("");
   const [respostaCNPJ, setRespostaCNPJ] = useState("");
@@ -103,7 +98,6 @@ export default function ChatBot() {
         try {
           const { data } = await validarCNPJ(respostaCNPJ);
           if (data.valido) {
-            setEmpresaId(data.empresaId);
             await addBotMessage("CNPJ válido! Vamos começar o questionário.");
             await addBotMessage(perguntas[0]);
             setEtapa("perguntas");
@@ -118,22 +112,29 @@ export default function ChatBot() {
         await addBotMessage("Digite o CNPJ novamente.");
         setEtapa("cnpj");
       }
-    } else if (etapa === "confirmarResposta" && empresaId !== null) {
+    } else if (etapa === "confirmarResposta") {
       if (opcao === "Correto") {
         try {
-          await salvarResposta(empresaId, perguntas[perguntaIndex], respostaTemp);
+          // 1. Tenta salvar a resposta no banco
+          await salvarResposta(respostaCNPJ, perguntas[perguntaIndex], respostaTemp);
+
+          // 2. Se salvou com sucesso, verifica se há mais perguntas
           if (perguntaIndex + 1 < perguntas.length) {
-            setPerguntaIndex(perguntaIndex + 1);
-            await addBotMessage(perguntas[perguntaIndex + 1]);
+            // Se ainda há perguntas, avança para a próxima
+            const proximoIndex = perguntaIndex + 1;
+            setPerguntaIndex(proximoIndex);
+            await addBotMessage(perguntas[proximoIndex]);
             setEtapa("perguntas");
           } else {
+            // Se acabaram as perguntas, finaliza a conversa
             await addBotMessage(mensagemFinal(nome));
             setEtapa("fim");
           }
         } catch {
+          // Se deu erro ao salvar, exibe a mensagem de erro
           await addBotMessage("Erro ao salvar resposta. Tente novamente.");
         }
-      } else {
+      } else { // Este 'else' é para o caso de o usuário clicar em "Editar"
         await addBotMessage(perguntas[perguntaIndex]);
         setEtapa("perguntas");
       }
@@ -159,7 +160,7 @@ export default function ChatBot() {
       setRespostaCNPJ(msg);
       await addBotMessage(`Você digitou o CNPJ: ${msg}. Está correto?`, 500, ["Sim", "Não"]);
       setEtapa("confirmar");
-    } else if (etapa === "perguntas" && empresaId !== null) {
+    } else if (etapa === "perguntas") {
       setRespostaTemp(msg);
       await addBotMessage(
         `Sua resposta foi: "${msg}". Está correto ou deseja editar?`,
