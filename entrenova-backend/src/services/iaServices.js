@@ -28,7 +28,8 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     
     O feedback é baseado em respostas de questionário sobre gestão empresarial:
     ${feedbackFormatado}
-    Quero que na resposta nao imprima d1, e1, nada desse tipo, só a resposta
+    
+    Quero que na resposta nao imprima d1, e1, nada desse tipo, só a resposta.
     
     Com base na sua análise, execute as seguintes tarefas:
     1. Identifique o maior problema da empresa (descreva em 20 palavras ou menos).
@@ -36,6 +37,7 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     3. Classifique o tom do feedback (positivo, negativo ou neutro).
     4. Liste até 3 emoções que o cliente pode estar sentindo.
     5. Forneça um resumo claro e conciso do feedback (até 40 palavras).
+    6. Gere um "relatorioCompleto", detalhado e estruturado, expandindo todas as informações acima.
     
     Formate a resposta EXATAMENTE em JSON com a seguinte estrutura, sem nenhum texto adicional antes ou depois do JSON:
     {
@@ -43,9 +45,39 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
       "sugestoes": ["string", "string", "string"],
       "tom": "positivo|negativo|neutro",
       "emocoes": ["string", "string", "string"],
-      "resumo": "string"
+      "resumo": "string",
+      "relatorioCompleto": "string"
     }
   `;
+
+  try {
+    const result = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 600, // aumentando para suportar relatorioCompleto
+    });
+
+    console.log("Tokens prompt:", result.usage.prompt_tokens);
+    console.log("Tokens resposta:", result.usage.completion_tokens);
+    console.log("Tokens total:", result.usage.total_tokens);
+
+    const text = result.choices[0].message.content;
+    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    return JSON.parse(jsonText);
+
+  } catch (error) {
+    console.error("Erro ao gerar conteúdo com a IA:", error);
+    return {
+      maiorProblema: "Não foi possível analisar as respostas",
+      sugestoes: ["Verificar a conexão com a IA", "Revisar as respostas fornecidas", "Tentar novamente mais tarde"],
+      tom: "neutro",
+      emocoes: ["neutro"],
+      resumo: "Análise não disponível no momento",
+      relatorioCompleto: "Relatório completo não disponível no momento"
+    };
+  }
+}
+
 
   try {
     const result = await client.chat.completions.create({
@@ -72,7 +104,6 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
       resumo: "Análise não disponível no momento"
     };
   }
-}
 
 /**
  * Gera novo relatório 2 e resumo 2 diretamente baseado nas respostas do chatbot.

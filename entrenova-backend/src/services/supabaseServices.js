@@ -166,7 +166,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
   const dadosRelatorio = {
     cnpj_empresa: dadosEmpresa.cnpj,
     resumo1: analiseIA.resumo,
-    relatorio1: textoConsolidadoRelatorio1,
+    relatorio1: analiseIA.relatorioCompleto,
   };
 
   // Adicionar classificação de lead se disponível
