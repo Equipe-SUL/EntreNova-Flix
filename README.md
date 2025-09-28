@@ -3,7 +3,7 @@
 # Entrenova Flix
 
 <p align="center">
-      <img src="documentação/logosul.png alt="logo da Equipe Sul" width="200">
+      <img src="documentação/logosul.png" alt="logo da Equipe Sul" width="200">
       <h2 align="center"> Equipe Sul</h2>
 </p>
 
