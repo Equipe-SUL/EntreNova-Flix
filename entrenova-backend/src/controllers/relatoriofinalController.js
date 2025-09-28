@@ -1,10 +1,8 @@
-import { 
-  buscarConversaPorCnpj, 
-  buscarRelatorioPorCnpj, 
-  atualizarRelatorio, 
-  buscarConteudos 
-} from "../services/supabaseServices.js";
-import { gerarNovoRelatorio, gerarTrilhaConteudos } from "../services/iaServices.js";
+import { buscarConversaPorCnpj, buscarRelatorioPorCnpj, atualizarRelatorio, buscarConteudos } from "../services/supabaseServices.js";
+import { gerarNovoRelatorio } from "../services/iaServices.js";
+import { enviarEmailRelatorio2 } from "../services/emailServices.js";
+
+
 
 /**
  * Controller para gerar e salvar relatório 2, resumo2 e trilha
@@ -117,6 +115,15 @@ if (conteudosDisponiveis.length > 0) {
       trilha: textoTrilha,
     });
     console.log("✅ Relatórios salvos no banco");
+
+    await enviarEmailRelatorio2(
+      { nome: "Empresa " + cnpj, cnpj }, 
+      textoRelatorio2, 
+      resumo2, 
+      chatData.map(c => ({ remetente: "Cliente", mensagem: c.mensagem_recebida }))
+        .concat(chatData.map(c => ({ remetente: "Iris", mensagem: c.mensagem_enviada }))),
+      trilha
+    );
 
     // 🔟 Retornar dados para frontend
     res.json({

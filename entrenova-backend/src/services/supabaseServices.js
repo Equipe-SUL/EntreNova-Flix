@@ -1,7 +1,7 @@
 import supabase from '../config/supabase.js';
 import { analisarRespostasComIA } from './iaServices.js';
-import { gerarNovoRelatorio } from './iaServices.js';
 import { perguntasLead } from '../data/quizdata.js';
+import { enviarEmailDiagnostico } from './emailServices.js';
 
 /**
  * Busca todos os conteúdos (trilhas) disponíveis na tabela 'conteudos'.
@@ -185,6 +185,16 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
     console.error('Erro ao criar registro do relatório:', errorRelatorio);
     throw new Error('Falha ao gerar o registro do relatório.');
   }
+
+    const relatorioCompletoParaEmail = {
+  relatorio1: textoConsolidadoRelatorio1,  // ✅ relatório completo
+  resumo_ia: analiseIA.resumo,
+  maior_problema: analiseIA.maiorProblema,
+  sugestoes: analiseIA.sugestoes,
+  lead: scoreLead?.classificacao || null   // ✅ lead se existir
+};
+
+  await enviarEmailDiagnostico(dadosEmpresa, relatorioCompletoParaEmail);
 
   // D.2: Salvar os detalhes estruturados na tabela 'analises_ia'
   const dadosAnaliseIA = {

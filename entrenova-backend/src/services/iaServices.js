@@ -28,6 +28,7 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     
     O feedback é baseado em respostas de questionário sobre gestão empresarial:
     ${feedbackFormatado}
+    Quero que na resposta nao imprima d1, e1, nada desse tipo, só a resposta
     
     Com base na sua análise, execute as seguintes tarefas:
     1. Identifique o maior problema da empresa (descreva em 20 palavras ou menos).
