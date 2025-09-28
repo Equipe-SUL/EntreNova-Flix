@@ -59,6 +59,10 @@ export const enviarEmailDiagnostico = async (dadosEmpresa, relatorio) => {
 
 export const enviarEmailRelatorio2 = async (dadosEmpresa, relatorio2, resumo2, conversaIris, trilhaFormada) => {
   try {
+    // filtra perguntas e respostas separadamente
+    const perguntas = conversaIris.filter((_, i) => i % 2 === 0);
+    const respostas = conversaIris.filter((_, i) => i % 2 !== 0);
+
     const emailBody = `
       <h2>Relatório 2</h2>
       <p><strong>CNPJ:</strong> ${dadosEmpresa.cnpj}</p>
@@ -73,10 +77,45 @@ export const enviarEmailRelatorio2 = async (dadosEmpresa, relatorio2, resumo2, c
 
       <hr>
 
-      <h3>Conversa com a Iris:</h3>
-      ${conversaIris
-        .map((msg, i) => `<p><strong>${i % 2 === 0 ? 'Pergunta' : 'Resposta'}:</strong> ${msg.mensagem}</p>`)
-        .join('')}
+      <h3>Perguntas:</h3>
+      <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr style="background-color:#f2f2f2;">
+            <th>#</th>
+            <th>Pergunta</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${perguntas
+            .map((msg, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${msg.mensagem}</td>
+              </tr>
+            `)
+            .join('')}
+        </tbody>
+      </table>
+
+      <h3>Respostas:</h3>
+      <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr style="background-color:#f2f2f2;">
+            <th>#</th>
+            <th>Resposta</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${respostas
+            .map((msg, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${msg.mensagem}</td>
+              </tr>
+            `)
+            .join('')}
+        </tbody>
+      </table>
 
       <hr>
 

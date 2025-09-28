@@ -1,15 +1,15 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import dotenv from 'dotenv';
+import OpenAI from "openai";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+// Configuração do cliente OpenAI
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 /**
- * @param {object} dadosEmpresa - Objeto com os dados da empresa (nome, cnpj, etc).
- * @param {Array<object>} dadosQuiz - Array com as respostas do quiz.
- * @returns {Promise<object|null>} - O objeto JSON com a análise da IA, ou null em caso de erro.
+ * @param {object} dadosEmpresa
+ * @param {Array<object>} dadosQuiz
+ * @returns {Promise<object|null>}
  */
 export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
   if (!dadosQuiz || dadosQuiz.length === 0) {
@@ -48,17 +48,18 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
   `;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const result = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 300,
+    });
+
+    const text = result.choices[0].message.content;
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    const resultado = JSON.parse(jsonText);
-    
-    return resultado;
+    return JSON.parse(jsonText);
 
   } catch (error) {
     console.error("Erro ao gerar conteúdo com a IA:", error);
-    
     return {
       maiorProblema: "Não foi possível analisar as respostas",
       sugestoes: ["Verificar a conexão com a IA", "Revisar as respostas fornecidas", "Tentar novamente mais tarde"],
@@ -72,7 +73,6 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
 /**
  * Gera novo relatório 2 e resumo 2 diretamente baseado nas respostas do chatbot.
  */
-
 export async function gerarNovoRelatorio(dadosEmpresa, dadosQuiz, plano, preferenciaConteudo) {
   const respostasFormatadas = dadosQuiz
     .map((q, i) => `${i + 1}. Pergunta: ${q.pergunta}\n   Resposta: ${q.resposta}`)
@@ -95,9 +95,13 @@ export async function gerarNovoRelatorio(dadosEmpresa, dadosQuiz, plano, prefere
   `;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const result = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 350,
+    });
+
+    const text = result.choices[0].message.content;
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     const relatorioIA = JSON.parse(jsonText);
 
@@ -110,13 +114,9 @@ export async function gerarNovoRelatorio(dadosEmpresa, dadosQuiz, plano, prefere
 
   } catch (error) {
     console.error("Erro ao gerar novo relatório com IA:", error);
-
-    const fallbackRelatorio = respostasFormatadas;
-    const fallbackResumo = "Resumo não disponível";
-
     return {
-      relatorio2: fallbackRelatorio,
-      resumo2: fallbackResumo,
+      relatorio2: respostasFormatadas,
+      resumo2: "Resumo não disponível",
       plano,
       preferenciaConteudo
     };
@@ -138,20 +138,16 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
     throw new Error("Preferência de conteúdo não definida");
   }
 
-  // Filtrar conteúdos preferidos
   const preferidos = conteudosDisponiveis.filter(
     c => c.modelo && c.modelo.toLowerCase() === preferenciaConteudo.toLowerCase()
   );
 
-  // Garantir mínimo 2 e máximo 3 preferidos
   const qtdPreferidos = Math.min(Math.max(2, preferidos.length), 3);
   const selecionadosPreferidos = preferidos.slice(0, qtdPreferidos);
 
-  // Selecionar o restante aleatoriamente sem repetir conteúdos já escolhidos
   const restantes = qtdConteudos - selecionadosPreferidos.length;
   const selecionadosDiversos = [];
 
-  // Disponíveis para sorteio, excluindo preferidos já selecionados
   let disponiveisParaAleatorio = conteudosDisponiveis.filter(
     c => !selecionadosPreferidos.includes(c)
   );
@@ -160,7 +156,6 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
     const index = Math.floor(Math.random() * disponiveisParaAleatorio.length);
     const aleatorio = disponiveisParaAleatorio.splice(index, 1)[0];
 
-    // Contar quantos preferidos já estão na trilha final
     const totalPreferidosSelecionados = [...selecionadosPreferidos, ...selecionadosDiversos]
       .filter(c => c.modelo && c.modelo.toLowerCase() === preferenciaConteudo.toLowerCase())
       .length;
@@ -172,17 +167,14 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
     selecionadosDiversos.push(aleatorio);
   }
 
-  // Montar trilha final e embaralhar
   let trilhaFinal = [...selecionadosPreferidos, ...selecionadosDiversos];
   trilhaFinal = trilhaFinal.sort(() => 0.5 - Math.random());
 
-  // **Agora garantimos que a trilha final usa títulos e modelos exatamente do banco**
   const trilhaFinalFormatada = trilhaFinal.map(c => ({
-  titulo: c.descricao,
-  modelo: c.modelo
-}));
+    titulo: c.descricao,
+    modelo: c.modelo
+  }));
 
-  // Ainda deixo a parte da IA opcional (se quiser usar para analisar relevância, mas não altera título/modelo)
   const prompt = `
     Você é um especialista em desenvolvimento de pessoas e treinamento corporativo.
     Baseado nos seguintes relatórios:
@@ -200,13 +192,16 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
   `;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const result = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 300,
+    });
+
+    const text = result.choices[0].message.content;
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     const trilhaIA = JSON.parse(jsonText);
 
-    // Se IA gerar corretamente, pode usar, mas limitando apenas à quantidade e mantendo títulos/modelos do banco
     if (trilhaIA.length === qtdConteudos) {
       return trilhaIA.map((item, i) => ({
         titulo: trilhaFinalFormatada[i].titulo,
@@ -214,7 +209,6 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
       }));
     }
 
-    // Fallback: usar sempre os dados do banco
     return trilhaFinalFormatada;
 
   } catch (error) {
@@ -222,4 +216,3 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
     return trilhaFinalFormatada;
   }
 }
-
