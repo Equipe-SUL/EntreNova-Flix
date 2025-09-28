@@ -69,9 +69,9 @@ const ResultadoPage = () => {
           </div>
 
           <div className="relatorio-secao">
-            <strong>Principal Desafio Identificado:</strong>
-            <p>{relatorio.maior_problema}</p>
-          </div>
+            <strong>Relatório Completo:</strong>
+            <p>{relatorio.relatorioCompleto}</p>
+         </div>
 
           <div className="relatorio-secao">
             <strong>Sugestões Práticas:</strong>

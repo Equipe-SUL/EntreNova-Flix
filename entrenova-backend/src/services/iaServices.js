@@ -36,6 +36,7 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     3. Classifique o tom do feedback (positivo, negativo ou neutro).
     4. Liste até 3 emoções que o cliente pode estar sentindo.
     5. Forneça um resumo claro e conciso do feedback (até 40 palavras).
+    6. Gere um "relatorioCompleto", detalhado e estruturado, expandindo todas as informações acima.
     
     Formate a resposta EXATAMENTE em JSON com a seguinte estrutura, sem nenhum texto adicional antes ou depois do JSON:
     {
@@ -44,6 +45,7 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
       "tom": "positivo|negativo|neutro",
       "emocoes": ["string", "string", "string"],
       "resumo": "string"
+      "relatorioCompleto": "string"
     }
   `;
 
