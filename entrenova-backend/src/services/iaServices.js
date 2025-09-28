@@ -17,13 +17,11 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     return null;
   }
 
-  // Formata o feedback a partir dos dados recebidos
   let feedbackFormatado = '';
   dadosQuiz.forEach(item => {
     feedbackFormatado += `\n- ${item.pergunta}: ${item.resposta}`;
   });
 
-  // Monta o prompt **sem trilhas**
   const prompt = `
     Analise o seguinte feedback de um cliente de forma detalhada e estruturada.
     O cliente representa a empresa: ${dadosEmpresa.nome}.
@@ -52,10 +50,7 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-
-    // Limpa o texto para garantir que ele é um JSON válido
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
     const resultado = JSON.parse(jsonText);
     
     return resultado;
@@ -70,5 +65,101 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
       emocoes: ["neutro"],
       resumo: "Análise não disponível no momento"
     };
+  }
+}
+
+/**
+ * Gera novo relatório 2 e resumo 2 diretamente baseado nas respostas do chatbot.
+ */
+
+export async function gerarNovoRelatorio(dadosEmpresa, dadosQuiz, plano, preferenciaConteudo) {
+  const respostasFormatadas = dadosQuiz
+    .map((q, i) => `${i + 1}. Pergunta: ${q.pergunta}\n   Resposta: ${q.resposta}`)
+    .join("\n\n");
+
+  const prompt = `
+    Você é um especialista em análise de feedbacks de clientes.
+    Baseado nas respostas do cliente da empresa ${dadosEmpresa.nome}, gere:
+    1. Um Relatório 2: texto resumido, mas completo, consolidando todas as respostas do quiz.
+    2. Um Resumo 2: versão ainda mais curta do relatório, destacando os pontos principais.
+
+    Respostas do cliente:
+    ${respostasFormatadas}
+
+    Formate a saída EXATAMENTE como JSON:
+    {
+      "relatorio2": "texto completo consolidado",
+      "resumo2": "resumo curto do relatório"
+    }
+  `;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    const relatorioIA = JSON.parse(jsonText);
+
+    return {
+      relatorio2: relatorioIA.relatorio2,
+      resumo2: relatorioIA.resumo2,
+      plano,
+      preferenciaConteudo
+    };
+
+  } catch (error) {
+    console.error("Erro ao gerar novo relatório com IA:", error);
+
+    const fallbackRelatorio = respostasFormatadas;
+    const fallbackResumo = "Resumo não disponível";
+
+    return {
+      relatorio2: fallbackRelatorio,
+      resumo2: fallbackResumo,
+      plano,
+      preferenciaConteudo
+    };
+  }
+}
+
+/**
+ * Gera trilha de conteúdos baseada nos relatórios e nos conteúdos disponíveis.
+ */
+export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis) {
+  const { relatorio1, relatorio2, qtdConteudos, preferenciaConteudo } = dadosRelatorios;
+
+  if (!conteudosDisponiveis || conteudosDisponiveis.length === 0) {
+    console.error("Nenhum conteúdo disponível para gerar trilha.");
+    return [];
+  }
+
+  const prompt = `
+    Você é um especialista em desenvolvimento de pessoas e treinamento corporativo.
+    Baseado nos seguintes relatórios:
+    - Relatório 1: ${JSON.stringify(relatorio1)}
+    - Relatório 2: ${JSON.stringify(relatorio2)}
+
+    Crie uma trilha de aprendizagem com ${qtdConteudos} conteúdos,
+    priorizando o formato preferido pelo usuário: ${preferenciaConteudo}.
+    Use os conteúdos disponíveis fornecidos e escolha os mais relevantes.
+
+    Formate a resposta EXATAMENTE em JSON como:
+    [
+      { "titulo": "string", "tipo": "vídeo|podcast|curso|artigo", "link": "string" },
+      ...
+    ]
+  `;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    const trilha = JSON.parse(jsonText);
+    return trilha;
+
+  } catch (error) {
+    console.error("Erro ao gerar trilha de conteúdos com a IA:", error);
+    return [];
   }
 }

@@ -1,5 +1,6 @@
 import supabase from '../config/supabase.js';
 import { analisarRespostasComIA } from './iaServices.js';
+import { gerarNovoRelatorio } from './iaServices.js';
 import { perguntasLead } from '../data/quizdata.js';
 
 /**
@@ -143,7 +144,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
   const conteudosDisponiveis = await buscarConteudos();
   
   console.log('Iniciando análise com a IA...');
-  const analiseIA = await analisarRespostasComIA(dadosEmpresa, dadosQuiz, conteudosDisponiveis);
+  const analiseIA = await analisarRespostasComIA(dadosEmpresa, dadosQuiz);
 
   if (!analiseIA) {
     throw new Error('Falha ao gerar a análise da IA.');
@@ -195,7 +196,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
     emocoes: JSON.stringify(analiseIA.emocoes)
   };
 
-  // Adicionar trilhas recomendadas se disponíveis (nao utilizado mais)
+  // Adicionar trilhas recomendadas se disponíveis (nao utilizado mais )
   //if (analiseIA.trilhasRecomendadas) {
   //  dadosAnaliseIA.trilhas_recomendadas = JSON.stringify(analiseIA.trilhasRecomendadas);
  // }
@@ -258,6 +259,41 @@ const buscarRelatorioPorId = async (id) => {
   return formattedData;
 };
 
+const atualizarRelatorio = async (cnpj, dados) => {
+  const { error } = await supabase
+    .from('relatorios')
+    .update(dados)
+    .eq('cnpj_empresa', cnpj);
+
+  if (error) {
+    console.error("Erro ao atualizar relatório:", error);
+    throw new Error("Falha ao salvar relatório no banco de dados.");
+  }
+
+  return { success: true };
+};
+
+
+const buscarConversaPorCnpj = async (cnpj) => {
+  const { data, error } = await supabase
+    .from('chat_iris')
+    .select('*')
+    .eq('cnpj_empresa', cnpj);
+  if (error) throw new Error('Erro ao buscar conversa');
+  return data;
+};
+
+const buscarRelatorioPorCnpj = async (cnpj) => {
+  const { data, error } = await supabase
+    .from('relatorios')
+    .select('*')
+    .eq('cnpj_empresa', cnpj)
+    .single();
+  if (error) throw new Error('Erro ao buscar relatório');
+  return data;
+};
+
+
 // Exporta todas as funções
 export {
   salvarDiagnosticoCompleto,
@@ -265,5 +301,8 @@ export {
   verificarCnpjExistente,
   salvarRespostaChat,
   buscarConteudos,
-  salvarPlanoChat
+  salvarPlanoChat,
+  atualizarRelatorio,
+  buscarConversaPorCnpj,
+  buscarRelatorioPorCnpj
 };

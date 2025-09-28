@@ -20,4 +20,8 @@ export const salvarResposta = (cnpj: string, pergunta: string, resposta: string)
 export const salvarPlano = (cnpj: string, plano: string) =>
   api.post('/salvar-plano', { cnpj, plano });
 
+// 🔹 nova função para gerar relatório completo após o chatbot
+export const gerarRelatorioTotal = (cnpj: string) =>
+  api.post('/relatoriofinal/gerar-relatorio-total', { cnpj });
+
 export default api;
