@@ -11,10 +11,17 @@ const api = axios.create({
 });
 
 
-///Funcções que o moreira deixou em services para exportar para o ChatBot.tsx
+///Funções que o moreira deixou em services para exportar para o ChatBot.tsx
 export const validarCNPJ = (cnpj: string) => api.post('/validar-cnpj', { cnpj });
-export const salvarResposta = (empresaId: number, pergunta: string, resposta: string) =>
-  api.post('/salvar-resposta', { empresaId, pergunta, resposta });
+export const salvarResposta = (cnpj: string, pergunta: string, resposta: string) =>
+  api.post('/salvar-resposta', { cnpj, pergunta, resposta });
 
+// 🔹 nova função para salvar o plano
+export const salvarPlano = (cnpj: string, plano: string) =>
+  api.post('/salvar-plano', { cnpj, plano });
+
+// 🔹 nova função para gerar relatório completo após o chatbot
+export const gerarRelatorioTotal = (cnpj: string) =>
+  api.post('/relatoriofinal/gerar-relatorio-total', { cnpj });
 
 export default api;

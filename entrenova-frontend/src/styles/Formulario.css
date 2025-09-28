@@ -180,3 +180,38 @@ button:disabled {
     transform: translateX(0);
   }
 }
+
+/* Dimensão atual */
+.dimensao-atual {
+  font-size: 1.25rem;       /* um pouco menor que o h1/h2 */
+  font-weight: 700;
+  color: #4a00e0;           /* roxo para combinar com os botões */
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-left: 4px solid #4a00e0;
+  padding-left: 10px;
+  background-color: #f0f0ff; /* leve destaque */
+  border-radius: 6px;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+/* Pequenas telas */
+@media (max-width: 768px) {
+  .dimensao-atual {
+    font-size: 1rem;
+    padding: 8px;
+  }
+}
+
+/* Título explicativo das perguntas Lead */
+.titulo-lead {
+  color: #15007C;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #15007C;
+  padding-bottom: 5px;
+}

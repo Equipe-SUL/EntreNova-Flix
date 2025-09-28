@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import "../styles/Chatbot.css";
 import IrisAvatar from "../assets/Iris.jpg";
-import { validarCNPJ, salvarResposta } from "../services/api";
+import { validarCNPJ, salvarResposta, salvarPlano, gerarRelatorioTotal } from "../services/api";
 import { Message } from '../types/message';
+import { useNavigate } from "react-router-dom";
+
+
+
 
 const mensagensIniciais = [
   "Gostaria que me contasse, de forma resumida, os desafios ou situações que você tem percebido na empresa.",
@@ -32,11 +36,7 @@ const mensagemFinal = (nome: string) =>
 Se tiver qualquer dúvida ou precisar de mais informações, você pode entrar em contato conosco pelo e-mail: entrenovaflix@gmail.com.
 
 (Seus dados estão seguros e usados apenas para essa análise)`;
-//-tireamos type message daq
 
-
-
-//=---------------
 let iniciaisJaEnviadas = false;
 
 export default function ChatBot() {
@@ -44,22 +44,41 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [inputDisabled, setInputDisabled] = useState(false);
   const [etapa, setEtapa] = useState<
-    "iniciais" | "nome" | "cnpj" | "confirmar" | "perguntas" | "confirmarResposta" | "fim"
-  >("iniciais");
-  const [empresaId, setEmpresaId] = useState<number | null>(null);
+  "iniciais" | "nome" | "cnpj" | "confirmar" | "perguntas" | "confirmarResposta" | "plano" | "fim"
+>("iniciais");
   const [perguntaIndex, setPerguntaIndex] = useState(0);
   const [respostaTemp, setRespostaTemp] = useState("");
   const [respostaCNPJ, setRespostaCNPJ] = useState("");
+  const [cnpjConfirmado, setCnpjConfirmado] = useState("");
   const [nome, setNome] = useState("");
   const [botTyping, setBotTyping] = useState(false);
-
+  const [inputBloqueado, setInputBloqueado] = useState(false);
   const endRef = useRef<HTMLDivElement | null>(null);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, botTyping]);
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const irParaResultado = async () => {
+  try {
+    // Chama o endpoint do backend para gerar relatorio2, resumo2 e trilha
+    const response = await gerarRelatorioTotal(cnpjConfirmado);
+    const { relatorio2, resumo2, trilha } = response.data;
+
+    // Salva localmente para a Resultadopage2
+    localStorage.setItem("resultadoFinal", JSON.stringify({ relatorio2, resumo2, trilha }));
+
+    // Navega para a página de resultado
+    navigate("/resultadopage2"); // substitua pela rota correta
+  } catch (error) {
+    console.error("Erro ao gerar relatório final:", error);
+    alert("Ocorreu um erro ao gerar o relatório. Tente novamente.");
+  }
+};
 
   const addBotMessage = async (text: string, ms = 1000, opcoes?: string[]) => {
     setBotTyping(true);
@@ -98,46 +117,66 @@ export default function ChatBot() {
     clearLastMessageOptions();
     setMessages(prev => [...prev, { text: opcao, sender: "user" }]);
 
-    if (etapa === "confirmar") {
-      if (opcao === "Sim") {
-        try {
-          const { data } = await validarCNPJ(respostaCNPJ);
-          if (data.valido) {
-            setEmpresaId(data.empresaId);
-            await addBotMessage("CNPJ válido! Vamos começar o questionário.");
-            await addBotMessage(perguntas[0]);
-            setEtapa("perguntas");
-          } else {
-            await addBotMessage("CNPJ não cadastrado. Procure o suporte.");
-            setEtapa("fim");
-          }
-        } catch {
-          await addBotMessage("Erro ao validar CNPJ. Tente novamente.");
-        }
-      } else {
-        await addBotMessage("Digite o CNPJ novamente.");
-        setEtapa("cnpj");
-      }
-    } else if (etapa === "confirmarResposta" && empresaId !== null) {
-      if (opcao === "Correto") {
-        try {
-          await salvarResposta(empresaId, perguntas[perguntaIndex], respostaTemp);
-          if (perguntaIndex + 1 < perguntas.length) {
-            setPerguntaIndex(perguntaIndex + 1);
-            await addBotMessage(perguntas[perguntaIndex + 1]);
-            setEtapa("perguntas");
-          } else {
-            await addBotMessage(mensagemFinal(nome));
-            setEtapa("fim");
-          }
-        } catch {
-          await addBotMessage("Erro ao salvar resposta. Tente novamente.");
-        }
-      } else {
-        await addBotMessage(perguntas[perguntaIndex]);
+  if (etapa === "confirmar") {
+  if (opcao === "Sim") {
+    try {
+      const { data } = await validarCNPJ(respostaCNPJ);
+      if (data.valido) {
+        setCnpjConfirmado(respostaCNPJ); // ✅ aqui salvamos o CNPJ que o usuário confirmou
+        await addBotMessage("CNPJ válido! Vamos começar o questionário.");
+        await addBotMessage(perguntas[0]);
         setEtapa("perguntas");
+      } else {
+        await addBotMessage("CNPJ não cadastrado. Procure o suporte.");
+        setInputBloqueado(true);
       }
+    } catch {
+      await addBotMessage("Erro ao validar CNPJ. Tente novamente.");
     }
+  } else {
+    await addBotMessage("Digite o CNPJ novamente.");
+    setEtapa("cnpj");
+  }
+} else if (etapa === "confirmarResposta") {
+      if (opcao === "Correto") {
+  try {
+    // ✅ Usa o CNPJ confirmado, não o digitado
+    await salvarResposta(cnpjConfirmado, perguntas[perguntaIndex], respostaTemp);
+
+    if (perguntaIndex + 1 < perguntas.length) {
+      const proximoIndex = perguntaIndex + 1;
+      setPerguntaIndex(proximoIndex);
+      await addBotMessage(perguntas[proximoIndex]);
+      setEtapa("perguntas");
+    } else {
+      await addBotMessage(
+        "Para finalizarmos, qual plano você prefere contratar?",
+        500,
+        ["Básico", "Premium"]
+      );
+      setEtapa("plano");
+    }
+  } catch {
+    await addBotMessage("Erro ao salvar resposta. Tente novamente.");
+  }
+} else {
+  await addBotMessage(perguntas[perguntaIndex]);
+  setEtapa("perguntas");
+} 
+}
+ else if (etapa === "plano") {
+  try {
+    console.log("vai enviar plano:", opcao, "para o CNPJ:", cnpjConfirmado);
+    await salvarPlano(cnpjConfirmado, opcao); // ✅ Aqui também
+    console.log("plano enviado para o backend");
+    await addBotMessage(mensagemFinal(nome));
+
+    setEtapa("fim");
+  } catch (error) {
+    console.error("erro ao salvar plano:", error);
+    await addBotMessage("Erro ao salvar plano. Tente novamente.");
+  }
+}
   };
 
   const sendMessage = async () => {
@@ -159,7 +198,7 @@ export default function ChatBot() {
       setRespostaCNPJ(msg);
       await addBotMessage(`Você digitou o CNPJ: ${msg}. Está correto?`, 500, ["Sim", "Não"]);
       setEtapa("confirmar");
-    } else if (etapa === "perguntas" && empresaId !== null) {
+    } else if (etapa === "perguntas") {
       setRespostaTemp(msg);
       await addBotMessage(
         `Sua resposta foi: "${msg}". Está correto ou deseja editar?`,
@@ -224,8 +263,8 @@ export default function ChatBot() {
         <div ref={endRef} />
       </div>
 
-      {/* INPUT */}
-      {etapa !== "fim" && (
+            {/* INPUT */}
+      {!inputBloqueado && etapa !== "fim" && (
         <div className="chat-footer">
           <div className="chat-input-container">
             <input
@@ -236,12 +275,26 @@ export default function ChatBot() {
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               disabled={inputDisabled}
             />
-            <button className="chat-button" onClick={sendMessage} disabled={inputDisabled}>
+            <button
+              className="chat-button"
+              onClick={sendMessage}
+              disabled={inputDisabled}
+            >
               Enviar
             </button>
           </div>
         </div>
       )}
+
+      {/* BOTÃO DE RESULTADO */}
+      {etapa === "fim" && (
+        <div className="chat-footer">
+          <button className="chat-button" onClick={irParaResultado}>
+            Ver Resultado
+          </button>
+        </div>
+      )}
     </div>
   );
 }
+

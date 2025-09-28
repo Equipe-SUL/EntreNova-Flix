@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import DiagnosticoPage from './pages/DiagnosticoPage';
 import ChatbotPage from './pages/ChatbotPage';
 import ResultadoPage from './pages/ResultadoPage';
+import ResultadoPage2 from './pages/Resultadopage2';
 
 // Componente para rotas não encontradas (404)
 const NotFoundPage = () => <h1 style={{ textAlign: 'center' }}>404 - Página Não Encontrada</h1>;
@@ -29,7 +30,10 @@ function App() {
 
           {/* Rota dinâmica para a página de resultado (o :id é um parâmetro) */}
           <Route path="/resultado/:id" element={<ResultadoPage />} />
-          
+
+           {/* Rota dinâmica para a página de resultado2 (o :id é um parâmetro) */}
+          <Route path="/resultadopage2" element={<ResultadoPage2 />} />
+
           {/* Rota de fallback para qualquer URL que não exista */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
