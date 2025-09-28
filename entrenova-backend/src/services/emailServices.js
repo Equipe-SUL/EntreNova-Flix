@@ -28,9 +28,9 @@ export const enviarEmailDiagnostico = async (dadosEmpresa, relatorio) => {
   <hr>
 
   <h3>Relatório Completo:</h3>
-  <p><strong>Principal Desafio:</strong> ${relatorio.maior_problema}</p>
-  <p><strong>Tom da Análise:</strong> ${relatorio.tom || 'Não definido'}</p>
-  <p><strong>Emoções Identificadas:</strong> ${relatorio.emocoes ? relatorio.emocoes.join(', ') : 'Não definido'}</p>
+  <p>${relatorio.relatorioCompleto || 'Não definido'}</p>
+
+  <hr>
 
   <h4>Sugestões Práticas:</h4>
   <ul>

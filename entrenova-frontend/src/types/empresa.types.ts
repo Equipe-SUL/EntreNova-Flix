@@ -49,6 +49,7 @@ export interface IRelatorio {
   resumo_ia: string;
   maior_problema: string;
   sugestoes: string[];
+  relatorioCompleto: string
   trilhasRecomendadas: Itrilha[];
   ///////--- sem função
   tom_analise: string;

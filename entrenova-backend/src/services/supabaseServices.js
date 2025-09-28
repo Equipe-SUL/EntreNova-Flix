@@ -166,7 +166,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
   const dadosRelatorio = {
     cnpj_empresa: dadosEmpresa.cnpj,
     resumo1: analiseIA.resumo,
-    relatorio1: textoConsolidadoRelatorio1,
+    relatorio1: analiseIA.relatorioCompleto,
   };
 
   // Adicionar classificação de lead se disponível
@@ -187,9 +187,8 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
   }
 
     const relatorioCompletoParaEmail = {
-  relatorio1: textoConsolidadoRelatorio1,  // ✅ relatório completo
+  relatorioCompleto: analiseIA.relatorioCompleto,  // ✅ relatório completo
   resumo_ia: analiseIA.resumo,
-  maior_problema: analiseIA.maiorProblema,
   sugestoes: analiseIA.sugestoes,
   lead: scoreLead?.classificacao || null   // ✅ lead se existir
 };
@@ -256,6 +255,7 @@ const buscarRelatorioPorId = async (id) => {
   const formattedData = {
     id: data.id,
     resumo_ia: analise.resumo,
+    relatorioCompleto: data.relatorio1 || '', // ou analise.relatorioCompleto se estiver lá
     maior_problema: analise.maior_problema,
     sugestoes: sugestoesArray,
     trilhasRecomendadas: trilhasArray
