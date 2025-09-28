@@ -22,6 +22,7 @@ const ResultadoPage = () => {
   // 'error': Para guardar uma mensagem de erro, caso algo dê errado na busca. Começa vazio.
   const [error, setError] = useState('');
 
+  
 
   useEffect(() => {
     // Só tentamos buscar os dados se o 'id' existir na URL

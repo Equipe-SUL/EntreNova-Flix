@@ -133,6 +133,50 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
     return [];
   }
 
+  if (!preferenciaConteudo) {
+    throw new Error("Preferência de conteúdo não definida");
+  }
+
+  // Filtrar conteúdos preferidos
+  const preferidos = conteudosDisponiveis.filter(
+    c => c.modelo && c.modelo.toLowerCase() === preferenciaConteudo.toLowerCase()
+  );
+
+  // Garantir mínimo 2 e máximo 3 preferidos
+  const qtdPreferidos = Math.min(Math.max(2, preferidos.length), 3);
+  const selecionadosPreferidos = preferidos.slice(0, qtdPreferidos);
+
+  // Selecionar o restante aleatoriamente sem repetir conteúdos já escolhidos
+  const restantes = qtdConteudos - selecionadosPreferidos.length;
+  const selecionadosDiversos = [];
+
+  // Disponíveis para sorteio, excluindo preferidos já selecionados
+  let disponiveisParaAleatorio = conteudosDisponiveis.filter(
+    c => !selecionadosPreferidos.includes(c)
+  );
+
+  while (selecionadosDiversos.length < restantes && disponiveisParaAleatorio.length > 0) {
+    const index = Math.floor(Math.random() * disponiveisParaAleatorio.length);
+    const aleatorio = disponiveisParaAleatorio.splice(index, 1)[0];
+
+    // Contar quantos preferidos já estão na trilha final
+    const totalPreferidosSelecionados = [...selecionadosPreferidos, ...selecionadosDiversos]
+      .filter(c => c.modelo && c.modelo.toLowerCase() === preferenciaConteudo.toLowerCase())
+      .length;
+
+    // Se for do tipo preferido e já tiver 3, não adiciona
+    if (aleatorio.modelo.toLowerCase() === preferenciaConteudo.toLowerCase() && totalPreferidosSelecionados >= 3) {
+      continue;
+    }
+
+    selecionadosDiversos.push(aleatorio);
+  }
+
+  // Montar trilha final e embaralhar
+  let trilhaFinal = [...selecionadosPreferidos, ...selecionadosDiversos];
+  trilhaFinal = trilhaFinal.sort(() => 0.5 - Math.random());
+
+  // Prompt para IA (opcional)
   const prompt = `
     Você é um especialista em desenvolvimento de pessoas e treinamento corporativo.
     Baseado nos seguintes relatórios:
@@ -155,11 +199,12 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
     const response = await result.response;
     const text = response.text();
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    const trilha = JSON.parse(jsonText);
-    return trilha;
+    const trilhaIA = JSON.parse(jsonText);
 
+    // Se IA não gerar corretamente, usa fallback
+    return trilhaIA.length === qtdConteudos ? trilhaIA : trilhaFinal;
   } catch (error) {
     console.error("Erro ao gerar trilha de conteúdos com a IA:", error);
-    return [];
+    return trilhaFinal;
   }
 }

@@ -33,11 +33,11 @@ const Resultadopage2 = () => {
           <strong>Trilha Personalizada:</strong>
           <ul>
             {trilha.map((item: any, index: number) => (
-              <li key={index}>
-                {item.titulo} - {item.tipo} {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer">🔗</a>}
-              </li>
+                <li key={index}>
+                {item.titulo}
+                </li>
             ))}
-          </ul>
+         </ul>
         </div>
       </div>
 

@@ -37,20 +37,41 @@ export const gerarRelatorioTotal = async (req, res) => {
     console.log("🔹 Relatório 1 e plano encontrados:", plano);
 
     // 3️⃣ Determinar preferência de conteúdo
-    const preferenciaPergunta = "Por fim, ao gerar as trilhas, qual tipo de conteúdo você prefere ver na maioria delas? (Ex: Vídeos, Podcasts, Cursos Curtos)";
-    const respostasPreferencia = chatData
-      .filter(r => r.pergunta === preferenciaPergunta)
-      .map(r => r.resposta);
+// Pergunta exata do chatbot
+const preferenciaPergunta = "Por fim, ao gerar as trilhas, qual tipo de conteúdo você prefere ver na maioria delas? (Ex: Vídeos, Podcasts, Cursos Curtos)";
 
-    let preferenciaConteudo = "texto"; // padrão
-    if (respostasPreferencia.length > 0) {
-      const freqMap = {};
-      respostasPreferencia.forEach(p => (freqMap[p] = (freqMap[p] || 0) + 1));
-      preferenciaConteudo = Object.keys(freqMap).reduce((a, b) =>
-        freqMap[a] > freqMap[b] ? a : b
-      );
-    }
-    console.log("🔹 Preferência de conteúdo:", preferenciaConteudo);
+// Busca a resposta correta no chatData
+const respostaPreferenciaObj = chatData.find(c => {
+  if (!c.mensagem_recebida) return false;
+  const original = c.mensagem_recebida
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
+    .trim().toLowerCase();
+  const alvo = preferenciaPergunta
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .trim().toLowerCase();
+  return original === alvo;
+});
+
+// Se não encontrar a pergunta, lança erro
+if (!respostaPreferenciaObj || !respostaPreferenciaObj.mensagem_enviada) {
+  throw new Error("❌ Resposta de preferência de conteúdo não encontrada no chat!");
+}
+
+// Normaliza e valida a resposta
+let resposta = respostaPreferenciaObj.mensagem_enviada
+  .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
+  .trim().toLowerCase()
+  .replace(/s$/, ""); // normaliza plural
+
+const tiposConteudoValidos = ["video", "quiz", "curso curto", "podcast", "palestra", "artigo"];
+
+if (!tiposConteudoValidos.includes(resposta)) {
+  throw new Error(`❌ Resposta de preferência de conteúdo inválida: "${respostaPreferenciaObj.mensagem_enviada}"`);
+}
+
+const preferenciaConteudo = resposta;
+console.log("🔹 Preferência de conteúdo:", preferenciaConteudo);
+
 
     // 4️⃣ Gerar relatório2 com IA (usando plano e preferenciaConteudo)
     const relatorio2IA = await gerarNovoRelatorio(
@@ -65,31 +86,36 @@ export const gerarRelatorioTotal = async (req, res) => {
     const resumo2 = relatorio2IA.resumo2;
 
     // 5️⃣ Determinar quantidade de conteúdos da trilha
-    const qtdConteudos = plano === "basico" ? 5 : 7;
+    const qtdConteudos = (plano?.toLowerCase() === "básico") ? 5 : 7;
 
     // 6️⃣ Buscar conteúdos disponíveis
+ // 6️⃣ Buscar conteúdos disponíveis
     const conteudosDisponiveis = await buscarConteudos();
     console.log(`🔹 Conteúdos disponíveis: ${conteudosDisponiveis.length}`);
 
-    // 7️⃣ Gerar trilha usando IA
+    // 7️⃣ Gerar trilha usando IA, passando a preferência do usuário
     const trilha = await gerarTrilhaConteudos(
-      { relatorio1, relatorio2: relatorio2IA, qtdConteudos, preferenciaConteudo },
-      conteudosDisponiveis
+    {
+        relatorio1,
+        relatorio2: relatorio2IA,
+        qtdConteudos,
+        preferenciaConteudo // 🔹 Passando para a função IA
+    },
+    conteudosDisponiveis
     );
     console.log(`✅ Trilha gerada com ${trilha.length} conteúdos`);
 
     // 8️⃣ Transformar relatorio2 e trilha em texto legível para salvar no banco
-    const textoRelatorio2 = relatorio2IA.relatorio2
-
+    const textoRelatorio2 = relatorio2IA.relatorio2;
     const textoTrilha = trilha.map((c, i) => `${i + 1}. ${c.titulo} - ${c.tipo}`).join("\n");
 
     // 9️⃣ Salvar relatório2, resumo2 e trilha no banco (relatorio1 e resumo1 permanecem intactos)
     await atualizarRelatorio(cnpj, {
-  relatorio2: textoRelatorio2,
-  resumo2: resumo2,
-  trilha: textoTrilha,
-});
-console.log("✅ Relatórios salvos no banco");
+      relatorio2: textoRelatorio2,
+      resumo2: resumo2,
+      trilha: textoTrilha,
+    });
+    console.log("✅ Relatórios salvos no banco");
 
     // 🔟 Retornar dados para frontend
     res.json({
