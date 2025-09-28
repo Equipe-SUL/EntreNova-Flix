@@ -32,12 +32,12 @@ const Resultadopage2 = () => {
         <div className="relatorio-secao">
           <strong>Trilha Personalizada:</strong>
           <ul>
-            {trilha.map((item: any, index: number) => (
-                <li key={index}>
-                {item.titulo}
-                </li>
-            ))}
-         </ul>
+  {trilha.map((item: any, index: number) => (
+    <li key={index}>
+  {item.titulo} - Modelo: {item.modelo}
+</li>
+  ))}
+</ul>
         </div>
       </div>
 

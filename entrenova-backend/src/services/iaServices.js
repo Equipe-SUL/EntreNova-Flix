@@ -164,7 +164,6 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
       .filter(c => c.modelo && c.modelo.toLowerCase() === preferenciaConteudo.toLowerCase())
       .length;
 
-    // Se for do tipo preferido e já tiver 3, não adiciona
     if (aleatorio.modelo.toLowerCase() === preferenciaConteudo.toLowerCase() && totalPreferidosSelecionados >= 3) {
       continue;
     }
@@ -176,7 +175,13 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
   let trilhaFinal = [...selecionadosPreferidos, ...selecionadosDiversos];
   trilhaFinal = trilhaFinal.sort(() => 0.5 - Math.random());
 
-  // Prompt para IA (opcional)
+  // **Agora garantimos que a trilha final usa títulos e modelos exatamente do banco**
+  const trilhaFinalFormatada = trilhaFinal.map(c => ({
+  titulo: c.descricao,
+  modelo: c.modelo
+}));
+
+  // Ainda deixo a parte da IA opcional (se quiser usar para analisar relevância, mas não altera título/modelo)
   const prompt = `
     Você é um especialista em desenvolvimento de pessoas e treinamento corporativo.
     Baseado nos seguintes relatórios:
@@ -185,11 +190,10 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
 
     Crie uma trilha de aprendizagem com ${qtdConteudos} conteúdos,
     priorizando o formato preferido pelo usuário: ${preferenciaConteudo}.
-    Use os conteúdos disponíveis fornecidos e escolha os mais relevantes.
-
+    **Use apenas os títulos e modelos já fornecidos nos conteúdosDisponiveis.**
     Formate a resposta EXATAMENTE em JSON como:
     [
-      { "titulo": "string", "tipo": "vídeo|podcast|curso|artigo", "link": "string" },
+      { "titulo": "string", "modelo": "vídeo|podcast|curso|artigo" },
       ...
     ]
   `;
@@ -201,10 +205,20 @@ export async function gerarTrilhaConteudos(dadosRelatorios, conteudosDisponiveis
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     const trilhaIA = JSON.parse(jsonText);
 
-    // Se IA não gerar corretamente, usa fallback
-    return trilhaIA.length === qtdConteudos ? trilhaIA : trilhaFinal;
+    // Se IA gerar corretamente, pode usar, mas limitando apenas à quantidade e mantendo títulos/modelos do banco
+    if (trilhaIA.length === qtdConteudos) {
+      return trilhaIA.map((item, i) => ({
+        titulo: trilhaFinalFormatada[i].titulo,
+        modelo: trilhaFinalFormatada[i].modelo
+      }));
+    }
+
+    // Fallback: usar sempre os dados do banco
+    return trilhaFinalFormatada;
+
   } catch (error) {
     console.error("Erro ao gerar trilha de conteúdos com a IA:", error);
-    return trilhaFinal;
+    return trilhaFinalFormatada;
   }
 }
+
