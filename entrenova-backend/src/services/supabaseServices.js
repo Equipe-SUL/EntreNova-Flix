@@ -195,10 +195,10 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
     emocoes: JSON.stringify(analiseIA.emocoes)
   };
 
-  // Adicionar trilhas recomendadas se disponíveis
-  if (analiseIA.trilhasRecomendadas) {
-    dadosAnaliseIA.trilhas_recomendadas = JSON.stringify(analiseIA.trilhasRecomendadas);
-  }
+  // Adicionar trilhas recomendadas se disponíveis (nao utilizado mais)
+  //if (analiseIA.trilhasRecomendadas) {
+  //  dadosAnaliseIA.trilhas_recomendadas = JSON.stringify(analiseIA.trilhasRecomendadas);
+ // }
 
   const { error: errorAnalise } = await supabase
     .from('analises_ia')

@@ -80,20 +80,6 @@ const ResultadoPage = () => {
               ))}
             </ul>
           </div>
-
-          <div className="relatorio-secao">
-            <strong>Trilhas de Conteúdo Recomendadas:</strong>
-            <ul>
-              {relatorio.trilhasRecomendadas && relatorio.trilhasRecomendadas.map((trilha, index) => (
-                <li key={index}>
-                  <strong>{trilha.categoria} ({trilha.modelo}):</strong> {trilha.descricao}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-
-
         </div>
       ) : (
         <p>Nenhum relatório encontrado para este ID.</p>
