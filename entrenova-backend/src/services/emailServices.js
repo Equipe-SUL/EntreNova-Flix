@@ -64,7 +64,7 @@ export const enviarEmailRelatorio2 = async (dadosEmpresa, relatorio2, resumo2, c
     const respostas = conversaIris.filter((_, i) => i % 2 !== 0);
 
     const emailBody = `
-      <h2>Relatório 2</h2>
+      <h2>Relatório final/Trilha</h2>
       <p><strong>CNPJ:</strong> ${dadosEmpresa.cnpj}</p>
 
       <hr>
@@ -128,7 +128,7 @@ export const enviarEmailRelatorio2 = async (dadosEmpresa, relatorio2, resumo2, c
     await transporter.sendMail({
       from: `"Equipe Sul Suporte" <${process.env.EMAIL_USER}>`,
       to: 'entrenovaflix@gmail.com',
-      subject: `Relatório 2 - ${dadosEmpresa.cnpj}`,
+      subject: `Relatório final / Trilha - ${dadosEmpresa.cnpj}`,
       html: emailBody
     });
 

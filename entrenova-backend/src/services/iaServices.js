@@ -54,6 +54,10 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
       max_tokens: 300,
     });
 
+    console.log("Tokens prompt:", result.usage.prompt_tokens);
+    console.log("Tokens resposta:", result.usage.completion_tokens);
+    console.log("Tokens total:", result.usage.total_tokens);
+
     const text = result.choices[0].message.content;
     const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(jsonText);
