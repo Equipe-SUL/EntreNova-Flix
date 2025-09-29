@@ -18,7 +18,7 @@
   <a href ="#equipe"> Equipe</a> |
 </p>
 
-> Status da Sprint: Em andamento 
+> Status da Sprint: Concluída ✅ 
 
 ## 🏅 Desafio <a id="desafio"></a>
 
@@ -118,3 +118,4 @@ PDF com explicação do fluxo de leads e dimensões) está disponível.
     </tr>
   </table>
 </div>
+
