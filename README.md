@@ -59,6 +59,19 @@
 
 ---
 
+### 📌 Sprint 3 (Planejada)  
+
+| Rank | Prioridade | User Story | Story Points | Sprint | Status |
+| :--: | :--------: | ---------- | :----------: | :----: | :----: |
+|  1   | Médio      | Como funcionário, quero enviar feedback sobre a trilha que completei, para que a plataforma melhore minhas recomendações futuras. | 5 | 3 | ⏳ |
+|  2   | Médio      | Como RH, quero ter a opção de gerar novas trilhas a cada 2 meses, além da atualização padrão, para acelerar resolução de problemas críticos. | 5 | 3 | ⏳ |
+|  3   | Baixo      | Como usuário, quero páginas mais claras e organizadas, para que a navegação seja mais intuitiva e agradável. | 8 | 3 | ⏳ |
+|  4   | Baixo      | Como usuário, quero navegar entre páginas e seções sem perder dados ou encontrar erros, para ter uma experiência contínua e confiável. | 8 | 3 | ⏳ |
+|  5   | Baixo      | Como administrador da Entrenova, quero que o feedback enviado seja usado para ajustar recomendações futuras, deixando trilhas mais personalizadas. | 8 | 3 | ⏳ |
+|  6   | Baixo      | Como RH, quero enviar feedback sobre relatórios e progresso dos funcionários, para acompanhar resultados e melhorias da plataforma. | 3 | 3 | ⏳ |
+
+---
+
 ## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
 
 * **Descrição clara:** A user story está escrita de forma compreensível. 
