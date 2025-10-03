@@ -1,9 +1,8 @@
-
 # API 3º Semestre ADS
 
-# Entrenova Flix - EntreNova
+## Entrenova Flix - EntreNova
 
-# Documentação - Sprint 2
+## Documentação - Sprint 2
 
 <p align="center">
       <img src="../logosul.png" alt="logo da Equipe Sul" width="200">
@@ -26,7 +25,7 @@
 | 2 | US9 | Como RH, quero criar, editar e deletar usuários/funcionários, para que eles possam acessar a plataforma corretamente. | Permite controlar e vincular relatórios e trilhas aos funcionários corretos. | 8 | 🟠 **Alto** |
 | 3 | US10 | Como usuário, quero acessar minha página principal de acordo com meu perfil, para visualizar relatórios, progresso e trilhas. | Oferece experiência personalizada e facilita acesso às informações relevantes. | 8 | 🟠 **Alto** |
 | 4 | US8 | Como administrador da Entrenova, quero definir perfis de usuários (RH, funcionário, visitante), para que cada um tenha acesso apenas às suas funcionalidades. | Garante segurança e organização de permissões. | 5 | 🟠 **Alto** |
-| 5 | US11 | Como administrador da Entrenova, quero visualizar um geral de empresas e progresso de trilhas, para acompanhar o uso da plataforma. | Permite que a Entrenova evolua a experiência das empresas na plataforma, com base em relatórios erenciais resumidos para tomada de decisão.  | 5 | 🔵 **Médio** |
+| 5 | US11 | Como administrador da Entrenova, quero visualizar um geral de empresas e progresso de trilhas, para acompanhar o uso da plataforma. | Permite que a Entrenova evolua a experiência das empresas na plataforma, com base em relatórios gerenciais resumidos para tomada de decisão.  | 5 | 🔵 **Médio** |
 
 ## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
 
