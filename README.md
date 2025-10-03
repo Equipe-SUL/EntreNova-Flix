@@ -27,58 +27,55 @@
 
 ## 🏅 Solução <a id="solucao"></a>
 
--Entregar relatórios personalizados às empresas, apontando necessidades, oportunidades e
-
-sugestões de melhorias.
-
--Fornecer dados estratégicos à Entrenova para desenvolver e validar produtos de treinamentos
-
-online focados nas maiores demandas do mercado
+- Entregar relatórios personalizados às empresas, apontando necessidades, oportunidades e sugestões de melhorias.  
+- Fornecer dados estratégicos à Entrenova para desenvolver e validar produtos de treinamentos online focados nas maiores demandas do mercado  
 
 ---
 
-## 📋 Backlog do Produto
+## 📋 Backlog do Produto <a id="backlog"></a>
 
-| Rank | Prioridade  | User Story                                                                                                                                     | Story Points | Sprint | Requisito do Cliente | Status |
-| :--: | :---------: | ---------------------------------------------------------------------------------------------------------------------------------------------- | :----------: | :----: | :------------------: | :----: |
-|  1   | Altíssimo   | Como visitante, quero preencher um mini diagnóstico, para que entenda minhas principais necessidades de forma simples e acessível.              |      5       |   1    |         US1          |   ✅   |
-|  2   | Altíssimo   | Como agente comercial, quero geração de um relatório básico a partir dos dados do formulário, para facilitar a coleta de dados com IA.          |      3       |   1    |         US2          |   ✅   |
-|  3   | Altíssimo   | Como gestor de RH, quero receber um relatório completo e uma trilha proposta, para visualizar recomendações e verificar o valor do produto.     |      8       |   1    |         US5          |   ✅   |
-|  4   | Alto        | Como usuário, quero ser redirecionado para o chatbot após enviar o formulário, para agilizar o processo de aquisição do produto.           |      8       |   1    |         US3          |   ✅   |
-|  5   | Alto        | Como agente comercial, quero que salve as respostas do usuário durante a conversa com o chatbot, para enriquecer o diagnóstico e direcionar trilha.  |      5       |   1    |         US4          |   ✅   |
-|  6   | Alto        | Como agente comercial, quero que calcule o estágio das dimensões e um score do lead, para que o cliente receba diagnóstico claro e objetivo.   |      5       |   1    |         US6          |   ✅   |
-|  7   | Alto        | Como usuário, quero criar minha conta e acessar a plataforma com login e senha, para visualizar relatórios e trilhas de forma segura.          |      8       |   2    |         US7          |   ⏳   |
-|  8   | Alto        | Como RH, quero criar, editar e deletar usuários/funcionários, para que eles possam acessar a plataforma corretamente.                          |      8       |   2    |         US9          |   ⏳   |
-|  9   | Alto        | Como usuário, quero acessar minha página principal de acordo com meu perfil, para visualizar relatórios, progresso e trilhas.                   |      8       |   2    |        US10          |   ⏳   |
-| 10   | Alto        | Como administrador da Entrenova, quero diferenciar perfis de usuário (RH, funcionário, Entrenova), para cada um acessar apenas suas funções.   |      5       |   2    |         US8          |   ⏳   |
-| 11   | Médio       | Como administrador da Entrenova, quero visualizar visão geral de empresas e progresso de trilhas, para acompanhar o uso da plataforma.          |      5       |   2    |        US11          |   ⏳   |
-| 12   | Médio       | Como funcionário, quero enviar feedback sobre a trilha que completei, para que a plataforma melhore minhas recomendações futuras.               |      5       |   3    |        US12          |   ⏳   |
-| 13   | Médio       | Como RH, quero ter a opção de gerar novas trilhas a cada 2 meses, além da atualização padrão, para acelerar resolução de problemas críticos.   |      5       |   3    |        US17          |   ⏳   |
-| 14   | Baixo       | Como usuário, quero páginas mais claras e organizadas, para que a navegação seja mais intuitiva e agradável.                                   |      8       |   3    |        US14          |   ⏳   |
-| 15   | Baixo       | Como usuário, quero navegar entre páginas e seções sem perder dados ou encontrar erros, para ter uma experiência contínua e confiável.         |      8       |   3    |        US15          |   ⏳   |
-| 16   | Baixo       | Como administrador da Entrenova, quero que o feedback enviado seja usado para ajustar recomendações futuras, deixando trilhas mais personalizadas. |   8   |   3    |        US16          |   ⏳   |
-| 17   | Baixo       | Como RH, quero enviar feedback sobre relatórios e progresso dos funcionários, para acompanhar resultados e melhorias da plataforma.            |      3       |   3    |        US13          |   ⏳   |
+### ✅ Sprint 1 (Entregue)
 
+| Rank | Prioridade  | User Story                                                                                                                                     | Story Points | Sprint | Status |
+| :--: | :---------: | ---------------------------------------------------------------------------------------------------------------------------------------------- | :----------: | :----: | :----: |
+|  1   | Altíssimo   | Como visitante, quero preencher um mini diagnóstico, para que entenda minhas principais necessidades de forma simples e acessível.              |      5       |   1    |   ✅   |
+|  2   | Altíssimo   | Como agente comercial, quero geração de um relatório básico a partir dos dados do formulário, para facilitar a coleta de dados com IA.          |      3       |   1    |   ✅   |
+|  3   | Altíssimo   | Como gestor de RH, quero receber um relatório completo e uma trilha proposta, para visualizar recomendações e verificar o valor do produto.     |      8       |   1    |   ✅   |
+|  4   | Alto        | Como usuário, quero ser redirecionado para o chatbot após enviar o formulário, para agilizar o processo de aquisição do produto.                |      8       |   1    |   ✅   |
+|  5   | Alto        | Como agente comercial, quero que salve as respostas do usuário durante a conversa com o chatbot, para enriquecer o diagnóstico e direcionar trilha. |      5    |   1    |   ✅   |
+|  6   | Alto        | Como agente comercial, quero que calcule o estágio das dimensões e um score do lead, para que o cliente receba diagnóstico claro e objetivo.   |      5       |   1    |   ✅   |
+
+---
+
+### 🕒 Sprint 2 (Atual)  
+
+| Rank | Prioridade | User Story | Story Points | Sprint | Status |
+| :--: | :--------: | ---------- | :----------: | :----: | :----: |
+|  1   | Alta       | Como usuário, quero uma interface mais clara e intuitiva, para que eu consiga navegar sem fricções e acessar relatórios e trilhas de forma prática. | 10 | 2 | ⏳ |
+|  2   | Alta       | Como RH, quero que o relatório gerado pela IA seja claro, útil e aplicável, para que eu possa tomar decisões estratégicas com base nos dados. | 8 | 2 | ⏳ |
+|  3   | Alta       | Como RH, quero autenticar meu acesso via pagamento e gerar login, para ter acesso seguro ao sistema e às funcionalidades exclusivas. | 10 | 2 | ⏳ |
+|  4   | Alta       | Como RH, quero um dashboard onde eu possa registrar e gerenciar usuários, para controlar quem acessa a plataforma e visualizar relatórios globais. | 8 | 2 | ⏳ |
+|  5   | Alta       | Como Usuário, quero um dashboard pessoal, para acompanhar minhas trilhas, progresso e relatórios individuais. | 7 | 2 | ⏳ |
+
+---
 
 ## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
 
 * **Descrição clara:** A user story está escrita de forma compreensível. 
 * **Critérios de aceitação definidos:** Cada US tem critérios testáveis (como você já fez).
-* **Dependências identificadas:** Não existem bloqueios externos (tecnologia,
-banco de dados, etc.) sem solução. 
+* **Dependências identificadas:** Não existem bloqueios externos sem solução. 
 * **Estimativa feita:** Pontos de esforço foram atribuídos
 * **Prioridade definida:** O valor de negócio está claro para a equipe. 
-* **Material de referência disponível:** Qualquer documento extra necessário (ex.:
-PDF com explicação do fluxo de leads e dimensões) está disponível. 
+* **Material de referência disponível:** Qualquer documento extra necessário (ex.: PDF com explicação do fluxo de leads e dimensões) está disponível. 
 
 ## 🏆 DoD - Definition of Done <a id="dod"></a>
 
-* Funcionalidade implementada
-* Critérios de aceitação atendidos
-* Testes realizados
-* Documentação mínima atualizada
-* Integração concluída
-* Validação do PO ou responsável
+* Funcionalidade implementada  
+* Critérios de aceitação atendidos  
+* Testes realizados  
+* Documentação mínima atualizada  
+* Integração concluída  
+* Validação do PO ou responsável  
 
 ---
 
