@@ -1,9 +1,9 @@
 
 # API 3º Semestre ADS
 
-# Entrenova Flix - EntreNova
+## Entrenova Flix - EntreNova
 
-# Documentação - Sprint 3
+## Documentação - Sprint 3
 
 <p align="center">
       <img src="../logosul.png" alt="logo da Equipe Sul" width="200">
@@ -107,3 +107,4 @@ PDF com explicação do fluxo de leads e dimensões) está disponível.
     </tr>
   </table>
 </div>
+
