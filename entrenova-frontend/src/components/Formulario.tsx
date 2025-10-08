@@ -10,36 +10,38 @@ import { IPerguntaLead, IRespostasLead, IScoreLead } from '../types/empresa.type
 
 const perguntasPorDimensao: IPerguntasPorDimensao = {
   pessoas: [
-    { id: 'p1', texto: 'Questão 1 – Comunicação interna', opcoes: ['Clara, frequente e bidirecional', 'Funciona, mas nem sempre chega a todos', 'Só em reuniões formais ou quando há problemas', 'Pouco estruturada'] },
-    { id: 'p2', texto: 'Questão 2 – Postura de liderança', opcoes: ['Engajadora, dá autonomia e orienta', 'Boa, mas depende do líder individual', 'Centralizadora, pouco espaço para protagonismo', 'Inexistente, decisões sempre de cima para baixo'] },
-    { id: 'p3', texto: 'Questão 3 – Resolução de problemas', opcoes: ['Ideias novas e soluções conjuntas', 'Resolvem, mas reativos', 'Dependem da liderança', 'Evitam mudanças'] },
-    { id: 'p4', texto: 'Questão 4 – Organização do trabalho', opcoes: ['Clareza de papéis e prioridades', 'Clareza parcial, mas falta recurso', 'Confuso, apagando incêndios', 'Sem organização clara'] },
-    { id: 'p5', texto: 'Questão 5 – Valores e propósito', opcoes: ['Claros e aplicados', 'Conhecidos, mas pouco aplicados', 'Pouco lembrados, só em discurso', 'Não há clareza'] },
-    { id: 'p6', texto: 'Questão 6 – Ferramentas de desenvolvimento', opcoes: ['Plataformas estruturadas', 'Algumas iniciativas digitais', 'Recursos informais', 'Não há ferramentas'] }
+    { id: 'p1', texto: 'Questão 1 – Como a comunicação acontece no dia a dia?', opcoes: ['Todos têm clareza e acesso fácil às informações', 'Funciona na maior parte do tempo, mas com algumas falhas.'
+    , 'Normalmente só em reuniões formais ou quando há problemas', 'É confusa, cada líder comunica de um jeito.'
+    ] },
+    { id: 'p2', texto: 'Questão 2 – Como você descreveria o estilo de liderança predominante?', opcoes: ['Engajam e dão autonomia', 'São bons, mas variam conforme o líder', 'Centralizam muito as decisões.', 'Raramente exercem liderança ativa'] },
+    { id: 'p3', texto: 'Questão 3 – Quando surgem problemas, como os times costumam agir?', opcoes: ['Trazem ideias e resolvem juntos.', 'Resolvem, mas de forma reativa', 'Dependem sempre do gestor para decidir', 'Evitam mudanças e preferem manter como está'] },
+    { id: 'p4', texto: 'Questão 4 – Como está organizada a rotina de trabalho?', opcoes: ['Papéis e prioridades são claros', 'Há certa clareza, mas faltam recursos ou prazos realistas.', 'Muitas vezes é confusa, com foco em “apagar incêndios”', 'Não há organização definida, cada um faz do seu jeito'] },
+    { id: 'p5', texto: 'Questão 5 – Até que ponto os valores da empresa estão presentes no dia a dia?', opcoes: ['Claros e vividos na prática', 'Conhecidos, mas pouco aplicados.', 'Pouco lembrados, só em discurso', 'Não há clareza sobre os valores'] },
+    { id: 'p6', texto: 'Questão 6 – Quais ferramentas apoiam pessoas & cultura?', opcoes: ['Temos plataforma estruturada de desenvolvimento', 'Algumas iniciativas digitais, mas sem consistência', 'Recursos informais (planilhas, grupos de mensagens)', 'Não temos ferramentas definidas'] }
   ],
   estrutura: [
-    { id: 'e1', texto: 'Questão 1 – Fluxo de informação entre áreas', opcoes: ['Integração constante', 'Em parte, com ruídos', 'Depende de reuniões formais', 'Áreas isoladas'] },
-    { id: 'e2', texto: 'Questão 2 – Delegação dos gestores', opcoes: ['Delegam com confiança', 'Delegam, mas controlam em excesso', 'Raramente delegam', 'Não delegam'] },
-    { id: 'e3', texto: 'Questão 3 – Ajustes de processos', opcoes: ['Equipes propõem melhorias', 'Ajustes demoram', 'Só gestão revisa', 'Nada muda'] },
-    { id: 'e4', texto: 'Questão 4 – Autonomia operacional', opcoes: ['Alta autonomia com responsabilidade', 'Alguma, mas depende de aprovação', 'Baixa autonomia', 'Nenhuma'] },
-    { id: 'e5', texto: 'Questão 5 – Qualidade e padrões', opcoes: ['Prioridade no DNA', 'Importante, mas não sempre seguida', 'Depende de cobrança externa', 'Não há padrão'] },
-    { id: 'e6', texto: 'Questão 6 – Ferramentas de operação', opcoes: ['ERP/CRM integrados', 'Algumas digitais, não integradas', 'Recursos básicos', 'Não há'] }
+    { id: 'e1', texto: 'Questão 1 – Como é a troca de informações entre áreas?', opcoes: ['Integrada e frequente.', 'Funciona em parte, com alguns ruídos.', 'Depende de reuniões formais.', 'As áreas trabalham isoladas.'] },
+    { id: 'e2', texto: 'Questão 2 – Como os gestores lidam com delegação?', opcoes: ['Delegam com clareza e confiança.', 'Delegam, mas acompanham em excesso.', 'Raramente delegam.', 'Não delegam, concentram tudo.'] },
+    { id: 'e3', texto: 'Questão 3 – Quando processos falham, o que acontece?', opcoes: ['As equipes propõem melhorias rapidamente.', 'Há ajustes, mas com demora.', 'Só a gestão revisa processos.', 'Nada muda, seguimos com os problemas.'] },
+    { id: 'e4', texto: 'Questão 4 – Quanta autonomia operacional os colaboradores têm?', opcoes: ['Alta, com responsabilidade.', 'Alguma, mas dependem de aprovações.', 'Pouca, com muito controle.', 'Nenhuma, tudo vem da gestão.'] },
+    { id: 'e5', texto: 'Questão 5 – Qual é a relação da empresa com padrões de qualidade?', opcoes: ['Qualidade é prioridade e está no DNA.', 'Importante, mas não sempre seguida.', 'Depende da cobrança externa.', 'Não há padrão definido.'] },
+    { id: 'e6', texto: 'Questão 6 – Quais ferramentas apoiam as operações do dia a dia?', opcoes: ['Sistemas integrados (ERP, CRM, dashboards).', 'Algumas ferramentas digitais, mas sem integração.', 'Recursos básicos (planilhas, controles manuais).', 'Não há ferramentas.'] }
   ],
   mercado: [
-    { id: 'm1', texto: 'Questão 1 – Escuta ativa', opcoes: ['Estruturada e contínua', 'Ocasional', 'Reativa', 'Não existe'] },
-    { id: 'm2', texto: 'Questão 2 – Integração vendas e atendimento', opcoes: ['Colaboram e compartilham', 'Trocam parcialmente', 'Trabalham em silos', 'Conflitos entre áreas'] },
-    { id: 'm3', texto: 'Questão 3 – Reação ao mercado', opcoes: ['Antecipamos e inovamos rápido', 'Ajustamos com atraso', 'Só reagimos a crises', 'Não há adaptação'] },
-    { id: 'm4', texto: 'Questão 4 – Metas de vendas', opcoes: ['Claro e revisado', 'Existe, pouco revisado', 'Informal', 'Não há'] },
-    { id: 'm5', texto: 'Questão 5 – Diferencial competitivo', opcoes: ['Claro e vivo', 'Existe, mas mal divulgado', 'Incerto', 'Não há'] },
-    { id: 'm6', texto: 'Questão 6 – Ferramentas de clientes', opcoes: ['CRM e BI estruturados', 'Planilhas/relatórios', 'Feedbacks informais', 'Nenhum'] }
+    { id: 'm1', texto: 'Questão 1 – Como a empresa ouve seus clientes?', opcoes: ['Temos pesquisa estruturada e contínua.', 'Fazemos de forma ocasional.', 'Reagimos só em reclamações.', 'Não há escuta formal.'] },
+    { id: 'm2', texto: 'Questão 2 – Como vendas e atendimento trabalham juntos?', opcoes: ['Colaboram e compartilham informações.', 'Trocam parcialmente, com falhas.', 'Atuam isolados, sem integração.', 'Há conflitos ou competição entre áreas.'] },
+    { id: 'm3', texto: 'Questão 3 – Quando o mercado muda, como a empresa reage?', opcoes: ['Antecipamos tendências e inovamos rápido.', 'Ajustamos, mas com atraso.', 'Só reagimos a crises.', 'Não temos adaptação estruturada.'] },
+    { id: 'm4', texto: 'Questão 4 – Como é o acompanhamento de metas comerciais?', opcoes: ['Claro, transparente e frequente.', 'Existe, mas pouco revisado.', 'Informal, depende do gestor.', 'Não temos acompanhamento.'] },
+    { id: 'm5', texto: 'Questão 5 – O diferencial competitivo está claro?', opcoes: ['Sim, é comunicado e reconhecido.', 'Existe, mas pouco divulgado.', 'É incerto, varia por área.', 'Não está claro.'] },
+    { id: 'm6', texto: 'Questão 6 – Quais ferramentas apoiam mercado & clientes?', opcoes: ['CRM, BI e pesquisas estruturadas.', 'Algumas planilhas e relatórios.', 'Feedbacks informais, dados dispersos.', 'Não há recursos específicos.'] }
   ],
   direcao: [
-    { id: 'd1', texto: 'Questão 1 – Visão de futuro', opcoes: ['Todos conhecem', 'Só a gestão conhece', 'Pouco falada', 'Não comunicada'] },
-    { id: 'd2', texto: 'Questão 2 – Conexão dos líderes à estratégia', opcoes: ['Inspiram e alinham metas', 'Tentam, mas parcial', 'Pouca conexão', 'Não há'] },
-    { id: 'd3', texto: 'Questão 3 – Papel da inovação', opcoes: ['Prioridade central', 'Importante, sem orçamento', 'Ocasional', 'Não prioridade'] },
-    { id: 'd4', texto: 'Questão 4 – Atividades x objetivos', opcoes: ['Sempre clara', 'Parcial, depende do gestor', 'Raramente', 'Nunca'] },
-    { id: 'd5', texto: 'Questão 5 – Propósito e impacto social', opcoes: ['No centro das decisões', 'Importante, secundário', 'Falado, mas não aplicado', 'Não há preocupação'] },
-    { id: 'd6', texto: 'Questão 6 – Ferramentas estratégicas', opcoes: ['Dashboards, OKRs', 'Planilhas/relatórios', 'Discussões informais', 'Não há'] }
+    { id: 'd1', texto: 'Questão 1 – Como a visão de futuro é comunicada?', opcoes: ['Todos conhecem e entendem.', 'É conhecida, mas só pela gestão.', 'Quase não é falada.', 'Não é comunicada.'] },
+    { id: 'd2', texto: 'Questão 2 – Como os líderes conectam pessoas à estratégia?', opcoes: ['Inspiram e alinham metas claramente.', 'Tentam alinhar, mas varia muito.', 'Há pouca conexão.', 'Não há esforço de alinhamento.'] },
+    { id: 'd3', texto: 'Questão 3 – Qual é o papel da inovação no planejamento?', opcoes: ['Prioridade central, com projetos claros.', 'Importante, mas sem orçamento.', 'Acontece de forma isolada.', 'Não é prioridade.'] },
+    { id: 'd4', texto: 'Questão 4 – Como as atividades diárias se conectam com a estratégia?', opcoes: ['Sempre, com clareza.', 'Às vezes, depende do gestor.', 'Raramente, não chega claro.', 'Nunca, cada área segue isolada.'] },
+    { id: 'd5', texto: 'Questão 5 – Como a empresa lida com propósito e impacto social?', opcoes: ['Está no centro das decisões.', 'É importante, mas secundário.', 'Fala-se, mas não se aplica.', 'Não há preocupação.'] },
+    { id: 'd6', texto: 'Questão 6 – Quais ferramentas apoiam a estratégia?', opcoes: ['Dashboards, OKRs, planejamentos formais.', 'Algumas planilhas ou relatórios.', 'Discussões informais, sem registro contínuo.', 'Não temos instrumentos claros'] }
   ]
 };
 
