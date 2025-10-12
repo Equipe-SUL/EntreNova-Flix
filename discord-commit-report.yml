@@ -1,0 +1,21 @@
+name: Discord Commit Report
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, closed, reopened, merged]
+
+jobs:
+  send-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Discord
+        uses: peter-evans/webhook@v2
+        with:
+          url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          payload: |
+            {
+              "content": "📌 **Commit Report / PR Update**\n👤 **Autor:** ${{ github.actor }}\n📅 **Data:** ${{ github.event.head_commit.timestamp || github.event.pull_request.updated_at }}\n💻 **Mensagem:** ${{ github.event.head_commit.message || github.event.pull_request.title }}\n🔗 **URL:** ${{ github.event.head_commit.url || github.event.pull_request.html_url }}"
+            }
