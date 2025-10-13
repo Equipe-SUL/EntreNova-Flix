@@ -7,6 +7,7 @@ import diagnosticoRoutes from './src/routes/diagnosticoRoutes.js';
 import relatorioRoutes from './src/routes/relatorioRoutes.js'
 import chatbotRoutes from './src/routes/chatbotRoutes.js';
 import relatoriofinalRoutes from './src/routes/relatoriofinalRoutes.js';
+import pagamentoRoutes from './src/routes/pagamentoRoutes.js'
 
 
 
@@ -26,6 +27,7 @@ app.use('/api/diagnostico', diagnosticoRoutes);
 app.use('/api/relatorio', relatorioRoutes);
 app.use('/api', chatbotRoutes);
 app.use('/api/relatoriofinal', relatoriofinalRoutes);
+app.use('/api/payment', pagamentoRoutes); 
 
 
 

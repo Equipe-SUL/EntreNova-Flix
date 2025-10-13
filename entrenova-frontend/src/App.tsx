@@ -7,6 +7,14 @@ import ChatbotPage from './pages/ChatbotPage';
 import ResultadoPage from './pages/ResultadoPage';
 import ResultadoPage2 from './pages/Resultadopage2';
 
+import SignIn from './components/SignIn';
+import ProtectedRoute from './components/ProtectedRoute';
+import CheckoutPage from './components/PaginaCheckout';
+
+
+
+
+
 // Componente para rotas não encontradas (404)
 const NotFoundPage = () => <h1 style={{ textAlign: 'center' }}>404 - Página Não Encontrada</h1>;
 
@@ -33,6 +41,19 @@ function App() {
 
            {/* Rota dinâmica para a página de resultado2 (o :id é um parâmetro) */}
           <Route path="/resultadopage2" element={<ResultadoPage2 />} />
+
+          <Route path="/signin" element={<SignIn />} />
+
+          <Route path="/checkout" element={<CheckoutPage />} /> 
+
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+                <h1>Bem vindo ao dashboard!</h1>
+            </ProtectedRoute>
+          }
+          />
+
+          
 
           {/* Rota de fallback para qualquer URL que não exista */}
           <Route path="*" element={<NotFoundPage />} />
