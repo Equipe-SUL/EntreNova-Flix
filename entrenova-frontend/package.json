@@ -1,5 +1,5 @@
 {
-  "name": "projeto-api-provisorio",
+  "name": "Entrenova-Flix",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,6 +13,8 @@
     "axios": "^1.12.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "@supabase/supabase-js": "^2.47.1",
+    "dotenv": "^16.4.7",
     "react-router-dom": "^7.9.1"
   },
   "devDependencies": {
