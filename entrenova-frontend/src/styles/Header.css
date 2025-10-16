@@ -1,16 +1,26 @@
-/* ======================================= */
-/* ESTILOS GERAIS */
-/* ======================================= */
+
+
+:root {
+  --bg-center: #0D1117;
+  --bg-edge: #010409;
+  --text-primary: #E6EDF3;
+  --text-muted: #9AA7B2;
+  --accent-magenta: #E6007A;
+  --accent-magenta-strong: #FF007F;
+  --accent-cyan: #00BFFF;
+}
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px;
-    background: white;
-    /* Adicionado position: relative para que o menu flutuante (absolute)
-       no mobile se posicione corretamente em relação a ele. */
-    position: relative; 
+    padding: 12px 32px;
+    background: transparent;
+    position: relative;
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: 'Epilogue', system-ui, sans-serif;
 }
 
 header {
@@ -18,8 +28,53 @@ header {
     margin-right: 5em;
 }
 
+/* Realce y luz de fondo para el logo negro */
+.logo-wrap {
+  position: relative;
+  display: inline-block;
+}
+/* Placa de vidrio detrás del logo */
+.logo-glass {
+  position: absolute;
+  inset: -8px -10px -8px -10px; /* tamaño de la placa */
+  border-radius: 2px;
+  background: rgba(13,17,23,0.55); /* base oscura translúcida */
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 24px rgba(230,0,122,0.18), inset 0 0 22px rgba(255,255,255,0.18), inset 0 0 48px rgba(255,255,255,0.12);
+}
+/* Más luz/halo detrás del logo negro */
+.logo-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -18px -22px -18px -22px; /* halo más amplio */
+  border-radius: 20px;
+  pointer-events: none;
+  background:
+    radial-gradient(65% 65% at 30% 50%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.12) 60%, rgba(255,255,255,0) 100%),
+    radial-gradient(45% 45% at 70% 50%, rgba(230,0,122,0.28) 0%, rgba(230,0,122,0.10) 60%, rgba(230,0,122,0) 100%);
+  filter: blur(6px);
+}
+
+.logo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -6px; /* luz focal cercana al logo */
+  border-radius: 14px;
+  pointer-events: none;
+  background:
+    radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0.14) 55%, rgba(255,255,255,0) 100%),
+    radial-gradient(40% 40% at 60% 50%, rgba(230,0,122,0.35) 0%, rgba(230,0,122,0.14) 55%, rgba(230,0,122,0) 100%);
+  filter: blur(8px);
+}
+
+/* Base glow sutil directamente en la imagen del logo */
 .logo {
-    width: 200px;
+    position: relative;
+    z-index: 1;
+    width: 150px;
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.18)) drop-shadow(0 0 20px rgba(230, 0, 122, 0.24));
 }
 
 #divuniao {
@@ -35,14 +90,20 @@ header {
 
 nav ul {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     list-style: none;
     margin-right: 25px;
+    align-items: center;
 }
 
-a {
+nav a {
     text-decoration: none;
-    color: black;
+    color: var(--text-muted);
+}
+
+/* Baseline color para itens sem <a> */
+nav ul li {
+    color: var(--text-muted);
 }
 
 /* Estilo geral dos itens do menu */
@@ -50,8 +111,10 @@ nav ul li,
 nav ul li a {
     position: relative;
     cursor: pointer;
-    font-weight: 400;
-    transition: color 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    font-family: 'Epilogue', system-ui, sans-serif;
+    transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
 /* Linha invisível por padrão (Desktop Hover Effect) */
@@ -59,15 +122,20 @@ nav ul li::after,
 nav ul li a::after {
     content: "";
     position: absolute;
-    bottom: -5px; /* distância da linha para o texto */
+    bottom: -6px;
     left: 0;
     width: 0%;
     height: 2px;
-    background-color: black;
-    transition: width 0.3s ease;
+    background: var(--accent-magenta);
+    transition: width 0.25s ease;
 }
 
-/* Quando passa o mouse, linha aparece (Desktop Hover Effect) */
+/* Hover: ilumina em magenta e linha surge */
+nav ul li:hover,
+nav ul li a:hover {
+    color: var(--accent-magenta);
+    text-shadow: 0 0 8px rgba(230, 0, 122, 0.45);
+}
 nav ul li:hover::after,
 nav ul li a:hover::after {
     width: 100%;
@@ -78,19 +146,22 @@ nav ul li a:hover::after {
 /* ======================================= */
 
 .login-btn {
-    background-color: #180a40;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    transition: 0.5s;
-    margin-top: 0;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+    border: 1px solid var(--accent-magenta);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: none;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .login-btn:hover {
-    transform: scale(1.05);
+    transform: translateY(-1px);
+    background: rgba(255,255,255,0.12);
+    border-color: var(--accent-magenta-strong);
+    box-shadow: none;
 }
 
 /* Menu Hamburguer (Oculto no Desktop) */
@@ -104,10 +175,15 @@ nav ul li a:hover::after {
 .menu-toggle span {
     height: 3px;
     width: 25px;
-    background: black;
+    background: var(--text-muted);
     margin: 4px 0;
     border-radius: 2px;
     transition: 0.3s;
+}
+
+.menu-toggle:hover span {
+    background: var(--accent-magenta);
+    box-shadow: 0 0 8px rgba(230, 0, 122, 0.6);
 }
 
 /* ======================================= */
@@ -115,14 +191,14 @@ nav ul li a:hover::after {
 /* ======================================= */
 
 @media (max-width: 768px) {
-      .header {
-        flex-direction: column; 
+    .header {
+        flex-direction: column;
         justify-content: flex-start;
-        align-items: center; 
+        align-items: center;
         padding: 10px 20px;
         margin: 0;
-        /* IMPORTANTE: position: relative já deve estar aqui, mas garantir não custa */
-        position: relative; 
+        position: relative;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
     header {
@@ -131,47 +207,40 @@ nav ul li a:hover::after {
     }
     
     .logo {
-        width: 160px;
-        margin: 0 0 10px 0; /* Espaço entre o logo e a linha de baixo */
+        width: 150px;
+        margin: 0 0 10px 0;
+        filter: drop-shadow(0 0 10px rgba(255,255,255,0.12)) drop-shadow(0 0 16px rgba(230, 0, 122, 0.18));
     }
 
     /* A linha de ações (botão e hambúrguer) */
     #divuniao {
-        flex-direction: row-reverse; 
-        width: 100%; 
-        justify-content: space-between; 
+        flex-direction: row-reverse;
+        width: 100%;
+        justify-content: space-between;
         align-items: center;
-        margin-right: 0; 
-        padding: 0 10px; 
-        /* Adiciona altura fixa, se necessário, ou padding. 
-           Vamos confiar no padding do header e nos elementos internos. */
+        margin-right: 0;
+        padding: 0 10px;
     }
     
     .login-btn {
-        display: block; 
-        margin-right: 0; 
-        padding: 8px 15px;
-        font-size: 0.9em;
+        display: block;
+        margin-right: 0;
+        padding: 8px 16px;
+        font-size: 0.95em;
+        top: 0;
     }
 
     .menu-toggle {
         display: flex;
         margin: 0;
-        order: -1; 
+        order: -1;
     }
 
-    /* AJUSTE CHAVE: Reposicionamento Responsivo do Menu Flutuante (NAV)
-    */
+    /* Menu flutuante (NAV) */
     nav {
-        /* Garante que o menu flutue sobre o conteúdo */
         position: absolute;
-        
-        /* O menu começa exatamente na borda inferior do .header (seu container relative) */
-        top: 100%; 
-        
-        /* Alinha o menu no canto direito do .header */
-        right: 20px; 
-        
+        top: 100%;
+        right: 20px;
         z-index: 100;
         width: auto;
     }
@@ -179,18 +248,82 @@ nav ul li a:hover::after {
       display: none;
     }
 
-    /* O menu em si quando aberto */
+    /* O menu quando aberto */
     nav ul.show {
-        /* ... (Mantenha os estilos existentes) ... */
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        background-color: white; 
-        padding: 15px 25px 15px 15px; 
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        min-width: 150px;
-        position: static; 
-        margin-top: 10px; /* Adiciona um pequeno espaço entre o fim do header e o menu */
+        background: rgba(13, 17, 23, 0.75);
+        backdrop-filter: blur(12px) saturate(140%);
+        -webkit-backdrop-filter: blur(12px) saturate(140%);
+        padding: 15px 25px 15px 15px;
+        border-radius: 10px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 0 18px rgba(230,0,122,0.3);
+        border: 1px solid rgba(255,255,255,0.08);
+        min-width: 180px;
+        position: static;
+        margin-top: 10px;
     }
+
+    nav ul.show a {
+        color: var(--text-primary);
+    }
+
+    nav ul.show a:hover {
+        color: var(--accent-magenta);
+        text-shadow: 0 0 8px rgba(230, 0, 122, 0.55);
+    }
+}
+
+/* Botón dentro del nav: quitar posición relativa y top */
+nav ul li .login-btn {
+  position: static;
+  top: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Ajuste de spacing para el último item (botón) */
+nav ul li:last-child {
+  margin-left: 8px; /* pequeño espacio respecto al item anterior */
+}
+
+/* Desactivar el halo fuera de la placa: que no sobresalga del vidrio */
+.logo-wrap::before,
+.logo-wrap::after {
+  content: none !important;
+  background: none !important;
+  filter: none !important;
+}
+
+/* Ajuste de la placa de vidrio: recorte interno del halo */
+.logo-glass {
+  /* mantener estilos existentes */
+  overflow: hidden; /* recorta el glow dentro de la placa */
+  z-index: 0;
+}
+
+/* Halo interno contenido dentro de la placa de vidrio */
+.logo-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* ocupa toda la placa */
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side at 50% 50%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.16) 92%, rgba(255,255,255,0.28) 100%),
+    radial-gradient(70% 70% at 30% 50%, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.16) 60%, rgba(255,255,255,0) 100%),
+    radial-gradient(55% 55% at 70% 50%, rgba(230,0,122,0.22) 0%, rgba(230,0,122,0.10) 55%, rgba(230,0,122,0) 100%);
+  filter: blur(9px);
+}
+.logo-glass::after {
+  content: "";
+  position: absolute;
+  inset: 6% 5%; /* glow focal más pequeño dentro de la placa */
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 60%, rgba(255,255,255,0) 100%),
+    radial-gradient(45% 45% at 60% 50%, rgba(230,0,122,0.26) 0%, rgba(230,0,122,0.12) 60%, rgba(230,0,122,0) 100%);
+  filter: blur(10px);
 }

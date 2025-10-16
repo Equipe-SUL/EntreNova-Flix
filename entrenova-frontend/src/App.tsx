@@ -10,7 +10,7 @@ import ResultadoPage2 from './pages/Resultadopage2';
 import SignIn from './components/SignIn';
 import ProtectedRoute from './components/ProtectedRoute';
 import CheckoutPage from './components/PaginaCheckout';
-
+import Dashboard from './pages/Dashboard';
 
 
 
@@ -46,11 +46,11 @@ function App() {
 
           <Route path="/checkout" element={<CheckoutPage />} /> 
 
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-                <h1>Bem vindo ao dashboard!</h1>
-            </ProtectedRoute>
-          }
+          <Route path="/dashboard" element={ <Dashboard/>
+          //  <ProtectedRoute>
+              // depois colocaremos o dashboard aqui dentro, mas eu precisava visuzaizar ele agora <-- ass.vivian
+           // </ProtectedRoute>
+}
           />
 
           

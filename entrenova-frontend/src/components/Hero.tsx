@@ -1,5 +1,5 @@
 import '../styles/Hero.css';
-import videoicon from '../assets/videoicon.png';
+import logo from '../assets/imagemINICIO.png';
 
 const Hero = () => (
   // coloquei o id encapsulado porque isso aqui vai dentro do component landingpage <-- ass.vivian
@@ -12,7 +12,6 @@ const Hero = () => (
           Nossa plataforma de streaming para treinamentos foi desenvolvida para levar conhecimento de forma prática, acessível e interativa.
         </p>
         <div className="hero-buttons">
-          {/* Botões com classes improváveis */}
           <a href="/diagnostico">
             <button className="btn-x9zq1">INICIAR</button>
           </a>
@@ -22,7 +21,7 @@ const Hero = () => (
         </div>
       </div>
       <div className="hero-image">
-        <img className="videoicon" src={videoicon} alt="Logo Ícone de vídeo" />
+        <img className="videoicon" src = {logo} alt="imagem da landing page" loading="lazy" />
       </div>
     </article>
   </section>
