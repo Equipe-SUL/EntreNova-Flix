@@ -1,96 +1,129 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-
-// instância configurada do Axios para fazer chamadas à API
 import api from '../services/api';
-
-// Importa a "forma" do nosso objeto de relatório
 import { IRelatorio } from '../types/empresa.types';
-
 import '../styles/ResultadoPage.css';
 
 const ResultadoPage = () => {
-
-  // O hook 'useParams' pega os parâmetros da URL.
   const { id } = useParams<{ id: string }>();
-
-
-  // 'relatorio': Para guardar os dados do relatório quando eles chegarem do backend. Começa como nulo.
   const [relatorio, setRelatorio] = useState<IRelatorio | null>(null);
-  // 'loading': Um interruptor para sabermos se estamos esperando a resposta da API. Começa como verdadeiro.
   const [loading, setLoading] = useState(true);
-  // 'error': Para guardar uma mensagem de erro, caso algo dê errado na busca. Começa vazio.
   const [error, setError] = useState('');
 
-  
-
   useEffect(() => {
-    // Só tentamos buscar os dados se o 'id' existir na URL
     if (id) {
-      // Usamos nosso 'api' service para fazer uma requisição GET para o backend.
       api.get(`/relatorio/${id}`)
         .then(response => {
-          // O backend agora garante que os dados são formatados e limpos.
           setRelatorio(response.data);
         })
         .catch(err => {
-          // .catch() é executado se a requisição FALHAR.
           setError('Não foi possível carregar o relatório. Verifique o ID e tente novamente.');
         })
         .finally(() => {
-          // Desligamos o interruptor de 'loading', pois a espera acabou.
           setLoading(false);
         });
     }
-  }, [id]); // O [id] no final diz ao useEffect: "só execute esta busca novamente se o ID na URL mudar".
+  }, [id]);
 
-
-
-  // Se 'loading' estiver rodando, mostramos uma mensagem de espera = " ta carregando espera ai"
   if (loading) {
-    return <div className="loading-error-container">Carregando resultado...</div>;
+    return <div className="loading-error-container">Carregando diagnóstico denso...</div>;
   }
 
-  // Se a 'error' tiver alguma mensagem, mostramos o erro.
   if (error) {
     return <div className="loading-error-container error-message">{error}</div>;
   }
 
-  // Se não estiver carregando e não houver erro, mostramos o relatório final.
   return (
     <div className="resultado-container">
-      <h1>Diagnóstico Inicial</h1>
-      {/* Verificamos se a memória 'relatorio' tem dados antes de tentar exibi-los */}
+      <h1>Diagnóstico Empresarial Completo</h1>
+
       {relatorio ? (
         <div className="relatorio-card">
+
+          {/* SEÇÃO 1: Descoberta e Resumo */}
           <div className="relatorio-secao">
-            <strong>Resumo da Análise:</strong>
-            <p>{relatorio.resumo_ia}</p>
+            <h3>Primeira Descoberta (D1)</h3>
+            <p className="secao-destaque">{relatorio.relatorio_narrativo.D1_descoberta}</p>
           </div>
 
+          {/* SEÇÃO 2: Problemas Centrais e Análise */}
           <div className="relatorio-secao">
-            <strong>Relatório Completo:</strong>
-            <p>{relatorio.relatorioCompleto}</p>
-         </div>
-
-          <div className="relatorio-secao">
-            <strong>Sugestões Práticas:</strong>
-            <ul>
-              {relatorio.sugestoes.map((sugestao, index) => (
-                <li key={index}>{sugestao}</li>
-              ))}
-            </ul>
+            <h3>Problemas Centrais e Análise Consultiva (D3)</h3>
+            {relatorio.problemas_centrais.map((item, index) => (
+              <div key={index} className="problema-item">
+                <strong>{item.problema} <span className={`classificacao ${item.classificacao.toLowerCase()}`}>({item.classificacao} - Score: {item.score})</span></strong>
+                <p><strong>Soft Skills em Falta:</strong> {item.soft_skills_mapeadas.map(s => s.skill).join(', ')}</p>
+                <p className="analise-consultiva">
+                  <strong>Análise:</strong> {relatorio.relatorio_narrativo.D3_analise_consultiva.find(a => a.problema === item.problema)?.analise}
+                </p>
+              </div>
+            ))}
           </div>
+
+          {/* SEÇÃO 3: Cenários Futuros */}
+          <div className="relatorio-secao">
+            <h3>Cenários Futuros (D5)</h3>
+            <div className="cenarios-container">
+              <div className="cenario-item evolucao">
+                <strong>Cenário de Evolução:</strong>
+                <p>{relatorio.relatorio_narrativo.D5_cenarios_futuros.evolucao}</p>
+              </div>
+              <div className="cenario-item deterioracao">
+                <strong>Cenário de Deterioração:</strong>
+                <p>{relatorio.relatorio_narrativo.D5_cenarios_futuros.deterioracao}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* SEÇÃO 4: Pontos Fortes e Próximos Passos */}
+          <div className="relatorio-secao-flex">
+            <div className="relatorio-metade">
+              <h3>Pontos Fortes</h3>
+              <ul>
+                {relatorio.relatorio_narrativo.pontos_fortes.map((ponto, index) => (
+                  <li key={index}>{ponto}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="relatorio-metade">
+              <h3>Direcionamento Estratégico (GROW - D6)</h3>
+              <p><strong>Meta Principal (Goal):</strong> {relatorio.relatorio_narrativo.D6_direcionamento_grow.goal}</p>
+              <p><strong>Opções Sugeridas (Options):</strong></p>
+              <ul>
+                {relatorio.relatorio_narrativo.D6_direcionamento_grow.options.map((opt, index) => (
+                  <li key={index}>{opt}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* SEÇÃO 5: Índice DHO e Trilhas */}
+          <div className="relatorio-secao">
+            <h3>Índice DHO e Recomendações (D7)</h3>
+            <div className="indice-dho">
+              <strong>Nota Indicativa de DHO:</strong>
+              <span className="nota-dho">{relatorio.indice_dho.nota_indicativa.toFixed(1)} / 5.0</span>
+              <p className="justificativa-dho">{relatorio.indice_dho.justificativa}</p>
+            </div>
+            <div className="trilhas-recomendadas">
+              <strong>Trilhas de Fundação Recomendadas:</strong>
+              <ul>
+                {relatorio.relatorio_narrativo.D7_design_desenvolvimento.trilhas_fundacao.map((trilha, index) => (
+                  <li key={index}>{trilha}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
         </div>
       ) : (
         <p>Nenhum relatório encontrado para este ID.</p>
       )}
 
       <Link to="/chatbot">
-        <button className="next-btn">Avançar</button>
+        <button className="next-btn">Avançar para a próxima etapa</button>
       </Link>
     </div>
-
   );
 };
 
