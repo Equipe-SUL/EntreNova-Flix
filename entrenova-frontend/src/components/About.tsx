@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/logoentrenova.png";
+import logo from "../assets/logo_branco_entrenova.png";
 import "../styles/About.css";
 
 const About: React.FC = () => {

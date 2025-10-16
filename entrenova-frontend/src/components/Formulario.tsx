@@ -289,9 +289,9 @@ const Formulario = () => {
   return (
     <div id="questionario" className="formulario-container">
       <div className="formulario-header">
-        <div className="linha" />
+        
         <h1>Diagnóstico Empresarial</h1>
-        <div className="linha" />
+       
       </div>
 
       {etapa === 'empresa' && (
