@@ -11,6 +11,7 @@ import SignIn from './components/SignIn';
 import ProtectedRoute from './components/ProtectedRoute';
 import CheckoutPage from './components/PaginaCheckout';
 import Dashboard from './pages/Dashboard';
+import DashboardRH from './pages/DashboardRH'; 
 
 
 
@@ -46,11 +47,20 @@ function App() {
 
           <Route path="/checkout" element={<CheckoutPage />} /> 
 
-          <Route path="/dashboard" element={ <Dashboard/>
-          //  <ProtectedRoute>
-              // depois colocaremos o dashboard aqui dentro, mas eu precisava visuzaizar ele agora <-- ass.vivian
-           // </ProtectedRoute>
-}
+          {/* Rota 1: Dashboard do Funcionário */}
+          <Route path="/dashboard/funcionario" element={ 
+            <ProtectedRoute allowedRoles={['funcionario']}> {/* Apenas o Funcionário deve ir para cá, RH tem sua rota */}
+              <Dashboard/>
+            </ProtectedRoute>
+          }
+          />
+
+          {/* Rota 2: Dashboard do RH */}
+          <Route path="/dashboard/rh" element={ 
+            <ProtectedRoute allowedRoles={['rh']}> 
+              <DashboardRH/> {/* NOVO COMPONENTE RH */}
+            </ProtectedRoute>
+          }
           />
 
           

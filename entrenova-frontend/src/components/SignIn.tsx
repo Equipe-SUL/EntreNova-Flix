@@ -1,3 +1,5 @@
+// src/components/SignIn.tsx (Versão Otimizada e Simples - Corrigida)
+
 import React, { useState } from 'react';
 import { supabase } from '../services/supabase';
 import { useNavigate } from 'react-router-dom'; 
@@ -14,6 +16,7 @@ const SignIn: React.FC = () => {
     setLoading(true);
     setMessage('');
 
+    // 1. Tenta fazer login no Supabase (Autenticação)
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -22,18 +25,45 @@ const SignIn: React.FC = () => {
     setLoading(false);
 
     if (error) {
-      // Lógica crucial: Trata e-mail não confirmado
-      if (error.message.includes('Email not confirmed')) {
-        setMessage('O email precisa ser confirmado. Verifique sua caixa de entrada.');
-      } else {
-        setMessage('Login falhou. Credenciais inválidas.');
+      // Login falhou (credenciais erradas)
+      setMessage('Login falhou. Credenciais inválidas ou conta não existe.');
+      
+    } else if (data.session && data.user) {
+      
+      // 2. Login bem-sucedido. Realiza a query na tabela public.profiles para obter a role.
+      const userId = data.user.id;
+      
+      // REALIZANDO A QUERY NA TABELA public.profiles
+      // Busca a role e armazena os dados em 'profileData' (que o usuário solicitou armazenar em uma variável data)
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('role') // Apenas o campo role é necessário
+        .eq('id', userId)
+        .single(); // Espera apenas uma linha
+        
+      if (profileError || !profileData) {
+        // Se houver erro na busca ou se o perfil não for encontrado (ex: Trigger falhou)
+        console.error('Erro ao buscar perfil:', profileError);
+        setMessage('Erro de autorização: Perfil de usuário não encontrado no banco de dados. Tente novamente.');
+        await supabase.auth.signOut(); // Desloga o usuário para segurança
+        return;
       }
-    } else if (data.session) {
-      // Login bem-sucedido: Redireciona para a página de pagamento protegida
-      navigate('/dashboard');
+      
+      // 3. Redirecionamento baseado na role ENCONTRADA no banco de dados
+      const role = profileData.role; 
+
+      if (role === 'rh') {
+          navigate('/dashboard/rh');
+      } else if (role === 'funcionario') {
+          navigate('/dashboard/funcionario');
+      } else {
+          setMessage(`Sua conta tem um papel de usuário inválido: ${role}.`);
+          await supabase.auth.signOut();
+      }
     }
   };
-   return (
+   
+  return (
     <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
       <h2>Login</h2>
       <form onSubmit={handleSignIn}>
@@ -57,14 +87,9 @@ const SignIn: React.FC = () => {
           {loading ? 'Entrando...' : 'Login'}
         </button>
       </form>
-      {message && <p style={{ color: message.includes('falhou') || message.includes('negado') ? 'red' : 'green', marginTop: '15px' }}>{message}</p>}
-      
-      {/* Exemplo de link para o sign up */}
-      <p style={{ marginTop: '20px' }}>
-        Não tem uma conta? <a href="/checkout">Registre-se aqui</a>
-      </p>
+      {message && <p style={{ color: message.includes('falhou') || message.includes('autorização') ? 'red' : 'green', marginTop: '10px' }}>{message}</p>}
     </div>
   );
-}
+};
 
 export default SignIn;
