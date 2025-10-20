@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Formulario.css';
-import api from '../services/api'; 
+import api from '../services/api';
 import { validarCNPJ } from '../services/api'
 
 import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types';
@@ -10,9 +10,11 @@ import { IPerguntaLead, IRespostasLead, IScoreLead } from '../types/empresa.type
 
 const perguntasPorDimensao: IPerguntasPorDimensao = {
   pessoas: [
-    { id: 'p1', texto: 'Questão 1 – Como a comunicação acontece no dia a dia?', opcoes: ['Todos têm clareza e acesso fácil às informações', 'Funciona na maior parte do tempo, mas com algumas falhas.'
-    , 'Normalmente só em reuniões formais ou quando há problemas', 'É confusa, cada líder comunica de um jeito.'
-    ] },
+    {
+      id: 'p1', texto: 'Questão 1 – Como a comunicação acontece no dia a dia?', opcoes: ['Todos têm clareza e acesso fácil às informações', 'Funciona na maior parte do tempo, mas com algumas falhas.'
+        , 'Normalmente só em reuniões formais ou quando há problemas', 'É confusa, cada líder comunica de um jeito.'
+      ]
+    },
     { id: 'p2', texto: 'Questão 2 – Como você descreveria o estilo de liderança predominante?', opcoes: ['Engajam e dão autonomia', 'São bons, mas variam conforme o líder', 'Centralizam muito as decisões.', 'Raramente exercem liderança ativa'] },
     { id: 'p3', texto: 'Questão 3 – Quando surgem problemas, como os times costumam agir?', opcoes: ['Trazem ideias e resolvem juntos.', 'Resolvem, mas de forma reativa', 'Dependem sempre do gestor para decidir', 'Evitam mudanças e preferem manter como está'] },
     { id: 'p4', texto: 'Questão 4 – Como está organizada a rotina de trabalho?', opcoes: ['Papéis e prioridades são claros', 'Há certa clareza, mas faltam recursos ou prazos realistas.', 'Muitas vezes é confusa, com foco em “apagar incêndios”', 'Não há organização definida, cada um faz do seu jeito'] },
@@ -45,7 +47,7 @@ const perguntasPorDimensao: IPerguntasPorDimensao = {
   ]
 };
 
-const perguntasLead : IPerguntaLead[] = [
+const perguntasLead: IPerguntaLead[] = [
   { id: 'lead1', texto: 'Número de colaboradores', opcoes: ['Até 10', '11 a 30', '31 a 100', '101 a 500', 'Acima de 500'], pontos: [1, 2, 3, 4, 5] },
   { id: 'lead2', texto: 'Porte da empresa', opcoes: ['Startup', 'PME', 'Grande empresa'], pontos: [2, 3, 5] },
   { id: 'lead3', texto: 'Investimento Disponível', opcoes: ['Até R$ 10 mil', 'Entre R$ 10 mil e R$ 50 mil', 'Acima de R$ 50 mil'], pontos: [1, 3, 5] },
@@ -75,16 +77,16 @@ const Formulario = () => {
   const [statusEnvio, setStatusEnvio] = useState<string>('');
   const [cnpjExistente, setCnpjExistente] = useState<boolean>(false);
   const getDimensaoAtual = (): string | null => {
-  if (!perguntas[indiceAtual]) return null;
+    if (!perguntas[indiceAtual]) return null;
 
-  for (const dim in perguntasPorDimensao) {
-    if (perguntasPorDimensao[dim as keyof IPerguntasPorDimensao].some(p => p.id === perguntas[indiceAtual].id)) {
-      return nomesDimensao[dim]; // usa o nome bonito
+    for (const dim in perguntasPorDimensao) {
+      if (perguntasPorDimensao[dim as keyof IPerguntasPorDimensao].some(p => p.id === perguntas[indiceAtual].id)) {
+        return nomesDimensao[dim]; // usa o nome bonito
+      }
     }
-  }
-  return null;
-};
-    const nomesDimensao: { [key: string]: string } = {
+    return null;
+  };
+  const nomesDimensao: { [key: string]: string } = {
     pessoas: 'Pessoas & Cultura',
     estrutura: 'Estrutura & Operações',
     mercado: 'Mercado & Clientes',
@@ -118,7 +120,7 @@ const Formulario = () => {
     });
 
     const mediaCultura = countCultura > 0 ? somaCultura / countCultura : 0;
-    
+
     let pontosMedia = 0;
     if (mediaCultura >= 3 && mediaCultura < 4) pontosMedia = 1;
     else if (mediaCultura >= 4 && mediaCultura < 5) pontosMedia = 2;
@@ -134,76 +136,76 @@ const Formulario = () => {
     return { total, classificacao, detalhes };
   };
 
- const handleEmpresaChange = (e: ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
+  const handleEmpresaChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
-  if (name === 'telefone') {
-    // Remove tudo que não é número
-    let digits = value.replace(/\D/g, '');
-    
-    // Limita a 11 dígitos (DDD 2 + número 9)
-    if (digits.length > 11) digits = digits.slice(0, 11);
-    
-    // Formata (XX) XXXXX-XXXX
-    let formatted = digits;
-    if (digits.length > 2) {
-      formatted = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}`;
-      if (digits.length > 7) {
-        formatted += `-${digits.slice(7)}`;
+    if (name === 'telefone') {
+      // Remove tudo que não é número
+      let digits = value.replace(/\D/g, '');
+
+      // Limita a 11 dígitos (DDD 2 + número 9)
+      if (digits.length > 11) digits = digits.slice(0, 11);
+
+      // Formata (XX) XXXXX-XXXX
+      let formatted = digits;
+      if (digits.length > 2) {
+        formatted = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}`;
+        if (digits.length > 7) {
+          formatted += `-${digits.slice(7)}`;
+        }
       }
+
+      setEmpresa(prev => ({ ...prev, telefone: formatted }));
+    } else if (name === 'cnpj') {
+      // Formatação simples de CNPJ: 00.000.000/0000-00
+      let digits = value.replace(/\D/g, '');
+      if (digits.length > 14) digits = digits.slice(0, 14);
+      let formatted = digits;
+      if (digits.length > 2) formatted = digits.slice(0, 2) + '.' + digits.slice(2);
+      if (digits.length > 5) formatted = formatted.slice(0, 6) + '.' + formatted.slice(6);
+      if (digits.length > 8) formatted = formatted.slice(0, 10) + '/' + formatted.slice(10);
+      if (digits.length > 12) formatted = formatted.slice(0, 15) + '-' + formatted.slice(15);
+
+      setEmpresa(prev => ({ ...prev, cnpj: formatted }));
+    } else {
+      setEmpresa(prev => ({ ...prev, [name]: value }));
     }
-    
-    setEmpresa(prev => ({ ...prev, telefone: formatted }));
-  } else if (name === 'cnpj') {
-    // Formatação simples de CNPJ: 00.000.000/0000-00
-    let digits = value.replace(/\D/g, '');
-    if (digits.length > 14) digits = digits.slice(0, 14);
-    let formatted = digits;
-    if (digits.length > 2) formatted = digits.slice(0, 2) + '.' + digits.slice(2);
-    if (digits.length > 5) formatted = formatted.slice(0, 6) + '.' + formatted.slice(6);
-    if (digits.length > 8) formatted = formatted.slice(0, 10) + '/' + formatted.slice(10);
-    if (digits.length > 12) formatted = formatted.slice(0, 15) + '-' + formatted.slice(15);
-    
-    setEmpresa(prev => ({ ...prev, cnpj: formatted }));
-  } else {
-    setEmpresa(prev => ({ ...prev, [name]: value }));
-  }
-};
+  };
 
 
-    const validarEmpresa = async (): Promise<boolean> => {
-  // checa se todos os campos obrigatórios foram preenchidos
-  if (!empresa.cnpj || !empresa.nome || !empresa.email || !empresa.telefone || !empresa.setor) {
-    alert('Preencha todos os campos obrigatórios: CNPJ, Nome, Email, Telefone e Setor de Atuação.');
-    return false;
-  }
-
-  // remove tudo que não é número
-  const cnpjNumeros = empresa.cnpj.replace(/\D/g, '');
-
-  // valida se tem exatamente 14 dígitos
-  if (cnpjNumeros.length !== 14) {
-    alert('O CNPJ precisa ter exatamente 14 dígitos.');
-    return false;
-  }
-
-  try {
-    const response = await validarCNPJ(cnpjNumeros); // envia só números pro backend
-    const existe = response.data.valido;
-    setCnpjExistente(existe);
-
-    if (existe) {
-      alert('Este CNPJ já está cadastrado.');
+  const validarEmpresa = async (): Promise<boolean> => {
+    // checa se todos os campos obrigatórios foram preenchidos
+    if (!empresa.cnpj || !empresa.nome || !empresa.email || !empresa.telefone || !empresa.setor) {
+      alert('Preencha todos os campos obrigatórios: CNPJ, Nome, Email, Telefone e Setor de Atuação.');
       return false;
     }
 
-    return true;
-  } catch (error) {
-    console.error('Erro ao validar CNPJ:', error);
-    alert('Erro ao validar CNPJ. Tente novamente.');
-    return false;
-  }
-};
+    // remove tudo que não é número
+    const cnpjNumeros = empresa.cnpj.replace(/\D/g, '');
+
+    // valida se tem exatamente 14 dígitos
+    if (cnpjNumeros.length !== 14) {
+      alert('O CNPJ precisa ter exatamente 14 dígitos.');
+      return false;
+    }
+
+    try {
+      const response = await validarCNPJ(cnpjNumeros); // envia só números pro backend
+      const existe = response.data.valido;
+      setCnpjExistente(existe);
+
+      if (existe) {
+        alert('Este CNPJ já está cadastrado.');
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Erro ao validar CNPJ:', error);
+      alert('Erro ao validar CNPJ. Tente novamente.');
+      return false;
+    }
+  };
 
 
 
@@ -243,55 +245,85 @@ const Formulario = () => {
 
   const confirmarRespostaLead = () => {
     if (respostaAtualLead === null) return;
-    
+
     const pergunta = perguntasLead[indiceLeadAtual];
     setRespostasLead({ ...respostasLead, [pergunta.id]: respostaAtualLead });
     setRespostaAtualLead(null);
-    
+
     if (indiceLeadAtual + 1 < perguntasLead.length) {
       setIndiceLeadAtual(indiceLeadAtual + 1);
     } else {
-      const score = calcularScoreLead({ 
-        ...respostasLead, 
-        [pergunta.id]: respostaAtualLead 
+      const score = calcularScoreLead({
+        ...respostasLead,
+        [pergunta.id]: respostaAtualLead
       });
       setScoreLead(score);
       setEtapa('finalizado');
     }
-  };  
+  };
 
   const handleSubmitFinal = async () => {
     setStatusEnvio('Enviando...');
 
-    const respostasFormatadas = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
-      return { pergunta: perguntaId, resposta: respostaIndex, tipo: 'dimensao' };
-    });
+    // Função auxiliar para encontrar a pergunta completa pelo ID
+    const getPerguntaCompleta = (perguntaId: string): IPergunta | undefined => {
+      for (const dim in perguntasPorDimensao) {
+        const perguntaEncontrada = perguntasPorDimensao[dim as keyof IPerguntasPorDimensao].find(p => p.id === perguntaId);
+        if (perguntaEncontrada) {
+          return perguntaEncontrada;
+        }
+      }
+      return undefined;
+    };
 
-    const todasRespostas = [...respostasFormatadas];
+    // Formata as respostas do quiz com a estrutura correta esperada pelo backend
+    const respostasFormatadasParaIA = Object.entries(respostas).map(([perguntaId, respostaIndex]) => {
+      const perguntaObj = getPerguntaCompleta(perguntaId);
 
+      // Garante que temos o objeto da pergunta antes de formatar
+      if (!perguntaObj || respostaIndex === null) {
+        console.warn(`Pergunta ${perguntaId} não encontrada ou sem resposta, pulando.`);
+        return null; // Retorna null para filtrar depois
+      }
+
+      return {
+        pergunta: perguntaObj.texto,          // O texto da pergunta
+        opcoes: perguntaObj.opcoes,          // O array de opções
+        respostaIndex: respostaIndex,        // O índice da resposta selecionada
+        perguntaId: perguntaId,              // Mantém o ID se precisar no backend para outra coisa
+        // 'resposta' com o texto não é mais necessário aqui se o backend usa o index
+      };
+    }).filter(item => item !== null); // Remove itens nulos caso alguma pergunta não seja encontrada
+
+    // Monta o payload final
     const payload = {
       dadosEmpresa: empresa,
-      dadosQuiz: todasRespostas,
+      dadosQuiz: respostasFormatadasParaIA, // Usa o novo array formatado
       scoreLead,
-      dimensoesSelecionadas
+      // dimensoesSelecionadas não parece ser usado no backend 'salvarDiagnosticoCompleto', mas pode manter se planeja usar
     };
+
+    console.log("Payload enviado para /api/diagnostico:", payload); // Log para depuração
 
     try {
       const response = await api.post('/diagnostico', payload);
       const reportId = response.data.reportId;
       navigate(`/resultado/${reportId}`);
-    } catch (error) {
-      console.error("Erro ao enviar diagnóstico:", error);
-      setStatusEnvio('Ocorreu um erro ao salvar. Tente novamente.');
+    } catch (error: any) { // Captura 'any' para inspecionar a resposta do erro
+      console.error("Erro detalhado ao enviar diagnóstico:", error);
+      // Mostra a mensagem de erro vinda do backend, se disponível
+      const errorMsg = error.response?.data?.erro || error.message || 'Ocorreu um erro desconhecido.';
+      setStatusEnvio(`Erro: ${errorMsg}. Tente novamente.`);
+      alert(`Erro ao enviar: ${errorMsg}`); // Alerta para o usuário
     }
   };
 
   return (
     <div id="questionario" className="formulario-container">
       <div className="formulario-header">
-        
+
         <h1>Diagnóstico Empresarial</h1>
-       
+
       </div>
 
       {etapa === 'empresa' && (
