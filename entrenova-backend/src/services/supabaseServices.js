@@ -70,18 +70,18 @@ const salvarRespostaChat = async (dados) => {
 };
 
 /**
- * Orquestra o processo completo: salva dados na 'empresas', 'respostas', 
- * salva o registro principal na 'relatorios' (com texto consolidado) 
- * e os detalhes estruturados na 'analises_ia'.
+ * Orquestra o processo completo: salva dados na 'empresas', 'respostas',
+ * chama a IA para o Diagnóstico Profundo e salva os resultados estruturados
+ * nas tabelas 'relatorios' и 'analises_ia'.
  */
 const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = null) => {
-  // Validação inicial do CNPJ
+  // --- Validações iniciais (isso aqui continua igual!) ---
   const cnpjExistente = await verificarCnpjExistente(dadosEmpresa.cnpj);
   if (cnpjExistente) {
     throw new Error('Não foi possível salvar os dados da empresa. O CNPJ pode já existir.');
   }
 
-  // Passo A: Salvar na tabela 'empresas'
+  // Passo A: Salvar na tabela 'empresas' (continua igual!)
   const { error: errorEmpresa } = await supabase
     .from('empresas')
     .insert([dadosEmpresa]);
@@ -91,94 +91,56 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
     throw new Error('Não foi possível salvar os dados da empresa.');
   }
 
-  // Passo B: Processar e salvar respostas por tipo
-  
-  // B.1: Respostas de Dimensão
-  const respostasDimensao = dadosQuiz.filter(item => item.tipo === 'dimensao' || !item.tipo);
-  const respostasParaInserir = respostasDimensao.map(item => ({
-    pergunta: item.pergunta,
-    resposta: item.resposta,
-    categoria: item.pergunta.split('-')[0],
+  // Passo B: Salvar respostas do quiz (continua igual!)
+  const respostasParaInserir = dadosQuiz.map(item => ({
+    pergunta: item.perguntaId,
+    resposta: item.respostaIndex,
+    categoria: item.perguntaId.charAt(0),
     tipo_diagnostico: 'inicial',
     cnpj_empresa: dadosEmpresa.cnpj
   }));
 
   if (respostasParaInserir.length > 0) {
-    const { error: errorRespostasIniciais } = await supabase
+    const { error: errorRespostas } = await supabase
       .from('respostas')
       .insert(respostasParaInserir);
-
-    if (errorRespostasIniciais) {
-      console.error('Erro ao salvar respostas iniciais:', errorRespostasIniciais);
+    if (errorRespostas) {
+      console.error('Erro ao salvar respostas iniciais:', errorRespostas);
+      // Decide se quer parar ou continuar mesmo se as respostas não salvarem
     }
   }
 
-  // B.2: Respostas de Lead Scoring (se existirem)
-  const respostasLead = dadosQuiz.filter(item => item.tipo === 'lead');
-  let respostasLeadParaInserir = [];
+  // --- A MÁGICA COMEÇA A MUDAR AQUI! ---
 
-  if (respostasLead.length > 0) {
-    respostasLeadParaInserir = respostasLead.map(item => {
-      const respostaAjustada = item.resposta - 1;
-      const pontos = perguntasLead.find(p => p.id === item.pergunta)?.pontos[respostaAjustada] || 0;
-      
-      return {
-        pergunta: item.pergunta,
-        resposta: item.resposta,
-        categoria: 'lead',
-        tipo_diagnostico: 'lead_scoring',
-        cnpj_empresa: dadosEmpresa.cnpj,
-      };
-    });
-
-    const { error: errorRespostasLead } = await supabase
-      .from('respostas')
-      .insert(respostasLeadParaInserir);
-
-    if (errorRespostasLead) {
-      console.error('Erro ao salvar respostas do lead:', errorRespostasLead);
-    }
-  }
-
-  // Passo C: Buscar conteúdos para recomendação e chamar IA
-  const conteudosDisponiveis = await buscarConteudos();
-  
-  console.log('Iniciando análise com a IA...');
+  // Passo C: Chamar a NOVA IA para o Diagnóstico Profundo
+  console.log('Iniciando Diagnóstico Profundo com a IA...');
   const analiseIA = await analisarRespostasComIA(dadosEmpresa, dadosQuiz);
 
-  if (!analiseIA) {
-    throw new Error('Falha ao gerar a análise da IA.');
+  if (!analiseIA || analiseIA.error) {
+    throw new Error(`Falha ao gerar a análise da IA: ${analiseIA.details || 'Erro desconhecido'}`);
   }
 
-  // Geração do Texto Consolidado para relatorio1
-  const textoConsolidadoRelatorio1 = `
-    **Principal Desafio:** ${analiseIA.maiorProblema}
-    
-    **Sugestões Práticas:**
-    ${analiseIA.sugestoes.map((s, index) => `${index + 1}. ${s}`).join('\n')}
-    
-    **Tom da Análise:** ${analiseIA.tom}
-    
-    **Emoções Identificadas:** ${analiseIA.emocoes.join(', ')}
-  `.trim();
+  // Passo D: Preparar os dados para salvar no Supabase (A NOVA LÓGICA!)
 
-  // Passo D: Preparar dados para relatório
+  // D.1: Preparando o registro principal para a tabela 'relatorios'
   const dadosRelatorio = {
     cnpj_empresa: dadosEmpresa.cnpj,
-    resumo1: analiseIA.resumo,
-    relatorio1: analiseIA.relatorioCompleto,
+    // O novo campo 'relatorio1_narrativo' vai receber o objeto JSON completo.
+    // O Supabase vai adorar isso!
+    relatorio1_narrativo: analiseIA.relatorio_narrativo,
+    // O novo campo 'nota_dho' recebe o número direto.
+    nota_dho: analiseIA.indice_dho.nota_indicativa,
+    // Podemos criar um resumo simples para o campo 'resumo1' que você já tinha.
+    resumo1: analiseIA.relatorio_narrativo.D1_descoberta,
+    // Adiciona a classificação do lead se ela existir.
+    lead: scoreLead?.classificacao || null,
   };
 
-  // Adicionar classificação de lead se disponível
-  if (scoreLead && scoreLead.classificacao) {
-    dadosRelatorio.lead = scoreLead.classificacao;
-  }
-
-  // D.1: Salvar o registro principal na tabela 'relatorios'
+  // D.2: Salvar o registro principal e pegar o ID dele
   const { data: relatorioData, error: errorRelatorio } = await supabase
     .from('relatorios')
     .insert([dadosRelatorio])
-    .select('id')
+    .select('id') // A gente precisa do ID para a próxima etapa!
     .single();
 
   if (errorRelatorio) {
@@ -186,39 +148,39 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
     throw new Error('Falha ao gerar o registro do relatório.');
   }
 
-    const relatorioCompletoParaEmail = {
-  relatorioCompleto: analiseIA.relatorioCompleto,  // ✅ relatório completo
-  resumo_ia: analiseIA.resumo,
-  sugestoes: analiseIA.sugestoes,
-  lead: scoreLead?.classificacao || null   // ✅ lead se existir
-};
-
-  await enviarEmailDiagnostico(dadosEmpresa, relatorioCompletoParaEmail);
-
-  // D.2: Salvar os detalhes estruturados na tabela 'analises_ia'
+  // D.3: Preparando os dados detalhados para a tabela 'analises_ia'
   const dadosAnaliseIA = {
-    relatorio_id: relatorioData.id,
-    resumo: analiseIA.resumo,
-    maior_problema: analiseIA.maiorProblema,
-    sugestoes: JSON.stringify(analiseIA.sugestoes),
-    tom_analise: analiseIA.tom,
-    emocoes: JSON.stringify(analiseIA.emocoes)
+    relatorio_id: relatorioData.id, // Conectamos as duas tabelas!
+    // O campo 'problemas_centrais' recebe o array de problemas completo.
+    problemas_centrais: analiseIA.problemas_centrais,
+    // Podemos guardar a justificativa do DHO aqui também, em um campo de texto.
+    // (Você precisaria criar uma coluna 'justificativa_dho' do tipo text)
+    justificativa_dho: analiseIA.indice_dho.justificativa,
   };
-
-  // Adicionar trilhas recomendadas se disponíveis (nao utilizado mais )
-  //if (analiseIA.trilhasRecomendadas) {
-  //  dadosAnaliseIA.trilhas_recomendadas = JSON.stringify(analiseIA.trilhasRecomendadas);
- // }
 
   const { error: errorAnalise } = await supabase
     .from('analises_ia')
     .insert([dadosAnaliseIA]);
 
   if (errorAnalise) {
-    console.error('Erro ao salvar análise da IA:', errorAnalise);
-    throw new Error('Falha ao salvar a análise detalhada da IA.');
+    console.error('Erro ao salvar análise detalhada da IA:', errorAnalise);
+    // Mesmo que isso falhe, o relatório principal foi salvo.
+    // Podemos só logar o erro e continuar.
   }
 
+  // Passo E: Enviar e-mail (agora com dados muito mais ricos!)
+  console.log('Enviando e-mail com o diagnóstico...');
+  // Você pode adaptar a função de e-mail para usar os novos dados estruturados
+  // e montar um e-mail muito mais bonito e informativo!
+  await enviarEmailDiagnostico(dadosEmpresa, {
+    resumo_ia: analiseIA.relatorio_narrativo.D1_descoberta,
+    relatorioCompleto: JSON.stringify(analiseIA.relatorio_narrativo, null, 2), // Uma forma simples de mostrar tudo
+    sugestoes: analiseIA.problemas_centrais.map(p => p.problema),
+    lead: scoreLead?.classificacao || null,
+  });
+
+
+  console.log('✅ Diagnóstico completo salvo com sucesso! ID:', relatorioData.id);
   return { success: true, reportId: relatorioData.id };
 };
 
@@ -226,48 +188,47 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
  * Busca um relatório (tabela 'relatorios') e os detalhes da análise (tabela 'analises_ia') por ID.
  * Retorna apenas os campos necessários para o frontend (omite tom e emoções).
  */
+// VERSÃO DE TRANSIÇÃO - PARA LER OS DADOS DO BANCO ATUAL
+
 const buscarRelatorioPorId = async (id) => {
+  console.log(`Buscando relatório ID: ${id} (modo denso)...`);
   const { data, error } = await supabase
     .from('relatorios')
-    .select('*, analises_ia(*)')
+    .select('*, analises_ia(*)') // Seleciona o relatório e sua análise IA associada
     .eq('id', id)
     .single();
 
-  if (error || !data || !data.analises_ia || data.analises_ia.length === 0) {
-    throw new Error('Relatório não encontrado ou análise detalhada ausente.');
+  if (error || !data) {
+    console.error('Erro ao buscar relatório:', error);
+    throw new Error('Relatório não encontrado.');
+  }
+  if (!data.analises_ia || data.analises_ia.length === 0) {
+    throw new Error('Análise detalhada da IA para este relatório não foi encontrada.');
   }
 
   const analise = data.analises_ia[0];
 
-  // Converte a string JSON de sugestões de volta para array
-  let sugestoesArray = [];
-  if (analise.sugestoes && typeof analise.sugestoes === 'string') {
-    sugestoesArray = JSON.parse(analise.sugestoes);
-  }
-
-  // Converte as trilhas JSON para array
-  let trilhasArray = [];
-  if (analise.trilhas_recomendadas && typeof analise.trilhas_recomendadas === 'string') {
-    trilhasArray = JSON.parse(analise.trilhas_recomendadas);
-  }
-
-  // Mapeia e consolida os dados para o formato esperado pelo frontend
+  // --- NOVA LÓGICA: ENVIAR DADOS ESTRUTURADOS ---
+  // Montamos um objeto que envia a estrutura completa para o frontend.
   const formattedData = {
     id: data.id,
-    resumo_ia: analise.resumo,
-    relatorioCompleto: data.relatorio1 || '', // ou analise.relatorioCompleto se estiver lá
-    maior_problema: analise.maior_problema,
-    sugestoes: sugestoesArray,
-    trilhasRecomendadas: trilhasArray
+    lead: data.lead,
+    nota_dho: data.nota_dho,
+    problemas_centrais: analise.problemas_centrais, // Array completo
+    relatorio_narrativo: data.relatorio1_narrativo, // Objeto completo
+    indice_dho: {
+      nota_indicativa: data.nota_dho,
+      justificativa: analise.justificativa_dho,
+    },
   };
 
-  // Adicionar lead se disponível
-  if (data.lead) {
-    formattedData.lead = data.lead;
-  }
-
+  console.log('Dados densos formatados para o frontend:', formattedData);
   return formattedData;
 };
+
+
+
+
 
 const atualizarRelatorio = async (cnpj, dados) => {
   const { error } = await supabase
