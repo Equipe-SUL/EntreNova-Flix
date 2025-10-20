@@ -2,22 +2,17 @@
 
 import express from 'express';
 import { handleCheckout } from '../controllers/pagamentoController.js'; 
-import { requireAuthAndRole } from '../middlewares/authMiddleware.js'; // ** IMPORTANTE: Incluir a extensão .js **
+import { requireAuthAndRole } from '../middlewares/authMiddleware.js'; 
+import { createFuncionario } from '../controllers/createFuncionarioController.js'; // NOVO IMPORT
 
 const router = express.Router();
 
-// Controller de Pagamento
-const handlePaymentAccess = (req, res) => {
-    // ...
-    res.json({ 
-        message: 'Acesso à lógica de pagamento concedido. Você é um RH verificado.',
-        status: 'AUTHORIZED', 
-        rh_email: req.user.email,
-        rh_id: req.user.id
-    });
-};
-
-router.get('/access', requireAuthAndRole, handlePaymentAccess);
+// Rota de Checkout (Registro do RH)
 router.post('/checkout', handleCheckout);
 
-export default router; 
+// [NOVA ROTA PROTEGIDA] Endpoint para RH cadastrar Funcionários
+router.post('/admin/create-funcionario', requireAuthAndRole, createFuncionario); 
+
+// (Mantenha outras rotas se houver)
+
+export default router;

@@ -2,13 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { supabase } from '../services/supabase'; // Certifique-se de que o caminho está correto
 
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowedRoles: string[]; // Recebe a lista de roles permitidas
+}
 /**
  * Componente Wrapper para proteger rotas.
  * Verifica a sessão do Supabase:
  * - Se logado, renderiza o componente filho (children).
  * - Se não logado ou sessão expirada, redireciona para /signin.
  */
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode, allowedRoles:string[] }> = ({ children }) => {
     // Estado para armazenar a sessão
     const [session, setSession] = useState<any>(null);
     // Estado para indicar se a verificação inicial terminou
