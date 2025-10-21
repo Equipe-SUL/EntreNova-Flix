@@ -71,7 +71,8 @@ export const gerarRelatorioTotal = async (req, res) => {
     const resumo2 = relatorio2IA.resumo2;
 
     // 5️⃣ Determinar quantidade de conteúdos da trilha
-    const qtdConteudos = (plano?.toLowerCase() === "básico") ? 5 : 7;
+    const qtdConteudos = 3;
+    //const qtdConteudos = (plano?.toLowerCase() === "básico") ? 5 : 7;
 
     // 6️⃣ Buscar conteúdos disponíveis
     const conteudosDisponiveis = await buscarConteudos();

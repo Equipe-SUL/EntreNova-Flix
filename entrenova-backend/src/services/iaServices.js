@@ -124,18 +124,58 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     }
   `;
 
+
+
   try {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
-    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    const match = text.match(/```(?:json)?([\s\S]*?)```/);
+
+    let jsonText;
+
+    if (match && match[1]) {
+      // 1. Encontrou o JSON dentro dos marcadores
+      jsonText = match[1].trim();
+    } else {
+      // 2. Não encontrou marcadores. Tenta encontrar o JSON "solto"
+      const jsonStartIndex = text.indexOf('{');
+      const jsonEndIndex = text.lastIndexOf('}');
+
+      if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
+        // Pega o texto entre o primeiro { e o último }
+        jsonText = text.substring(jsonStartIndex, jsonEndIndex + 1).trim();
+      } else {
+        // 3. Não encontrou nem marcadores nem um objeto JSON básico.
+        console.error("❌ Resposta da IA não continha um JSON válido:", text);
+        throw new Error("A resposta da IA não estava no formato JSON esperado.");
+      }
+    }
+    // --- FIM DA LÓGICA DE EXTRAÇÃO ---
+
+    // =================================================================
+    //                *** AQUI ESTÁ A CORREÇÃO QUE FALTAVA ***
+    // =================================================================
+    // Remove vírgulas sobrando (trailing commas) antes de '}' ou ']'
+    const sanitizedJsonText = jsonText
+      .replace(/,\s*([}\]])/g, '$1');
+    // =================================================================
+
 
     console.log("✅ Diagnóstico Profundo gerado com sucesso!");
-    return JSON.parse(jsonText);
+
+    // Agora faz o parse do TEXTO SANITIZADO, não do 'jsonText' original
+    return JSON.parse(sanitizedJsonText);
+
   } catch (error) {
+    // Se o JSON.parse() ainda falhar, o erro será pego aqui
     console.error("❌ Erro no Gemini ao gerar Diagnóstico Profundo:", error);
-    // Retorna um objeto de erro para não quebrar o sistema
+
+    // Se o erro persistir, descomente a linha abaixo no seu código para ver o JSON exato que está falhando
+    // console.log("--- JSON QUE FALHOU O PARSE ---", sanitizedJsonText || jsonText); 
+
     return {
       error: "Não foi possível gerar a análise completa.",
       details: error.message
@@ -143,9 +183,10 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
   }
 }
 
+
 // =================================================================
 
-// 3. FUNÇÃO 2: GERAR NOVO RELATÓRIO (RELATÓRIO 2) - A função do seu colega, agora com Gemini!
+// 3. FUNÇÃO 2: GERAR NOVO RELATÓRIO (RELATÓRIO 2) -
 /**
  * Gera um novo relatório (Relatório 2) baseado nas respostas do chatbot.
  */

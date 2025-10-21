@@ -54,9 +54,7 @@ const Header = () => {
 
       <div className="logo-wrap">
 
-        
-
-        {/* 2. SUBSTITUÍDO o 'div.text-logo' pela tag <img> */}
+      
 
         <img
 
@@ -64,7 +62,7 @@ const Header = () => {
 
           alt="Logo Entrenova"
 
-          className="logo" // Você pode precisar ajustar essa classe no seu CSS
+          className="logo" 
 
           onClick={() => handleScrollOrNavigate('#inicio')}
 
@@ -114,7 +112,7 @@ const Header = () => {
 
             <li>
 
-              <Link to="/login" className="btn-entrar">Login</Link>
+              <Link to="/signin" className="btn-entrar">Login</Link>
 
             </li>
 
