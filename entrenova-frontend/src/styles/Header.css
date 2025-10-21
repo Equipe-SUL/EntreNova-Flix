@@ -1,329 +1,761 @@
-
-
 :root {
+
   --bg-center: #0D1117;
+
   --bg-edge: #010409;
+
   --text-primary: #E6EDF3;
+
   --text-muted: #9AA7B2;
+
   --accent-magenta: #E6007A;
+
   --accent-magenta-strong: #FF007F;
+
   --accent-cyan: #00BFFF;
+
 }
+
+
 
 .header {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
     padding: 12px 32px;
+
     background: transparent;
+
     position: relative;
+
     backdrop-filter: saturate(140%) blur(8px);
+
     -webkit-backdrop-filter: saturate(140%) blur(8px);
+
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
     font-family: 'Epilogue', system-ui, sans-serif;
+
 }
+
+
 
 header {
+
     margin-left: 5em;
+
     margin-right: 5em;
+
 }
+
+
 
 /* Realce y luz de fondo para el logo negro */
+
 .logo-wrap {
+
   position: relative;
+
   display: inline-block;
-}
-/* Placa de vidrio detrás del logo */
-.logo-glass {
-  position: absolute;
-  inset: -8px -10px -8px -10px; /* tamaño de la placa */
-  border-radius: 2px;
-  background: rgba(13,17,23,0.55); /* base oscura translúcida */
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 24px rgba(230,0,122,0.18), inset 0 0 22px rgba(255,255,255,0.18), inset 0 0 48px rgba(255,255,255,0.12);
-}
-/* Más luz/halo detrás del logo negro */
-.logo-wrap::before {
-  content: "";
-  position: absolute;
-  inset: -18px -22px -18px -22px; /* halo más amplio */
-  border-radius: 20px;
-  pointer-events: none;
-  background:
-    radial-gradient(65% 65% at 30% 50%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.12) 60%, rgba(255,255,255,0) 100%),
-    radial-gradient(45% 45% at 70% 50%, rgba(230,0,122,0.28) 0%, rgba(230,0,122,0.10) 60%, rgba(230,0,122,0) 100%);
-  filter: blur(6px);
+
 }
 
-.logo-wrap::after {
-  content: "";
+/* Placa de vidrio detrás del logo */
+
+.logo-glass {
+
   position: absolute;
-  inset: -6px; /* luz focal cercana al logo */
-  border-radius: 14px;
-  pointer-events: none;
-  background:
-    radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0.14) 55%, rgba(255,255,255,0) 100%),
-    radial-gradient(40% 40% at 60% 50%, rgba(230,0,122,0.35) 0%, rgba(230,0,122,0.14) 55%, rgba(230,0,122,0) 100%);
-  filter: blur(8px);
+
+  inset: -8px -10px -8px -10px; /* tamaño de la placa */
+
+  border-radius: 2px;
+
+  background: rgba(13,17,23,0.55); /* base oscura translúcida */
+
+  backdrop-filter: blur(14px) saturate(150%);
+
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 24px rgba(230,0,122,0.18), inset 0 0 22px rgba(255,255,255,0.18), inset 0 0 48px rgba(255,255,255,0.12);
+
 }
+
+/* Más luz/halo detrás del logo negro */
+
+.logo-wrap::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: -18px -22px -18px -22px; /* halo más amplio */
+
+  border-radius: 20px;
+
+  pointer-events: none;
+
+  background:
+
+    radial-gradient(65% 65% at 30% 50%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.12) 60%, rgba(255,255,255,0) 100%),
+
+    radial-gradient(45% 45% at 70% 50%, rgba(230,0,122,0.28) 0%, rgba(230,0,122,0.10) 60%, rgba(230,0,122,0) 100%);
+
+  filter: blur(6px);
+
+}
+
+
+
+.logo-wrap::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: -6px; /* luz focal cercana al logo */
+
+  border-radius: 14px;
+
+  pointer-events: none;
+
+  background:
+
+    radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0.14) 55%, rgba(255,255,255,0) 100%),
+
+    radial-gradient(40% 40% at 60% 50%, rgba(230,0,122,0.35) 0%, rgba(230,0,122,0.14) 55%, rgba(230,0,122,0) 100%);
+
+  filter: blur(8px);
+
+}
+
+
 
 /* Base glow sutil directamente en la imagen del logo */
+
 .logo {
+
     position: relative;
+
     z-index: 1;
+
     width: 150px;
+
     filter: drop-shadow(0 0 12px rgba(255,255,255,0.18)) drop-shadow(0 0 20px rgba(230, 0, 122, 0.24));
+
 }
+
+
 
 #divuniao {
+
     display: flex;
+
     flex-direction: row;
+
     justify-content: space-between;
+
     align-items: center;
+
 }
 
+
+
 /* ======================================= */
+
 /* ESTILOS DE NAVEGAÇÃO (DESKTOP) */
+
 /* ======================================= */
+
+
 
 nav ul {
+
     display: flex;
+
     gap: 24px;
+
     list-style: none;
+
     margin-right: 25px;
+
     align-items: center;
+
 }
+
+
 
 nav a {
+
     text-decoration: none;
+
     color: var(--text-muted);
+
 }
+
+
 
 /* Baseline color para itens sem <a> */
+
 nav ul li {
+
     color: var(--text-muted);
+
 }
+
+
 
 /* Estilo geral dos itens do menu */
+
 nav ul li,
+
 nav ul li a {
+
     position: relative;
+
     cursor: pointer;
+
     font-weight: 500;
+
     letter-spacing: 0.3px;
+
     font-family: 'Epilogue', system-ui, sans-serif;
+
     transition: color 0.25s ease, text-shadow 0.25s ease;
+
+    flex-shrink: 0; /* <-- 1. CORREÇÃO: Impede que os itens encolham e se sobreponham */
+
 }
+
+
 
 /* Linha invisível por padrão (Desktop Hover Effect) */
+
 nav ul li::after,
+
 nav ul li a::after {
+
     content: "";
+
     position: absolute;
+
     bottom: -6px;
+
     left: 0;
+
     width: 0%;
+
     height: 2px;
+
     background: var(--accent-magenta);
+
     transition: width 0.25s ease;
+
 }
+
+
 
 /* Hover: ilumina em magenta e linha surge */
+
 nav ul li:hover,
+
 nav ul li a:hover {
+
     color: var(--accent-magenta);
+
     text-shadow: 0 0 8px rgba(230, 0, 122, 0.45);
-}
-nav ul li:hover::after,
-nav ul li a:hover::after {
-    width: 100%;
+
 }
 
+nav ul li:hover::after,
+
+nav ul li a:hover::after {
+
+    width: 100%;
+
+}
+
+
+
 /* ======================================= */
+
 /* BOTÃO FORMULÁRIO (LOGIN-BTN) */
+
 /* ======================================= */
+
+
 
 .login-btn {
+
     background: rgba(255,255,255,0.06);
+
     color: var(--text-primary);
+
     border: 1px solid var(--accent-magenta);
+
     padding: 8px 16px;
+
     border-radius: 4px;
+
     font-weight: 600;
+
     letter-spacing: 0.02em;
+
     box-shadow: none;
+
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
 }
+
+
 
 .login-btn:hover {
+
     transform: translateY(-1px);
+
     background: rgba(255,255,255,0.12);
+
     border-color: var(--accent-magenta-strong);
+
     box-shadow: none;
+
 }
+
+
+
+/* ======================================= */
+
+/* 2. ADICIONADO: BOTÃO LOGIN (BTN-ENTRAR) */
+
+/* ======================================= */
+
+
+
+.btn-entrar {
+
+  display: inline-block;
+
+  text-decoration: none;
+
+  background: var(--accent-magenta);
+
+  color: var(--text-primary) !important;
+
+  border: 1px solid var(--accent-magenta);
+
+  padding: 8px 16px;
+
+  border-radius: 4px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.02em;
+
+  box-shadow: none;
+
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+}
+
+
+
+.btn-entrar:hover {
+
+  transform: translateY(-1px);
+
+  background: var(--accent-magenta-strong);
+
+  border-color: var(--accent-magenta-strong);
+
+  color: var(--text-primary) !important;
+
+  box-shadow: none;
+
+}
+
+
+
+
 
 /* Menu Hamburguer (Oculto no Desktop) */
+
 .menu-toggle {
+
     display: none;
+
     flex-direction: column;
+
     cursor: pointer;
+
     margin-left: 1em;
+
 }
+
+
 
 .menu-toggle span {
+
     height: 3px;
+
     width: 25px;
+
     background: var(--text-muted);
+
     margin: 4px 0;
+
     border-radius: 2px;
+
     transition: 0.3s;
+
 }
+
+
 
 .menu-toggle:hover span {
+
     background: var(--accent-magenta);
+
     box-shadow: 0 0 8px rgba(230, 0, 122, 0.6);
+
 }
 
+
+
 /* ======================================= */
+
 /* MEDIA QUERY - ESTILOS MOBILE (max-width: 768px) */
+
 /* ======================================= */
+
+
 
 @media (max-width: 768px) {
+
     .header {
+
         flex-direction: column;
+
         justify-content: flex-start;
+
         align-items: center;
+
         padding: 10px 20px;
+
         margin: 0;
+
         position: relative;
+
         border-bottom: 1px solid rgba(255,255,255,0.06);
+
     }
+
+
 
     header {
+
         margin-left: 0;
+
         margin-right: 0;
+
     }
+
     
+
     .logo {
+
         width: 150px;
+
         margin: 0 0 10px 0;
+
         filter: drop-shadow(0 0 10px rgba(255,255,255,0.12)) drop-shadow(0 0 16px rgba(230, 0, 122, 0.18));
+
     }
+
+
 
     /* A linha de ações (botão e hambúrguer) */
+
     #divuniao {
+
         flex-direction: row-reverse;
+
         width: 100%;
+
         justify-content: space-between;
+
         align-items: center;
+
         margin-right: 0;
+
         padding: 0 10px;
+
     }
+
     
+
     .login-btn {
+
         display: block;
+
         margin-right: 0;
+
         padding: 8px 16px;
+
         font-size: 0.95em;
+
         top: 0;
+
     }
+
+    
+
+    /* 2. ADICIONADO: Garante que o .btn-entrar se comporte como o .login-btn fora do menu */
+
+    .btn-entrar {
+
+        display: block;
+
+        padding: 8px 16px;
+
+        font-size: 0.95em;
+
+    }
+
+
 
     .menu-toggle {
+
         display: flex;
+
         margin: 0;
+
         order: -1;
+
     }
+
+
 
     /* Menu flutuante (NAV) */
+
     nav {
+
         position: absolute;
+
         top: 100%;
+
         right: 20px;
+
         z-index: 100;
+
         width: auto;
+
     }
+
     nav ul{
+
       display: none;
+
     }
+
+
 
     /* O menu quando aberto */
+
     nav ul.show {
+
         display: flex;
+
         flex-direction: column;
+
         align-items: flex-start;
+
         background: rgba(13, 17, 23, 0.75);
+
         backdrop-filter: blur(12px) saturate(140%);
+
         -webkit-backdrop-filter: blur(12px) saturate(140%);
+
         padding: 15px 25px 15px 15px;
+
         border-radius: 10px;
+
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 0 18px rgba(230,0,122,0.3);
+
         border: 1px solid rgba(255,255,255,0.08);
+
         min-width: 180px;
+
         position: static;
+
         margin-top: 10px;
+
     }
+
+
 
     nav ul.show a {
+
         color: var(--text-primary);
+
     }
+
+
 
     nav ul.show a:hover {
+
         color: var(--accent-magenta);
+
         text-shadow: 0 0 8px rgba(230, 0, 122, 0.55);
+
     }
+
+
+
+    /* 3. ADICIONADO: Faz LIs e botões ocuparem 100% da largura no menu mobile */
+
+    nav ul.show li {
+
+        width: 100%;
+
+        margin-bottom: 8px; /* Espaço entre itens do menu mobile */
+
+    }
+
+    nav ul.show li:last-child {
+
+        margin-bottom: 0;
+
+    }
+
+
+
+    nav ul.show .login-btn,
+
+    nav ul.show .btn-entrar {
+
+        display: block;
+
+        width: 100%;
+
+        text-align: center;
+
+        margin-top: 10px; /* Espaço extra acima dos botões */
+
+        box-sizing: border-box; /* Para padding não quebrar layout */
+
+    }
+
 }
 
-/* Botón dentro del nav: quitar posición relativa y top */
-nav ul li .login-btn {
+
+
+/* 3. CORRIGIDO: Regra combinada para ambos os botões dentro do nav */
+
+nav ul li .login-btn,
+
+nav ul li .btn-entrar {
+
   position: static;
+
   top: auto;
+
   display: inline-flex;
+
   align-items: center;
+
 }
 
-/* Ajuste de spacing para el último item (botón) */
+
+
+/* Ajuste de spacing para o último item (botão) */
+
 nav ul li:last-child {
-  margin-left: 8px; /* pequeño espacio respecto al item anterior */
+
+  margin-left: 8px; /* pequeno espacio respecto al item anterior */
+
 }
 
-/* Desactivar el halo fuera de la placa: que no sobresalga del vidrio */
+
+
+/* Desativar el halo fuera de la placa: que no sobresalga del vidrio */
+
 .logo-wrap::before,
+
 .logo-wrap::after {
+
   content: none !important;
+
   background: none !important;
+
   filter: none !important;
+
 }
+
+
 
 /* Ajuste de la placa de vidrio: recorte interno del halo */
+
 .logo-glass {
+
   /* mantener estilos existentes */
+
   overflow: hidden; /* recorta el glow dentro de la placa */
+
   z-index: 0;
+
 }
 
+
+
 /* Halo interno contenido dentro de la placa de vidrio */
+
 .logo-glass::before {
+
   content: "";
+
   position: absolute;
+
   inset: 0; /* ocupa toda la placa */
+
   border-radius: inherit;
+
   pointer-events: none;
+
   background:
+
     radial-gradient(closest-side at 50% 50%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.16) 92%, rgba(255,255,255,0.28) 100%),
+
     radial-gradient(70% 70% at 30% 50%, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.16) 60%, rgba(255,255,255,0) 100%),
+
     radial-gradient(55% 55% at 70% 50%, rgba(230,0,122,0.22) 0%, rgba(230,0,122,0.10) 55%, rgba(230,0,122,0) 100%);
+
   filter: blur(9px);
+
 }
+
 .logo-glass::after {
+
   content: "";
+
   position: absolute;
+
   inset: 6% 5%; /* glow focal más pequeño dentro de la placa */
+
   border-radius: inherit;
+
   pointer-events: none;
+
   background:
+
     radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 60%, rgba(255,255,255,0) 100%),
+
     radial-gradient(45% 45% at 60% 50%, rgba(230,0,122,0.26) 0%, rgba(230,0,122,0.12) 60%, rgba(230,0,122,0) 100%);
+
   filter: blur(10px);
+
 }
