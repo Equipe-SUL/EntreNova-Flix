@@ -58,7 +58,7 @@ function App() {
           {/* Rota 2: Dashboard do RH */}
           <Route path="/dashboard/rh" element={ 
             <ProtectedRoute allowedRoles={['rh']}> 
-              <DashboardRH/> {/* NOVO COMPONENTE RH */}
+              <DashboardRH/> 
             </ProtectedRoute>
           }
           />
