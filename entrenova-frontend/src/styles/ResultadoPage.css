@@ -1,6 +1,4 @@
-/* --- CSS do Relatório (Tema Escuro/Magenta - Cores Padronizadas) --- */
-
-
+  /* --- CSS do Relatório (Tema Escuro/Magenta - Cores Padronizadas) --- */
 
 .resultado-container {
 
@@ -26,9 +24,9 @@
 
   padding: 1.5rem;
 
-  border-radius: 8px; /* Original mantido */
+/*  border-radius: 8px;  Original mantido */
 
-  border: 3px solid rgba(255, 0, 128, 0.3); /* Padrão do tema */
+ /* border: 3px solid rgba(255, 0, 128, 0.3);  Padrão do tema */
 
   margin-top: 1rem;
 
@@ -40,40 +38,215 @@
 
   margin-top: 1.5rem;
 
+  
+  border-radius: 8px; /* Original mantido */
+
+  border: 3px solid rgba(255, 0, 128, 0.3); /* Padrão do tema */
+
+  background-color: rgba(15, 15, 15, 0.9); 
+
+  padding: 1.5rem;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+
+}
+
+.relatorio-secao h3,
+.relatorio-secao-flex h3,
+.resultado-container h1 {
+    color: #ff007f; /* Título em destaque */
+    font-weight: 600; /* Um pouco mais de peso */
+    border-bottom: 2px solid rgba(255, 0, 128, 0.1); /* Linha sutil */
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+
+.secao-destaque {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #bcbcbc;
+    line-height: 1.8;
+    padding: 0 0.7rem;
+    border-radius: 3px;
+    border-left: 2px solid #e60074; /* Destaque lateral */
+}
+
+
+.problema-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+}
+
+.problema-item strong {
+    display: flex; /* Para alinhar o texto e a classificação */
+    justify-content: space-between;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: white;
+}
+
+.classificacao {
+    font-size: 0.85rem;
+    padding: 3px 8px;
+    border-radius: 12px; /* Pill shape */
+    font-weight: 500;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.analise-consultiva {
+    margin-top: 1rem !important;
+    border-left: 3px solid #ff007f;
+    padding-left: 10px;
+    font-style: italic;
+    color: #bcbcbc !important;
 }
 
 
 
-.relatorio-secao strong {
+.cenarios-container {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
 
-  display: block;
+.cenario-item {
+    flex: 1;
+    min-width: 300px;
+    padding: 1.5rem;
+    border-radius: 8px;
+    line-height: 1.6;
+    background-color: #1e1e1e; /* Um pouco mais claro que o fundo */
+}
 
-  margin-bottom: 0.5rem;
+.cenario-item strong {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    display: block;
+}
 
-  color: white; /* Texto principal */
+.evolucao {
+    border-top: 3px solid #4CAF50; /* Verde sutil no topo */
+}
 
+.deterioracao {
+    border-top: 3px solid #F44336; /* Vermelho sutil no topo */
 }
 
 
 
-.relatorio-secao p,
+/* --- CSS do Relatório (Tema Escuro/Magenta - Cores Padronizadas) --- */
 
-.relatorio-secao li {
+.relatorio-secao-flex {
+    /* Mantém as cores e bordas antigas */
+    margin-top: 1.5rem;
+    border-radius: 8px;
+    border: 3px solid rgba(255, 0, 128, 0.3);
+    background-color: rgba(15, 15, 15, 0.9);
+    padding: 1.5rem;
+    display: flex; 
+    gap: 2rem; 
+    flex-wrap: wrap;
+}
 
-  line-height: 1.6;
+.relatorio-secao-flex .relatorio-metade {
+    flex: 1;
+    min-width: 250px;
+    margin-top: 0; 
+}
 
-  color: #bcbcbc; /* Texto silenciado (muted) */
+/* Estilização de Lista (Pontos Fortes e Opções Sugeridas) */
+.relatorio-secao-flex .relatorio-metade ul {
+    padding-left: 0;
+    list-style: none; /* Remove a marca padrão */
+}
 
+.relatorio-secao-flex .relatorio-metade ul li {
+    line-height: 1.8; /* Aumenta a legibilidade */
+    color: #bcbcbc;
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+/* Marcador customizado (Bolinha ou Ícone Simples) */
+.relatorio-secao-flex .relatorio-metade ul li::before {
+    content: '•'; 
+    color: #ff007f;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+/* Tipografia dentro do Flex */
+.relatorio-secao-flex p strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.relatorio-secao-flex p {
+  color: #bcbcbc;
+  margin-top: 10px;
 }
 
 
-
-.relatorio-secao ul {
-
-  padding-left: 20px;
-
+.indice-dho {
+    padding: 1rem;
+    background-color: rgba(255, 0, 128, 0.1); /* Fundo suave com a cor do tema */
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
+.indice-dho strong {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.nota-dho {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4CAF50;
+    margin-left: 0;
+    margin-top: 5px;
+    display: inline-block;
+}
+
+.justificativa-dho {
+    margin-top: 1rem !important;
+    font-style: italic;
+    line-height: 25px;
+    color: #bcbcbc;
+    border-left: 3px solid rgba(255, 0, 128, 0.3);
+    padding-left: 10px;
+}
+
+.trilhas-recomendadas {
+    margin-top: 1rem;
+}
+
+.trilhas-recomendadas ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.trilhas-recomendadas li {
+    background-color: rgba(255, 255, 255, 0.05);
+    margin-top: 15px;
+    padding: 20px 15px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    color: #bcbcbc;
+    border-left: 5px solid #ff007f; /* Borda de destaque na trilha */
+}
 
 
 .relatorio-dados-flex {
@@ -198,4 +371,16 @@
 
   color: white; /* Destaque para o texto em negrito */
 
+}
+
+
+@media (max-width: 650px) {
+    .relatorio-secao-flex {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .cenarios-container {
+        flex-direction: column;
+    }
 }
