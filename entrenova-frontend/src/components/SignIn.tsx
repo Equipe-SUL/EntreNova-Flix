@@ -1,22 +1,26 @@
-
+// src/pages/SignIn.tsx
 import React, { useState } from 'react';
 import { supabase } from '../services/supabase';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
+
+// 1. IMPORTAÇÕES DE ESTILO (NÃO IMPORTA MAIS O HEADER)
 import '../styles/SignIn.css'; 
+// import Header from '../components/Header'; // <-- REMOVIDO
 
 const SignIn: React.FC = () => {
+  // Lógica de estado e navegação (sem alterações)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Função handleSignIn (sem alterações na lógica)
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
 
-    // 1. Tenta fazer login no Supabase (Autenticação)
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -25,70 +29,87 @@ const SignIn: React.FC = () => {
     setLoading(false);
 
     if (error) {
-      // Login falhou (credenciais erradas)
       setMessage('Login falhou. Credenciais inválidas ou conta não existe.');
-      
     } else if (data.session && data.user) {
-      
-      // 2. Login bem-sucedido. Realiza a query na tabela public.profiles para obter a role.
       const userId = data.user.id;
-      
-      // REALIZANDO A QUERY NA TABELA public.profiles
-      // Busca a role e armazena os dados em 'profileData' (que o usuário solicitou armazenar em uma variável data)
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('role') // Apenas o campo role é necessário
+        .select('role')
         .eq('id', userId)
-        .single(); // Espera apenas uma linha
+        .single();
         
       if (profileError || !profileData) {
-        // Se houver erro na busca ou se o perfil não for encontrado (ex: Trigger falhou)
         console.error('Erro ao buscar perfil:', profileError);
-        setMessage('Erro de autorização: Perfil de usuário não encontrado no banco de dados. Tente novamente.');
-        await supabase.auth.signOut(); // Desloga o usuário para segurança
+        setMessage('Erro de autorização: Perfil de usuário não encontrado.');
+        await supabase.auth.signOut();
         return;
       }
       
-      // 3. Redirecionamento baseado na role ENCONTRADA no banco de dados
       const role = profileData.role; 
-
       if (role === 'rh') {
-          navigate('/dashboard/rh');
+        navigate('/dashboard/rh');
       } else if (role === 'funcionario') {
-          navigate('/dashboard/funcionario');
+        navigate('/dashboard/funcionario');
       } else {
-          setMessage(`Sua conta tem um papel de usuário inválido: ${role}.`);
-          await supabase.auth.signOut();
+        setMessage(`Sua conta tem um papel de usuário inválido: ${role}.`);
+        await supabase.auth.signOut();
       }
     }
   };
-   
+
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSignIn}>
-        <input 
-          type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          placeholder="Email" 
-          required 
-          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
-        />
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          placeholder="Senha" 
-          required 
-          style={{ width: '100%', padding: '10px', marginBottom: '20px' }}
-        />
-        <button type="submit" disabled={loading} style={{ padding: '10px 15px' }}>
-          {loading ? 'Entrando...' : 'Login'}
-        </button>
-      </form>
-      {message && <p style={{ color: message.includes('falhou') || message.includes('autorização') ? 'red' : 'green', marginTop: '10px' }}>{message}</p>}
-    </div>
+    // 2. O FRAGMENT <> E O <Header /> FORAM REMOVIDOS
+    // O <main> agora é o elemento raiz do componente
+    <main className="container">
+      <div className="login-card">
+        
+        <h2>Login</h2>
+        <p>Insira as credenciais fornecidas pelo seu RH.</p>
+
+        <form onSubmit={handleSignIn}>
+          <label htmlFor="email">E-mail</label>
+          <input 
+            type="email" 
+            id="email" 
+            placeholder="seu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <label htmlFor="senha">Senha</label>
+          <input 
+            type="password" 
+            id="senha" 
+            placeholder="Sua senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required 
+          />
+
+          <a href="#" className="forgot">Esqueci minha senha.</a>
+
+          {message && (
+            <p 
+              className="login-message"
+              style={{ 
+                color: message.includes('falhou') || message.includes('Erro') ? 'red' : 'green' 
+              }}
+            >
+              {message}
+            </p>
+          )}
+
+          <button 
+            type="submit" 
+            className="btn-submit"
+            disabled={loading}
+          >
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
+        </form>
+      </div>
+    </main>
   );
 };
 
