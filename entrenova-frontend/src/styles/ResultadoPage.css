@@ -1,92 +1,201 @@
+/* --- CSS do Relatório (Tema Escuro/Magenta - Cores Padronizadas) --- */
+
+
+
 .resultado-container {
+
   padding: 2rem;
-  font-family: sans-serif;
+
+  font-family: "Poppins", sans-serif; /* Padronizado */
+
   max-width: 800px;
+
   margin: auto;
+
+  color: white; /* Cor de texto padrão */
+
 }
+
+
 
 .relatorio-card {
-  background: #f9f9f9;
+
+  /* Padrão do .login-card */
+
+  background-color: rgba(15, 15, 15, 0.9); 
+
   padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #eee;
+
+  border-radius: 8px; /* Original mantido */
+
+  border: 3px solid rgba(255, 0, 128, 0.3); /* Padrão do tema */
+
   margin-top: 1rem;
+
 }
+
+
 
 .relatorio-secao {
+
   margin-top: 1.5rem;
+
 }
+
+
 
 .relatorio-secao strong {
+
   display: block;
+
   margin-bottom: 0.5rem;
-  color: #333;
+
+  color: white; /* Texto principal */
+
 }
+
+
 
 .relatorio-secao p,
+
 .relatorio-secao li {
+
   line-height: 1.6;
-  color: #555;
+
+  color: #bcbcbc; /* Texto silenciado (muted) */
+
 }
+
+
 
 .relatorio-secao ul {
+
   padding-left: 20px;
+
 }
+
+
 
 .relatorio-dados-flex {
+
   margin-top: 1.5rem;
+
   display: flex;
+
   gap: 2rem;
+
 }
+
+
 
 .relatorio-dados-flex p {
+
   text-transform: capitalize;
+
   margin-top: 0.25rem;
+
 }
+
+
 
 .loading-error-container {
-    padding: 2rem;
-    text-align: center;
+
+  padding: 2rem;
+
+  text-align: center;
+
+  color: white; /* Texto padrão */
+
 }
+
+
 
 .error-message {
-    color: red;
+
+  color: #ff007f; /* Cor de destaque (magenta) para erro */
+
 }
+
+
+
 .next-btn {
+
   margin-top: 3rem;
-  font-family: inherit;
+
+  font-family: "Poppins", sans-serif; /* Fonte padronizada */
+
   font-weight: 500;
+
   font-size: 18px;
+
   letter-spacing: 0.05em;
-  border-radius: 0.8em;
+
+  border-radius: 0.8em; /* Original mantido */
+
   cursor: pointer;
+
   border: none;
+
   color: ghostwhite;
+
   padding: 0.8em 1.2em;
-  background: linear-gradient(to right, #8e2de2, #4a00e0);
+
+  /* Cores do gradiente atualizadas para o tema */
+
+  background: linear-gradient(to right, #ff007f, #e60074); 
+
   background-size: 200% 100%;
+
   background-position: left;
-  transition: all 0.4s ease;
+
+  transition: all 0.4s ease; /* Original mantido */
+
   overflow: hidden;
+
 }
+
+
 
 .next-btn:hover {
+
   color: white;
-  background-position: right; 
+
+  background-position: right; /* Efeito original mantido */
+
 }
+
+
 
 .contato-pagamento {
-  margin-top:3rem ;
-  background-color: #eaf4ff;
-  border: 1px solid #b6d4fe;
+
+  /* Caixa de info com o tema */
+
+  margin-top: 3rem;
+
+  background-color: rgba(15, 15, 15, 0.9); /* Fundo escuro */
+
+  border: 1px solid #ff007f; /* Borda de destaque (magenta) */
+
   padding: 15px 20px;
-  border-radius: 10px;
+
+  border-radius: 10px; /* Original mantido */
+
   font-size: 1em;
-  color: #0b3d91;
+
+  color: #bcbcbc; /* Texto silenciado */
+
   line-height: 1.5;
+
   text-align: center;
+
 }
 
+
+
 .contato-pagamento strong {
+
   font-weight: bold;
+
+  color: white; /* Destaque para o texto em negrito */
+
 }
