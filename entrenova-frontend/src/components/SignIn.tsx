@@ -1,8 +1,8 @@
-// src/components/SignIn.tsx (Versão Otimizada e Simples - Corrigida)
 
 import React, { useState } from 'react';
 import { supabase } from '../services/supabase';
 import { useNavigate } from 'react-router-dom'; 
+import '../styles/SignIn.css'; 
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
