@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import DashboardHeader from '../components/DashboardHeader';
-import DashboardSidebar from '../components/DashboardSidebar';
+//import DashboardSidebar from '../components/DashboardSidebar';
 import DashboardFooter from '../components/DashboardFooter';
 import CreateFuncionarioForm from '../components/CreateFuncionarioForm'; // Componente de formulário
 import '../styles/dashboard.css';
@@ -50,7 +50,7 @@ const DashboardRH: React.FC = () => {
   // Renderiza o Dashboard
   return (
     <div className="dashboard-layout">
-      <DashboardSidebar /> 
+     
 
       <div className="dashboard-main">
         <DashboardHeader />

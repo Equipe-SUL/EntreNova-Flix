@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import api from '../services/api';
 import { IRelatorio } from '../types/empresa.types';
 import '../styles/ResultadoPage.css';
+import diagnosticoImg from '../assets/irisNeon3.png';
 
 const ResultadoPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -120,8 +121,31 @@ const ResultadoPage = () => {
         <p>Nenhum relatório encontrado para este ID.</p>
       )}
 
-      <Link to="/chatbot">
-        <button className="next-btn">Avançar para a próxima etapa</button>
+      {/* --- balaozinho da iris --- */}
+      <div className="advanced-cta-box">
+        <img src={diagnosticoImg} alt="Análise de Dados" className="advanced-cta-icon" />
+        <div className="advanced-cta-text">
+<h3>Sua análise inicial está pronta. Vamos aprofundar?</h3>
+
+          <p>
+
+            O próximo passo é conversar com a <strong>Iris</strong>, nossa <strong>assistente virtual</strong>.
+
+            Em 10 minutos, ela irá cruzar estes dados com os desafios reais da sua equipe para gerar seu <strong>Diagnóstico Avançado</strong> gratuito.
+
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* --- FIM DO balaozinho da iris --- */}
+
+
+      {/* ===================== INÍCIO DA CORREÇÃO ===================== */}
+      <Link to="/chatbot" className="link-botao">
+      {/* ====================== FIM DA CORREÇÃO ======================= */}
+        <button className="next-btn">Ir para Diagnostico Avançado</button>
       </Link>
     </div>
   );

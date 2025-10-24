@@ -1,5 +1,5 @@
 import '../styles/Hero.css';
-import logo from '../assets/imagemINICIO.png';
+import logo from '../assets/imagemINICIO3.png';
 
 const Hero = () => (
   // coloquei o id encapsulado porque isso aqui vai dentro do component landingpage <-- ass.vivian
