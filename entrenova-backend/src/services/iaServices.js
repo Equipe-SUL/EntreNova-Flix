@@ -124,8 +124,6 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     }
   `;
 
-
-
   try {
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -155,33 +153,36 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
     }
     // --- FIM DA LÓGICA DE EXTRAÇÃO ---
 
+
     // =================================================================
-    //                *** AQUI ESTÁ A CORREÇÃO QUE FALTAVA ***
+    //                *** ADICIONE ESTA LINHA DE CORREÇÃO ***
     // =================================================================
     // Remove vírgulas sobrando (trailing commas) antes de '}' ou ']'
     const sanitizedJsonText = jsonText
       .replace(/,\s*([}\]])/g, '$1');
     // =================================================================
 
-
     console.log("✅ Diagnóstico Profundo gerado com sucesso!");
 
-    // Agora faz o parse do TEXTO SANITIZADO, não do 'jsonText' original
+    // =================================================================
+    //          *** ALTERE 'jsonText' PARA 'sanitizedJsonText' ***
+    // =================================================================
+    // Esta linha (agora 170 no seu arquivo) deve usar o texto limpo
     return JSON.parse(sanitizedJsonText);
 
   } catch (error) {
     // Se o JSON.parse() ainda falhar, o erro será pego aqui
     console.error("❌ Erro no Gemini ao gerar Diagnóstico Profundo:", error);
-
-    // Se o erro persistir, descomente a linha abaixo no seu código para ver o JSON exato que está falhando
-    // console.log("--- JSON QUE FALHOU O PARSE ---", sanitizedJsonText || jsonText); 
-
     return {
       error: "Não foi possível gerar a análise completa.",
       details: error.message
     };
   }
 }
+
+
+
+
 
 
 // =================================================================

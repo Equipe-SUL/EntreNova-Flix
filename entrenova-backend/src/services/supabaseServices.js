@@ -94,7 +94,7 @@ const salvarDiagnosticoCompleto = async (dadosEmpresa, dadosQuiz, scoreLead = nu
   // Passo B: Salvar respostas do quiz (continua igual!)
   const respostasParaInserir = dadosQuiz.map(item => ({
     pergunta: item.perguntaId,
-    resposta: item.respostaIndex,
+    resposta: item.respostaIndex + 1,
     categoria: item.perguntaId.charAt(0),
     tipo_diagnostico: 'inicial',
     cnpj_empresa: dadosEmpresa.cnpj
