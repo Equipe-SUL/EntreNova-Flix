@@ -78,6 +78,45 @@
   opacity: 1;
 }
 
+/* ==================================================================
+   INÍCIO DA CORREÇÃO 
+   Isso corrige o fundo branco do AUTOFILL do navegador (Chrome, etc.)
+  ==================================================================
+*/
+.empresa-form input:-webkit-autofill,
+.empresa-form input:-webkit-autofill:hover, 
+.empresa-form input:-webkit-autofill:focus, 
+.empresa-form input:-webkit-autofill:active {
+    /* Define a cor do TEXTO para a cor primária */
+    -webkit-text-fill-color: var(--text-primary) !important;
+    
+    /* Truque para SOBRESCREVER o fundo branco do autofill. 
+      Isso cria uma sombra interna gigante da cor do seu fundo.
+    */
+    -webkit-box-shadow: 0 0 0 30px var(--background-dark) inset !important;
+    
+    /* Garante que a cor de fundo também seja a correta */
+    background-color: var(--background-dark) !important; 
+    
+    /* Mantém a borda original */
+    border-color: var(--border-color);
+}
+
+/* Garante que o seu estilo de :focus (com a borda rosa) 
+  funcione MESMO QUANDO o campo está em autofill.
+*/
+.empresa-form input:-webkit-autofill:focus {
+    /* Combina a sombra do autofill com a sombra do seu focus */
+    -webkit-box-shadow: 0 0 0 30px var(--background-dark) inset, 0 0 0 3px rgba(230, 0, 122, 0.25) !important;
+    /* Aplica a borda rosa do focus */
+    border-color: var(--accent-magenta) !important;
+}
+/* ==================================================================
+   FIM DA CORREÇÃO
+  ==================================================================
+*/
+
+
 label {
   display: flex;
   align-items: center;
@@ -198,4 +237,3 @@ button:disabled {
   from { opacity: 0; transform: translateX(-15px); }
   to { opacity: 1; transform: translateX(0); }
 }
-

@@ -1,0 +1,56 @@
+/* Container principal da seção */
+.progresso-section {
+  padding: 0 2.5rem; /* Mesmo padding do .dash-section */
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Título da seção (igual ao .dash-section__header h3) */
+.progresso-section h3 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+/* Linha rosa (igual ao .dash-section__header h3::after) */
+.progresso-section h3::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #ff007f; /* Cor do dashboard */
+  margin-top: 4px;
+}
+
+/* Grid para os dois gráficos */
+.progresso-grid {
+  display: grid;
+  /* Cria duas colunas, dando mais espaço para o gráfico de barras */
+  grid-template-columns: 1fr 1.5fr; 
+  gap: 20px;
+}
+
+/* Card individual para cada gráfico */
+.progresso-card {
+  background-color: #1a1a1a; /* Mesmo do .dash-item */
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 0 15px rgba(255, 0, 127, 0.05); /* Brilho sutil */
+}
+
+.progresso-card h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #eee;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Responsividade para empilhar os gráficos em telas pequenas */
+@media (max-width: 900px) {
+  .progresso-grid {
+    grid-template-columns: 1fr; /* Empilha os gráficos */
+  }
+}
