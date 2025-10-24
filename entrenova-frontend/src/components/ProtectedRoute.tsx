@@ -1,62 +1,122 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '../services/supabase'; // Certifique-se de que o caminho está correto
-
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   allowedRoles: string[]; // Recebe a lista de roles permitidas
 }
+
 /**
  * Componente Wrapper para proteger rotas.
- * Verifica a sessão do Supabase:
- * - Se logado, renderiza o componente filho (children).
- * - Se não logado ou sessão expirada, redireciona para /signin.
+ * Verifica a sessão do Supabase E a Role (RBAC) de forma assíncrona.
  */
-const ProtectedRoute: React.FC<{ children: React.ReactNode, allowedRoles:string[] }> = ({ children }) => {
-    // Estado para armazenar a sessão
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => { 
     const [session, setSession] = useState<any>(null);
-    // Estado para indicar se a verificação inicial terminou
-    const [loading, setLoading] = useState(true);
+    // O estado 'loading' garante que nada seja renderizado/redirecionado antes da conclusão
+    const [loading, setLoading] = useState(true); 
+    const [userRole, setUserRole] = useState<string | null>(null);
+    const location = useLocation();
 
     useEffect(() => {
-        // 1. Verifica o estado inicial da sessão
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setLoading(false);
-        });
+        let isCancelled = false; // Flag para evitar atualizações de estado em componente desmontado
+        
+        // Função unificada para verificar a autenticação e a Role
+        const checkAuthAndRole = async (s: any | null) => {
+            // Obtém a sessão do listener (s) ou busca a sessão inicial
+            const currentSession = s || (await supabase.auth.getSession()).data.session;
+            
+            if (isCancelled) return;
+            
+            if (currentSession) {
+                setSession(currentSession);
+                
+                // 1. Busca a ROLE do perfil do usuário no Supabase
+                const { data: profileData, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('role') 
+                    .eq('id', currentSession.user.id)
+                    .single();
+                
+                if (isCancelled) return;
 
-        // 2. Ouve mudanças na sessão (login, logout, refresh de token)
+                if (profileData && !profileError) {
+                    // SUCESSO: Role encontrada e definida
+                    setUserRole(profileData.role);
+                } else {
+                    // FALHA: Falhou a busca da role (Provável RLS)
+                    console.error('ERRO: Falha ao buscar a role. Verifique RLS e se o perfil existe.', profileError);
+                    setUserRole(null);
+                    setSession(null); // Trata como falha de autenticação
+                }
+            } else {
+                // FALHA: Nenhuma sessão encontrada
+                setSession(null);
+                setUserRole(null);
+            }
+            
+            // GARANTE que o loading seja desligado APÓS todas as verificações
+            if (!isCancelled) {
+                setLoading(false);
+            }
+        };
+
+        // Roda a verificação inicial ao montar
+        checkAuthAndRole(null);
+        
+        // Listener para garantir que login/logout sejam tratados em tempo real
         const { data: authListener } = supabase.auth.onAuthStateChange(
             (_event, session) => {
-                setSession(session);
-                // Garante que o loading seja desligado mesmo após o estado inicial
-                if (loading) setLoading(false);
+                // Ao fazer login, re-executa a lógica completa de espera
+                if (_event === 'SIGNED_IN') {
+                    setLoading(true); // Liga o loading novamente
+                    checkAuthAndRole(session);
+                } else if (_event === 'SIGNED_OUT') {
+                    // Ao deslogar, limpa os estados e desliga o loading
+                    setSession(null);
+                    setUserRole(null);
+                    setLoading(false); 
+                }
             }
         );
 
-        // Cleanup: remove o listener ao desmontar o componente
+        // Função de limpeza
         return () => {
+            isCancelled = true;
             authListener?.subscription.unsubscribe();
         };
-    }, []); // O array vazio garante que o useEffect rode apenas uma vez (na montagem)
+    }, []);
 
-    // Enquanto verifica a sessão (após o carregamento inicial da página)
+    // ----------------------------------------------------
+    // Lógica de Renderização que AGUARDA o carregamento
+    // ----------------------------------------------------
+
+    // 1. Enquanto o estado de 'loading' for verdadeiro, mostra a mensagem de espera
     if (loading) {
         return (
             <div style={{ padding: '50px', textAlign: 'center' }}>
-                Verificando autenticação...
+                Verificando autenticação e permissões...
             </div>
         );
     }
     
-    // Se houver sessão (o usuário está logado), renderiza o componente filho
-    if (session) {
-        return <>{children}</>;
+    // 2. Se não há sessão OU a role não foi carregada (mesmo após a espera), redireciona para o login
+    if (!session || !userRole) {
+        // Usa `location.pathname` para que o usuário possa ser redirecionado de volta depois
+        return <Navigate to="/signin" state={{ from: location.pathname }} replace />;
     }
 
-    // Se não houver sessão, redireciona para a página de login
-    return <Navigate to="/signin" replace />;
+    // 3. VERIFICAÇÃO FINAL DA ROLE (RBAC)
+    // Se logado E a role está na lista de permitidas, renderiza o componente filho
+    if (allowedRoles.includes(userRole)) {
+        return <>{children}</>;
+    }
+    
+    // 4. Se logado, mas com função incorreta: redireciona para o dashboard correto
+    const redirectTo = userRole === 'rh' ? '/dashboard/rh' : '/dashboard/funcionario';
+    
+    // Redireciona para o dashboard correto do usuário, pois ele tentou acessar a rota errada.
+    return <Navigate to={redirectTo} replace />;
 };
 
 export default ProtectedRoute;

@@ -27,7 +27,7 @@ const perguntas = [
   "Quais comportamentos recorrentes ou estruturas estão faltando?",
   "Qual é o maior prejuízo que esses comportamentos geram?",
   "Que habilidade ou competência humana você acha que está em falta?",
-  "Por fim, ao gerar as trilhas, qual tipo de conteúdo você prefere ver na maioria delas? (Ex: Vídeos, Podcasts, Cursos Curtos)"
+  "Por fim, ao gerar as trilhas, qual tipo de conteúdo você prefere ver na maioria delas? Digite o número correspondente: 1 - Vídeos; 2 - Podcasts; 3 - Cursos Curtos; 4 - Artigos;"
 ];
 
 const mensagemFinal = (nome: string) =>
