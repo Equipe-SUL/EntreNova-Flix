@@ -52,9 +52,9 @@ function App() {
 
           {/* Rota 1: Dashboard do Funcionário */}
           <Route path="/dashboard/funcionario" element={ 
-          //  <ProtectedRoute allowedRoles={['funcionario']}> {/* Apenas o Funcionário deve ir para cá, RH tem sua rota */}
+           <ProtectedRoute allowedRoles={['funcionario']}> {/* Apenas o Funcionário deve ir para cá, RH tem sua rota */}
               <Dashboard/>
-          //  </ProtectedRoute>
+           </ProtectedRoute>
           }
           />
 
