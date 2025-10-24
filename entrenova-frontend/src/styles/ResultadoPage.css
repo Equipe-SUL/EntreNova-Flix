@@ -1,386 +1,315 @@
-  /* --- CSS do Relatório (Tema Escuro/Magenta - Cores Padronizadas) --- */
-
+/* --- ESTILOS DE BASE PARA O RELATÓRIO --- */
 .resultado-container {
-
-  padding: 2rem;
-
-  font-family: "Poppins", sans-serif; /* Padronizado */
-
-  max-width: 800px;
-
-  margin: auto;
-
-  color: white; /* Cor de texto padrão */
-
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
 }
 
+.resultado-container h1 {
+  text-align: center;
+  color: #fff;
+  font-size: 2.2rem;
+  margin-bottom: 2.5rem;
+  font-weight: 600;
+}
 
+.loading-error-container {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 4rem;
+  color: #ccc;
+}
+.error-message {
+  color: #ff6b6b;
+}
 
+/* --- ESTILOS DO CARD DE CIMA (RELATÓRIO) --- */
 .relatorio-card {
-
-  /* Padrão do .login-card */
-
-  background-color: rgba(15, 15, 15, 0.9); 
-
-  padding: 1.5rem;
-
-/*  border-radius: 8px;  Original mantido */
-
- /* border: 3px solid rgba(255, 0, 128, 0.3);  Padrão do tema */
-
-  margin-top: 1rem;
-
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 2.5rem;
 }
-
-
 
 .relatorio-secao {
-
-  margin-top: 1.5rem;
-
-  
-  border-radius: 8px; /* Original mantido */
-
-  border: 3px solid rgba(255, 0, 128, 0.3); /* Padrão do tema */
-
-  background-color: rgba(15, 15, 15, 0.9); 
-
-  padding: 1.5rem;
-
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 2rem;
+}
+.relatorio-secao:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .relatorio-secao h3,
-.relatorio-secao-flex h3,
-.resultado-container h1 {
-    color: #ff007f; /* Título em destaque */
-    font-weight: 600; /* Um pouco mais de peso */
-    border-bottom: 2px solid rgba(255, 0, 128, 0.1); /* Linha sutil */
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+.relatorio-metade h3 {
+  color: #ff007f;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
-
 
 .secao-destaque {
-    font-size: 1.1rem;
-    font-style: italic;
-    color: #bcbcbc;
-    line-height: 1.8;
-    padding: 0 0.7rem;
-    border-radius: 3px;
-    border-left: 2px solid #e60074; /* Destaque lateral */
+  background-color: #222;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border-left: 4px solid #ff007f;
+  color: #eee;
+  line-height: 1.6;
+  font-size: 1.05rem;
 }
 
-
 .problema-item {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.1); 
+  margin-bottom: 1.5rem;
+  color: #ccc;
+  line-height: 1.7;
 }
 
 .problema-item strong {
-    display: flex; /* Para alinhar o texto e a classificação */
-    justify-content: space-between;
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-    color: white;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 600;
 }
 
-.classificacao {
-    font-size: 0.85rem;
-    padding: 3px 8px;
-    border-radius: 12px; /* Pill shape */
-    font-weight: 500;
-    margin-left: 10px;
-    white-space: nowrap;
+.problema-item .analise-consultiva {
+  color: #bbb;
+  margin-top: 0.5rem;
+}
+.problema-item .analise-consultiva strong {
+  color: #ff007f;
 }
 
-.analise-consultiva {
-    margin-top: 1rem !important;
-    border-left: 3px solid #ff007f;
-    padding-left: 10px;
-    font-style: italic;
-    color: #bcbcbc !important;
-}
-
-
+.classificacao { font-weight: 500; }
+.classificacao.crítico { color: #ff6b6b; }
+.classificacao.moderado { color: #ffae42; }
+.classificacao.baixo { color: #51cf66; }
 
 .cenarios-container {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
-
 .cenario-item {
-    flex: 1;
-    min-width: 300px;
-    padding: 1.5rem;
-    border-radius: 8px;
-    line-height: 1.6;
-    background-color: #1e1e1e; /* Um pouco mais claro que o fundo */
+  padding: 1.25rem;
+  border-radius: 8px;
+  line-height: 1.6;
 }
-
 .cenario-item strong {
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
-    display: block;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
 }
-
-.evolucao {
-    border-top: 3px solid #4CAF50; /* Verde sutil no topo */
+.cenario-item.evolucao {
+  background-color: #1f3a33;
+  border: 1px solid #2d5749;
+  color: #a6f1d9;
 }
-
-.deterioracao {
-    border-top: 3px solid #F44336; /* Vermelho sutil no topo */
+.cenario-item.deterioracao {
+  background-color: #422a2a;
+  border: 1px solid #6b4040;
+  color: #ffc9c9;
 }
-
-
-
-/* --- CSS do Relatório (Tema Escuro/Magenta - Cores Padronizadas) --- */
 
 .relatorio-secao-flex {
-    /* Mantém as cores e bordas antigas */
-    margin-top: 1.5rem;
-    border-radius: 8px;
-    border: 3px solid rgba(255, 0, 128, 0.3);
-    background-color: rgba(15, 15, 15, 0.9);
-    padding: 1.5rem;
-    display: flex; 
-    gap: 2rem; 
-    flex-wrap: wrap;
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 2rem;
+}
+.relatorio-metade {
+  flex: 1;
 }
 
-.relatorio-secao-flex .relatorio-metade {
-    flex: 1;
-    min-width: 250px;
-    margin-top: 0; 
+.relatorio-metade ul {
+  list-style-position: inside;
+  color: #ccc;
+  line-height: 1.8;
 }
-
-/* Estilização de Lista (Pontos Fortes e Opções Sugeridas) */
-.relatorio-secao-flex .relatorio-metade ul {
-    padding-left: 0;
-    list-style: none; /* Remove a marca padrão */
-}
-
-.relatorio-secao-flex .relatorio-metade ul li {
-    line-height: 1.8; /* Aumenta a legibilidade */
-    color: #bcbcbc;
-    padding-left: 20px;
-    position: relative;
-    margin-bottom: 5px;
-}
-
-/* Marcador customizado (Bolinha ou Ícone Simples) */
-.relatorio-secao-flex .relatorio-metade ul li::before {
-    content: '•'; 
-    color: #ff007f;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-    font-size: 1.2em;
-    line-height: 1;
-}
-
-/* Tipografia dentro do Flex */
-.relatorio-secao-flex p strong {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: white;
-}
-
-.relatorio-secao-flex p {
-  color: #bcbcbc;
-  margin-top: 10px;
-}
-
 
 .indice-dho {
-    padding: 1rem;
-    background-color: rgba(255, 0, 128, 0.1); /* Fundo suave com a cor do tema */
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    display: flex;
-    flex-direction: column;
+  margin-bottom: 1.5rem;
 }
-
-.indice-dho strong {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: white;
-}
-
 .nota-dho {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #4CAF50;
-    margin-left: 0;
-    margin-top: 5px;
-    display: inline-block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ff007f;
+  margin-left: 0.5rem;
 }
-
 .justificativa-dho {
-    margin-top: 1rem !important;
-    font-style: italic;
-    line-height: 25px;
-    color: #bcbcbc;
-    border-left: 3px solid rgba(255, 0, 128, 0.3);
-    padding-left: 10px;
+  color: #ccc;
+  line-height: 1.6;
+  margin-top: 0.5rem;
 }
 
-.trilhas-recomendadas {
-    margin-top: 1rem;
+.trilhas-recomendadas strong {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #fff;
 }
-
 .trilhas-recomendadas ul {
-    list-style: none;
-    padding-left: 0;
+  list-style: none;
+  padding-left: 0;
 }
-
 .trilhas-recomendadas li {
-    background-color: rgba(255, 255, 255, 0.05);
-    margin-top: 15px;
-    padding: 20px 15px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    color: #bcbcbc;
-    border-left: 5px solid #ff007f; /* Borda de destaque na trilha */
+  background-color: #2a2a2a;
+  border-left: 4px solid #ff007f;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  color: #ccc;
 }
 
 
-.relatorio-dados-flex {
-
-  margin-top: 1.5rem;
-
-  display: flex;
-
-  gap: 2rem;
-
+/* ===================== INÍCIO DA CORREÇÃO ===================== */
+/* Esta regra remove o sublinhado do componente <Link> (tag <a>) */
+.link-botao {
+  text-decoration: none;
 }
+/* ====================== FIM DA CORREÇÃO ======================= */
 
 
-
-.relatorio-dados-flex p {
-
-  text-transform: capitalize;
-
-  margin-top: 0.25rem;
-
-}
-
-
-
-.loading-error-container {
-
-  padding: 2rem;
-
-  text-align: center;
-
-  color: white; /* Texto padrão */
-
-}
-
-
-
-.error-message {
-
-  color: #ff007f; /* Cor de destaque (magenta) para erro */
-
-}
-
-
-
+/* --- Botão "Próximo Passo" --- */
 .next-btn {
-
-  margin-top: 3rem;
-
-  font-family: "Poppins", sans-serif; /* Fonte padronizada */
-
-  font-weight: 500;
-
-  font-size: 18px;
-
-  letter-spacing: 0.05em;
-
-  border-radius: 0.8em; /* Original mantido */
-
-  cursor: pointer;
-
-  border: none;
-
-  color: ghostwhite;
-
-  padding: 0.8em 1.2em;
-
-  /* Cores do gradiente atualizadas para o tema */
-
-  background: linear-gradient(to right, #ff007f, #e60074); 
-
-  background-size: 200% 100%;
-
-  background-position: left;
-
-  transition: all 0.4s ease; /* Original mantido */
-
-  overflow: hidden;
-
-}
-
-
-
-.next-btn:hover {
-
+  background-color: #ff007f;
   color: white;
-
-  background-position: right; /* Efeito original mantido */
-
+  border: none;
+  padding: 0.8rem 1.8rem;
+  border-radius: 25px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s;
+  cursor: pointer;
+  font-size: 1rem;
+  display: block;
+  margin: 0 auto;
+}
+.next-btn:hover {
+  background-color: #e60074;
 }
 
+/* --- CSS DO CARD DE BAIXO (BALÃO DE FALA DA IRIS) --- */
 
-
-.contato-pagamento {
-
-  /* Caixa de info com o tema */
-
-  margin-top: 3rem;
-
-  background-color: rgba(15, 15, 15, 0.9); /* Fundo escuro */
-
-  border: 1px solid #ff007f; /* Borda de destaque (magenta) */
-
-  padding: 15px 20px;
-
-  border-radius: 10px; /* Original mantido */
-
-  font-size: 1em;
-
-  color: #bcbcbc; /* Texto silenciado */
-
-  line-height: 1.5;
-
-  text-align: center;
-
+/* 1. O 'advanced-cta-box' é o container flex (invisível) */
+.advanced-cta-box {
+  display: flex;
+  align-items: center; /* Isso mantém o alinhamento vertical */
+  gap: 2.5rem; 
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
-
-
-.contato-pagamento strong {
-
-  font-weight: bold;
-
-  color: white; /* Destaque para o texto em negrito */
-
+/* 2. O ícone (avatar) com efeito neon --- MUDANÇA AQUI --- */
+.advanced-cta-icon {
+  width: 150px; /* <<< AUMENTADO DE 80px para 150px */
+  height: auto;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 5px #ff007f) drop-shadow(0 0 10px #ff007f);
+  transition: filter 0.3s ease-in-out;
+}
+.advanced-cta-icon:hover {
+  filter: drop-shadow(0 0 8px #ff007f) drop-shadow(0 0 15px #ff007f);
 }
 
+/* 3. O 'advanced-cta-text' se torna o balão de fala */
+.advanced-cta-text {
+  flex-grow: 1; /* Isso faz ele encolher automaticamente */
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  padding-left: 2.5rem; 
+  position: relative; 
+}
 
-@media (max-width: 650px) {
-    .relatorio-secao-flex {
-        flex-direction: column;
-        gap: 0;
-    }
+/* 4. A linha rosa DENTRO do balão de texto */
+.advanced-cta-text::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background-color: #ff007f;
+  border-radius: 16px 0 0 16px; 
+}
 
-    .cenarios-container {
-        flex-direction: column;
-    }
+/* 5. A 'cauda' do balão (::after) apontando para a imagem */
+.advanced-cta-text::after {
+  content: '';
+  position: absolute;
+  top: 50%; /* Continua centralizado no balão de texto */
+  right: 100%; 
+  transform: translateY(-50%); 
+  width: 0;
+  height: 0;
+  border: 15px solid transparent;
+  border-right-color: #1a1a1a; 
+  filter: drop-shadow(-1px 0 0 #1a1a1a);
+}
+
+.advanced-cta-text h3 {
+  color: #fff;
+  font-size: 1.35rem; 
+  margin-bottom: 0.5rem;
+}
+
+.advanced-cta-text p {
+  color: #ccc;
+  font-size: 1rem; 
+  line-height: 1.6;
+}
+
+.advanced-cta-text strong {
+  color: #ff007f;
+  font-weight: 600;
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+  .cenarios-container { grid-template-columns: 1fr; }
+  .relatorio-secao-flex { flex-direction: column; }
+}
+
+@media (max-width: 600px) {
+  /* No mobile, a imagem volta para cima do texto */
+  .advanced-cta-box {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem; 
+  }
+  
+  /* A linha rosa vira uma barra no topo do balão */
+  .advanced-cta-text::before {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    height: 6px;
+    border-radius: 16px 16px 0 0; 
+  }
+  
+  /* A 'cauda' do balão agora aponta PARA CIMA */
+  .advanced-cta-text::after {
+    top: 0;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -100%); 
+    border: 15px solid transparent;
+    border-bottom-color: #1a1a1a;
+    border-right-color: transparent;
+    filter: none; 
+  }
+  
+  /* --- MUDANÇA AQUI --- */
+  .advanced-cta-icon {
+    width: 100px; /* <<< AUMENTADO DE 60px para 100px */
+    margin-top: 0; 
+  }
+
+  .advanced-cta-text {
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+  }
 }

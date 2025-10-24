@@ -1,0 +1,152 @@
+/* ../styles/DetalhesModal.css */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: #1a1a1a; 
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 720px; 
+  position: relative;
+  box-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+
+/* ================== BOTÃO "X" ================== */
+
+.modal-close-btn {
+
+  position: absolute; 
+
+  top: 1rem;     /* 16px do topo (0.2rem é muito perto) */
+
+  right: 1rem;   /* 16px da direita */
+
+  
+
+  /* AJUSTE AQUI: Use width e height fixos */
+
+  width: 0.2rem;     /* Tamanho fixo (10px é muito pequeno) */
+
+  height: 0.2rem;    /* Tamanho fixo (igual ao width) */
+
+  
+
+  /* Zera o padding do navegador (o problema principal) */
+
+  padding: 0;    
+
+  
+
+  /*background: #333; */
+
+ /* border: none;*/
+
+  
+
+  /* Deixa "quadradinho" */
+
+  border-radius: 6px; 
+
+  
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #fff; 
+
+  
+
+  /* Tamanho do "x" (precisa ser menor que o botão) */
+
+  font-size: 1.2rem;   
+
+  font-weight: 600; 
+
+  /*line-height: 1;*/
+
+  
+
+  cursor: pointer;
+
+ /* transition: background-color 0.3s, color 0.3s; */
+
+  z-index: 1010; 
+
+}
+
+
+.modal-content h3 {
+  color: #ff007f; 
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  
+  /* Garante que o título não passe por baixo do botão */
+  padding-right: 40px; 
+}
+
+/* Container da Thumbnail (para forçar 16:9) */
+.modal-thumbnail-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.modal-thumbnail-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-description {
+  color: #eee; 
+  font-size: 1.05rem; 
+  line-height: 1.6;
+  margin-bottom: 1.5rem; 
+  padding-bottom: 1.5rem; 
+  border-bottom: 1px solid #333; 
+}
+
+.modal-meta {
+  color: #aaa; 
+  font-size: 0.9rem; 
+  line-height: 1.6;
+  text-transform: capitalize;
+  margin: 0; 
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

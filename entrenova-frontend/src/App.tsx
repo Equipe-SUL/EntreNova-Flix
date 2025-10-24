@@ -1,5 +1,5 @@
 import './styles/global.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom'; // 1. Importe o useLocation
 import Header from './components/Header';
 import LandingPage from './pages/LandingPage';
 import DiagnosticoPage from './pages/DiagnosticoPage';
@@ -13,17 +13,20 @@ import CheckoutPage from './components/PaginaCheckout';
 import Dashboard from './pages/Dashboard';
 import DashboardRH from './pages/DashboardRH'; 
 
-
-
-
 // Componente para rotas não encontradas (404)
 const NotFoundPage = () => <h1 style={{ textAlign: 'center' }}>404 - Página Não Encontrada</h1>;
 
 function App() {
+  // 2. Pegamos a localização atual
+  const location = useLocation();
+
+  // 3. Verificamos se a rota é alguma do dashboard
+  const isDashboardRoute = location.pathname.startsWith('/dashboard');
+
   return (
     <>
-      {/* O Header é o nosso layout persistente, ele aparece em todas as páginas */}
-      <Header />
+      {/* 4. O Header SÓ é renderizado se NÃO for uma rota de dashboard */}
+      {!isDashboardRoute && <Header />}
 
       <main>
        
@@ -49,9 +52,9 @@ function App() {
 
           {/* Rota 1: Dashboard do Funcionário */}
           <Route path="/dashboard/funcionario" element={ 
-            <ProtectedRoute allowedRoles={['funcionario']}> {/* Apenas o Funcionário deve ir para cá, RH tem sua rota */}
+          //  <ProtectedRoute allowedRoles={['funcionario']}> {/* Apenas o Funcionário deve ir para cá, RH tem sua rota */}
               <Dashboard/>
-            </ProtectedRoute>
+          //  </ProtectedRoute>
           }
           />
 

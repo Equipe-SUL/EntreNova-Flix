@@ -1,0 +1,133 @@
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: #1a1a1a; 
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px; /* Um pouco menor que o de detalhes */
+  position: relative;
+  box-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  width: 32px;  
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa; 
+  cursor: pointer;
+  border-radius: 6px; 
+  transition: background-color 0.2s, color 0.2s;
+  z-index: 1010;
+}
+
+.modal-close-btn:hover {
+  background-color: #333; 
+  color: #fff; 
+}
+
+.modal-close-icon {
+  width: 20px; 
+  height: 20px;
+}
+
+.modal-content h3 {
+  color: #ff007f; 
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-right: 40px; /* Espaço para o botão de fechar */
+}
+
+/* Estilos da lista (adaptado do CSS anterior) */
+.notificacoes-lista-modal {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 40vh; /* Altura máxima */
+  overflow-y: auto;
+}
+
+.notificacoes-lista-modal li {
+  display: flex;
+  align-items: center;
+  gap: 1rem; 
+  padding: 1.25rem 0; /* Menos padding lateral, já está no modal */
+  border-bottom: 1px solid #2a2a2a; 
+}
+
+.notificacoes-lista-modal li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.notificacao-tipo {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 5px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+.notificacao-tipo.video {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff4d4d;
+}
+.notificacao-tipo.podcast {
+  background-color: rgba(0, 255, 128, 0.1);
+  color: #00ff80;
+}
+.notificacao-tipo.atividade {
+  background-color: rgba(0, 128, 255, 0.1);
+  color: #4da6ff;
+}
+
+.notificacao-texto {
+  flex-grow: 1;
+}
+
+.notificacao-texto strong {
+  color: #eee;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.notificacao-texto span {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+/* Animações (copiado de DetalhesModal.css) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

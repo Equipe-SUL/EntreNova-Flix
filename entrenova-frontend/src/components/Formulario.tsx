@@ -358,7 +358,14 @@ const Formulario = () => {
               {dim.charAt(0).toUpperCase() + dim.slice(1)}
             </label>
           ))}
-          <button onClick={iniciarPerguntas}>Iniciar Perguntas</button>
+          {/* corrigi o bug que o moreira achou*/}
+          <button 
+            onClick={iniciarPerguntas} 
+            disabled={dimensoesSelecionadas.length === 0}
+          >
+            Iniciar Perguntas
+          </button>
+          {/* agora precisa selecionar ao menos 1*/}
         </>
       )}
 

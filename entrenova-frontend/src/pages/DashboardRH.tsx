@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DashboardHeader from '../components/DashboardHeader';
+
 import DashboardFooter from '../components/DashboardFooter';
 import CreateFuncionarioForm from '../components/CreateFuncionarioForm'; 
 import '../styles/Dashboardrh.css';
@@ -78,8 +79,13 @@ const DashboardRH: React.FC = () => {
   }
 
   return (
-    <>
-      <DashboardHeader />
+
+    <div className="dashboard-layout">
+     
+
+      <div className="dashboard-main">
+        <DashboardHeader />
+
 
       {/* ----------------------------------------------------------- */}
       {/* SEÇÃO 1: RH CARD /}
