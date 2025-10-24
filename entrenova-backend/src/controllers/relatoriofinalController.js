@@ -2,7 +2,14 @@ import { buscarConversaPorCnpj, buscarRelatorioPorCnpj, atualizarRelatorio, busc
 import { gerarNovoRelatorio } from "../services/iaServices.js";
 import { enviarEmailRelatorio2 } from "../services/emailServices.js";
 
-
+// Mapeamento para simplificar a preferência de conteúdo (Frontend deve enviar o número)
+const MAPA_PREFERENCIA = {
+  "1": "video",
+  "2": "podcast",
+  "3": "curso curto",
+  "4": "artigo",
+  // '5' será tratado como nenhuma preferência específica (trilha diversa)
+};
 
 /**
  * Controller para gerar e salvar relatório 2, resumo2 e trilha
@@ -15,7 +22,8 @@ export const gerarRelatorioTotal = async (req, res) => {
     console.log("🔹 Iniciando geração de relatório para CNPJ:", cnpj);
 
     // 1️⃣ Buscar conversas/respostas do chat
-    const chatData = await buscarConversaPorCnpj(cnpj);
+    //
+    const chatData = await buscarConversaPorCnpj(cnpj); 
     if (!chatData || chatData.length === 0) {
       console.warn("❌ Nenhuma conversa encontrada para este CNPJ:", cnpj);
       throw new Error("Dados da conversa não encontrados");
@@ -28,67 +36,94 @@ export const gerarRelatorioTotal = async (req, res) => {
     }));
 
     // 2️⃣ Buscar dados existentes do relatório 1 e plano
+    //
     const relatorioDB = await buscarRelatorioPorCnpj(cnpj);
     const relatorio1 = relatorioDB?.relatorio1 || "";
     const plano = relatorioDB?.plano || "basico";
     console.log("🔹 Relatório 1 e plano encontrados:", plano);
 
-    // 3️⃣ Determinar preferência de conteúdo
-    const preferenciaPergunta = "Por fim, ao gerar as trilhas, qual tipo de conteúdo você prefere ver na maioria delas? (Ex: Vídeos, Podcasts, Cursos Curtos)";
-    const respostaPreferenciaObj = chatData.find(c => {
-      if (!c.mensagem_recebida) return false;
-      const original = c.mensagem_recebida.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-      const alvo = preferenciaPergunta.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-      return original === alvo;
-    });
+    // 3️⃣ Determinar preferência de conteúdo - SIMPLIFICADO PARA ENTRADA NUMÉRICA
+    // Assume-se que a ÚLTIMA mensagem salva pelo usuário no chatData é a resposta de preferência.
+    const respostaPreferenciaObj = chatData[chatData.length - 1]; 
 
     if (!respostaPreferenciaObj || !respostaPreferenciaObj.mensagem_enviada) {
       throw new Error("❌ Resposta de preferência de conteúdo não encontrada no chat!");
     }
 
-    let resposta = respostaPreferenciaObj.mensagem_enviada
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      .trim().toLowerCase()
-      .replace(/s$/, "");
+    let respostaNumerica = respostaPreferenciaObj.mensagem_enviada.trim();
+    let preferenciaConteudo = null; // Inicializa como null para trilha diversa
 
-    const tiposConteudoValidos = ["video", "quiz", "curso curto", "podcast", "palestra", "artigo"];
-    if (!tiposConteudoValidos.includes(resposta)) {
-      throw new Error(`❌ Resposta de preferência de conteúdo inválida: "${respostaPreferenciaObj.mensagem_enviada}"`);
+    if (MAPA_PREFERENCIA[respostaNumerica]) {
+        // Se for 1, 2, 3 ou 4
+        preferenciaConteudo = MAPA_PREFERENCIA[respostaNumerica];
+        console.log("🔹 Preferência de conteúdo (via número):", preferenciaConteudo);
+    } else if (respostaNumerica === "5" || respostaNumerica.toLowerCase() === "outro") {
+        // Se for 5 ou "outro", mantém preferenciaConteudo como null (trilha diversa)
+        console.log("🔹 Preferência de conteúdo: Nenhuma específica (Trilha Diversa).");
+    } else {
+        // Se for um valor inválido, lança erro
+        throw new Error(`❌ Resposta de preferência de conteúdo inválida. Esperado um número de 1 a 5. Recebido: "${respostaNumerica}"`);
     }
 
-    const preferenciaConteudo = resposta;
-    console.log("🔹 Preferência de conteúdo:", preferenciaConteudo);
+    // 5️⃣ Determinar quantidade de conteúdos da trilha (7 para BÁSICO, 10 para PREMIUM)
+    let qtdConteudos;
+    const planoLower = plano?.toLowerCase();
+    
+    if (planoLower === "básico" || planoLower === "basico") {
+        qtdConteudos = 7; // Total de 7 trilhas para Básico
+    } else if (planoLower === "premium") {
+        qtdConteudos = 10; // Total de 10 trilhas para Premium
+    } else {
+        // Fallback para 7, se o plano for desconhecido
+        qtdConteudos = 7; 
+    }
+    console.log(`🔹 Quantidade total de conteúdos para o plano '${plano}': ${qtdConteudos}`);
 
     // 4️⃣ Gerar relatório2 com IA
+    //
     const relatorio2IA = await gerarNovoRelatorio(
       { nome: "Empresa " + cnpj, cnpj },
       dadosQuizFormatado,
       plano,
-      preferenciaConteudo
+      relatorio1, // Passando o relatório 1 como contexto
+      preferenciaConteudo // Passa o conteúdo ou null
     );
     if (!relatorio2IA) throw new Error("Falha ao gerar relatorio2");
     console.log("✅ Relatório 2 gerado com IA");
     const resumo2 = relatorio2IA.resumo2;
 
-    // 5️⃣ Determinar quantidade de conteúdos da trilha
-    const qtdConteudos = 3;
-    //const qtdConteudos = (plano?.toLowerCase() === "básico") ? 5 : 7;
 
     // 6️⃣ Buscar conteúdos disponíveis
+    //
     const conteudosDisponiveis = await buscarConteudos();
     console.log(`🔹 Conteúdos disponíveis: ${conteudosDisponiveis.length}`);
 
-    // 7️⃣ Gerar trilha usando apenas dados do banco
+    // 7️⃣ Gerar trilha usando apenas dados do banco (Lógica: 75% DE PREFERÊNCIA)
     let trilha = [];
 if (conteudosDisponiveis.length > 0) {
-  // Prioriza preferidos
-  const preferidos = conteudosDisponiveis.filter(c => c.modelo?.toLowerCase() === preferenciaConteudo.toLowerCase());
-  const qtdPreferidos = Math.min(Math.max(2, preferidos.length), 3);
-  const selecionadosPreferidos = preferidos.slice(0, qtdPreferidos);
+  let selecionadosPreferidos = [];
+  
+  // Condição para priorizar preferidos SÓ se houver preferênciaConteudo definida
+  if (preferenciaConteudo) {
+      // Cálculo: 75% da quantidade total de conteúdos (arredonda para baixo)
+      const qtdPreferidosDesejada = Math.floor(qtdConteudos * 0.75); 
+      
+      // Prioriza preferidos, se houver uma preferência definida
+      const preferidos = conteudosDisponiveis.filter(c => c.modelo?.toLowerCase() === preferenciaConteudo.toLowerCase());
+      
+      // A quantidade final de preferidos é o mínimo entre o desejado (75%) e o disponível no banco
+      const qtdPreferidos = Math.min(qtdPreferidosDesejada, preferidos.length);
+      
+      selecionadosPreferidos = preferidos.slice(0, qtdPreferidos);
+      console.log(`🔹 Selecionados preferidos (${preferenciaConteudo}): ${selecionadosPreferidos.length} (75% de ${qtdConteudos} é ${qtdPreferidosDesejada})`);
+  }
 
   const restantes = qtdConteudos - selecionadosPreferidos.length;
+  // Filtra os restantes disponíveis excluindo os já selecionados
   const restantesDisponiveis = conteudosDisponiveis.filter(c => !selecionadosPreferidos.includes(c));
   const selecionadosDiversos = [];
+  
+  // Seleciona conteúdos diversos (aleatórios) para preencher a trilha
   while (selecionadosDiversos.length < restantes && restantesDisponiveis.length > 0) {
     const index = Math.floor(Math.random() * restantesDisponiveis.length);
     selecionadosDiversos.push(restantesDisponiveis.splice(index, 1)[0]);
@@ -110,6 +145,7 @@ if (conteudosDisponiveis.length > 0) {
     const textoTrilha = trilha.map((c, i) => `${i + 1}. ${c.titulo} - Modelo: ${c.modelo}`).join("\n");
 
     // 9️⃣ Salvar relatório2, resumo2 e trilha no banco
+    //
     await atualizarRelatorio(cnpj, {
       relatorio2: textoRelatorio2,
       resumo2: resumo2,
@@ -127,6 +163,7 @@ if (conteudosDisponiveis.length > 0) {
     );
 
     // 🔟 Retornar dados para frontend
+    //
     res.json({
       relatorio2: relatorio2IA,
       resumo2,

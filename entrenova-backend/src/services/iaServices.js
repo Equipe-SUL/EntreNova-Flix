@@ -190,22 +190,35 @@ export async function analisarRespostasComIA(dadosEmpresa, dadosQuiz) {
 /**
  * Gera um novo relatório (Relatório 2) baseado nas respostas do chatbot.
  */
-export async function gerarNovoRelatorio(dadosEmpresa, dadosQuizChatbot) {
+export async function gerarNovoRelatorio(dadosEmpresa, dadosQuizChatbot, plano, relatorio1, preferenciaConteudo) {
   console.log("🚀 Iniciando análise com Gemini para o Relatório 2...");
 
   // Formatando as respostas do chatbot para a IA entender
   const respostasFormatadas = dadosQuizChatbot
-    .map((q, i) => `${i + 1}. Pergunta: ${q.pergunta}\n   Resposta: ${q.resposta}`)
+    .map((q, i) => `${i + 1}. Pergunta: ${q.pergunta}\n  Resposta: ${q.resposta}`)
     .join("\n\n");
+
+  // Formatando a preferência para o prompt
+  const prefConteudo = preferenciaConteudo 
+    ? `A preferência do cliente para o conteúdo da trilha é: "${preferenciaConteudo}". A trilha terá uma prioridade de 75% deste conteúdo.`
+    : `O cliente não especificou uma preferência de conteúdo (digitou '5' ou 'Outro'). A trilha será diversa.`;
 
   const prompt = `
         Você é um consultor de negócios analisando uma conversa com um cliente da empresa "${dadosEmpresa.nome}".
-        A conversa foi a seguinte:
+        O plano de contratação atual do cliente é: "${plano}".
+
+        --- RELATÓRIO ANTERIOR (Contexto de Diagnóstico) ---
+        ${relatorio1 || "Relatório 1 não disponível."}
+        --- FIM DO RELATÓRIO ANTERIOR ---
+
+        A conversa/respostas detalhadas do cliente (Relatório 2 - Novas Respostas) foi a seguinte:
         ${respostasFormatadas}
 
+        ${prefConteudo}
+
         Sua tarefa é:
-        1.  **relatorio2**: Crie um relatório textual que consolide e interprete as respostas do cliente, identificando os desafios e expectativas.
-        2.  **resumo2**: Crie um resumo executivo muito curto (máximo 30 palavras) desse relatório.
+        1.  **relatorio2**: Crie um relatório textual que CONSOLIDE e INTERPRETE o *Relatório Anterior* junto com as *Novas Respostas*, identificando os desafios, expectativas e aponte a importância da preferência de conteúdo (se houver).
+        2.  **resumo2**: Crie um resumo executivo muito curto (máximo 30 palavras) desse relatório consolidado.
 
         Formate a resposta EXCLUSIVAMENTE como um objeto JSON, sem nenhum texto ou marcador adicional. A estrutura deve ser:
         {
@@ -215,10 +228,12 @@ export async function gerarNovoRelatorio(dadosEmpresa, dadosQuizChatbot) {
     `;
 
   try {
+    // Assumindo que 'model' está definido neste escopo
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    // Limpa marcadores JSON e novas linhas para garantir que o JSON.parse funcione
+    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').replace(/\n/g, '').trim(); 
 
     console.log("✅ Análise do Relatório 2 recebida do Gemini!");
     return JSON.parse(jsonText);
