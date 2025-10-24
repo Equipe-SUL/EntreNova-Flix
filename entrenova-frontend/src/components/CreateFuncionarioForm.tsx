@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { supabase } from '../services/supabase'; // Para obter o token de sessão
-import { useNavigate } from 'react-router-dom';
+
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -73,38 +73,45 @@ const CreateFuncionarioForm: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '450px', margin: '20px 0', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h3>Cadastrar Novo Funcionário</h3>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+    // Aplicando classes do style.css (login-card)
+    <div className="login-card" style={{ maxWidth: '500px', margin: '20px 0', height: 'auto', textAlign: 'left' }}>
+      
+      <h2>Cadastrar Novo Colaborador</h2>
+      <p>Adicione um funcionário à sua conta e atribua uma senha inicial.</p>
+
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '1.5em' }}>
         
+        <label htmlFor="fullName">Nome Completo</label>
         <input 
           type="text" 
+          id="fullName"
           value={full_name} 
           onChange={(e) => setFullName(e.target.value)} 
           placeholder="Nome Completo do Funcionário" 
           required 
-          style={{ padding: '10px' }}
         />
         
+        <label htmlFor="email">Email</label>
         <input 
           type="email" 
+          id="email"
           value={email} 
           onChange={(e) => setEmail(e.target.value)} 
           placeholder="Email de Acesso" 
           required 
-          style={{ padding: '10px' }}
         />
         
+        <label htmlFor="password">Senha Inicial</label>
         <input 
           type="password" 
+          id="password"
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
           placeholder="Senha Inicial" 
           required 
-          style={{ padding: '10px' }}
         />
         
-        <button type="submit" disabled={loading} style={{ padding: '10px 15px', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px' }}>
+        <button type="submit" disabled={loading} className="btn-submit">
           {loading ? 'Criando...' : 'Criar Conta do Funcionário'}
         </button>
       </form>
