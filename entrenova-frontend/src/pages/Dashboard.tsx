@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import DashboardHeader from '../components/DashboardHeader';
 import DashboardFooter from '../components/DashboardFooter';
 import Progresso from '../components/Progresso'; 
@@ -6,6 +6,7 @@ import DetalhesModal from '../components/DetalhesModal';
 import '../styles/dashboard.css';
 import '../styles/DetalhesModal.css'; 
 import userIcon from '../assets/dashuser_icon.png';
+import { supabase } from '../services/supabase';
 
 // ================== simulando trilhas ==================
 // thumbs que criei com i.a
@@ -101,6 +102,11 @@ const allCursos: Curso[] = [
 
 
 const Dashboard: React.FC = () => {
+
+  const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState('João Sobrenome');
+  const [userRole, setUserRole] = useState('Funcionário');
+
   const [activeFilter, setActiveFilter] = useState<CursoStatus | 'todas'>('progresso');
 
   const [selectedCurso, setSelectedCurso] = useState<Curso | null>(null);
@@ -111,6 +117,31 @@ const Dashboard: React.FC = () => {
     }
     return curso.status === activeFilter; 
   });
+
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        supabase
+          .from('profiles')
+          .select('full_name, role') // Seleciona o nome e o papel/cargo
+          .eq('id', session.user.id)
+          .single()
+          .then(({ data, error }) => {
+            if (data) {
+              setUserName(data.full_name);
+              // Mapeia o 'role' para um termo de cargo mais amigável, se necessário
+              setUserRole(data.role === 'rh' ? 'Gerente RH' : 'Colaborador'); 
+            } else if (error) {
+              console.error('Erro ao buscar perfil:', error.message);
+            }
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []); // Executa apenas uma vez ao montar o componente
   
   const handleDetalhesClick = (curso: Curso) => {
     setSelectedCurso(curso);
@@ -137,8 +168,8 @@ const Dashboard: React.FC = () => {
             />
             <div className="dash-card__header">
               <span className="dash-badge dash-badge--active">Funcionário Ativo</span>
-              <h2>João da Silva</h2>
-              <span className="dash-tag">Estagiário</span>
+              <h2>{userName}</h2>
+              <span className="dash-tag">{userRole}</span>
             </div>
             <div className="dash-card__score">
               <div className="dash-score">
