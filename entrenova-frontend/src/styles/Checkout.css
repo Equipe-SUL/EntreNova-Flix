@@ -1,0 +1,390 @@
+/* ------------------------------------- */
+/* ESTILOS DE PLANO */
+/* ------------------------------------- */
+
+.pagina {
+ font-family: Arial, sans-serif;
+ color: #fff;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ margin: 0;
+}
+
+/* Layout dos planos */
+.planos-container {
+ display: flex;
+ gap: 20px;
+}
+
+/* Cartões dos planos */
+.plano {
+ background-color: #1a1a1a;
+ border-radius: 10px;
+ padding: 25px;
+ width: 250px;
+ height: 300px;
+ text-align: center;
+ box-shadow: 0 0 10px rgba(255,255,255,0.05);
+ border: 2px solid transparent;
+ transition: all 0.3s ease;
+}
+
+/* Hover com traçado vermelho */
+.plano:hover {
+ border: 2px solid #ff007f;
+ transform: translateY(-4px);
+ box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+}
+
+/* Estado Selecionado */
+.plano.selecionado {
+  border: 2px solid #ff007f; 
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.6);
+}
+
+/* Título e logos */
+.titulo {
+ font-size: 1.2em;
+ font-weight: bold;
+ margin-bottom: 10px;
+}
+
+.titulo span {
+ display: inline-block;
+ background-color: #333;
+ color: #fff;
+ padding: 2px 6px;
+ font-size: 0.9em;
+ margin-left: 4px;
+ border-radius: 3px;
+ letter-spacing: 1px;
+}
+
+/* Texto e preços */
+.plano-tipo {
+ font-weight: bold;
+ margin-bottom: 10px;
+}
+
+.preco {
+ font-size: 1.5em;
+ font-weight: bold;
+ margin-bottom: 5px;
+}
+
+.preco span {
+ font-size: 0.7em;
+ vertical-align: middle;
+ margin-right: 5px;
+ color: #bbb;
+}
+
+.total {
+ color: #aaa;
+ margin-bottom: 20px;
+}
+
+/* Botão (Geral) */
+button {
+ background-color: #ff007f;
+ color: #fff;
+ border: none;
+ border-radius: 8px;
+ padding: 10px 15px;
+ font-size: 1em;
+ font-weight: bold;
+ cursor: pointer;
+ transition: background 0.3s;
+ width: 20%;
+}
+
+button:hover {
+ background-color: #ff007f;
+}
+
+/* Link de detalhes */
+.detalhes {
+ display: block;
+ color: #fff;
+ margin-top: 15px;
+ font-size: 0.9em;
+ text-decoration: none;
+ font-weight: bold;
+}
+
+.detalhes:hover {
+ text-decoration: underline;
+}
+
+/* ID usado no componente principal (PaginaCheckout.tsx) para alinhar */
+#sec1registro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3em;
+}
+
+/* ------------------------------------- */
+/* ESTILOS DE FORMULÁRIO RH (RhRegistrationForm.tsx) */
+/* ------------------------------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 450px;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  color: #ff007f;
+}
+
+.title::before {
+  width: 18px;
+  height: 18px;
+}
+
+.title::after {
+  width: 18px;
+  height: 18px;
+  animation: pulse 1s linear infinite;
+}
+
+.title::before,
+.title::after {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  left: 0px;
+  background-color: #ff007f;
+}
+
+.message, 
+.signin {
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.signin {
+  text-align: center;
+}
+
+.signin a:hover {
+  text-decoration: underline #ff007f;
+}
+
+.signin a {
+  color: #ff007f;
+}
+
+/* Estrutura de label para placeholder flutuante */
+.form label {
+  position: relative;
+}
+
+.form label .input {
+  background-color: #333;
+  color: #fff;
+  width: 100%;
+  padding: 20px 05px 05px 10px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 10px;
+}
+
+.form label .input + span {
+  color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  left: 10px;
+  top: 0px;
+  font-size: 0.9em;
+  cursor: text;
+  transition: 0.3s ease;
+}
+
+/* Placeholder (span) na posição de descanso */
+.form label .input:placeholder-shown + span {
+  top: 12.5px;
+  font-size: 0.9em;
+}
+
+/* Placeholder (span) na posição flutuante quando focado ou preenchido */
+.form label .input:focus + span,
+.form label .input:valid + span {
+  color: #ff007f;
+  top: 0px;
+  font-size: 0.7em;
+  font-weight: 600;
+}
+
+.input {
+  font-size: medium;
+}
+
+.submit {
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  transform: .3s ease;
+  background-color: #ff007f;
+}
+
+.submit:hover {
+  background-color: #ff007f;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------- */
+/* ESTILOS DE PAGAMENTO (PaymentMethodSelection.tsx) */
+/* ------------------------------------- */
+
+/* O card principal */
+.payment-card {
+  width: 450px; /* Ajustado para um tamanho fixo */
+  /* height: 350px; Removido para ter altura automática */
+  padding: 1.5rem; 
+  border-radius: 0.8rem; 
+  background-color: #1a1a1a; /* Fundo branco/claro */
+  box-shadow: 0 4px 6px -1px #ff007f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.card-title {
+  text-transform: capitalize;
+  font-weight: 600;
+  align-self: flex-start;
+  color: white;
+  font-size: 1.4em;
+}
+
+.card-subtitle {
+  font-size: 12px; /* Aumentado um pouco */
+  align-self: flex-start;
+  text-wrap: wrap;
+  color: rgb(107 114 128);
+  padding-bottom: 0.5rem;
+}
+
+/* Cada opção de pagamento (o <label>) */
+.payment-option {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  border-radius: 0.5rem;
+  padding: 0.7rem; 
+  border: 1px solid transparent; 
+  cursor: pointer;
+  overflow: hidden; 
+  transition: all 500ms;
+}
+
+/* Estado Hover */
+.payment-option:hover {
+  background-color: rgb(44, 44, 44); 
+}
+
+/* Estiliza o <label> pai quando o <input> filho está :checked */
+.payment-option:has(:checked) {
+  border-color: rgb(241, 99, 205); /* Cor de destaque azul */
+  color: rgb(255, 255, 255); /* Texto azul escuro */
+  background-color: rgb(255, 0, 157); /* Fundo azul claro */
+  font-weight: 700;
+}
+
+/* Contêiner para o SVG e o texto */
+.option-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  position: relative;
+}
+
+.option-content svg {
+  fill: currentColor;
+  width: 32px;
+  height: 32px;
+}
+
+/* Texto do método de pagamento */
+.option-text {
+  font-weight: 600;
+  /* Garante que o texto seja visível */
+  position: static; 
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* Estilização do botão de rádio */
+.payment-radio {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 1.25em;
+  height: 1.25em;
+  border: 1px solid #9ca3af; 
+  border-radius: 50%;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.payment-radio:checked {
+  background-color: rgb(99 102 241);
+  border-color: rgb(99 102 241);
+  background-image: radial-gradient(white 40%, transparent 50%);
+}
+
+#btn-pagamento{
+  color: #ff007f;
+  margin-top: 10px;
+  background-color: white; /* Fundo branco/claro */
+  border: 1px solid #ff007f;
+}
+#btn-pagamento:hover {
+  background-color: #ff007f;
+  color: white;
+}
+
+#h2planos{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

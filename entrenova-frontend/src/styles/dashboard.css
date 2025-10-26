@@ -251,7 +251,7 @@
 .dash-item__type-badge[data-type="video"] { background-color: rgba(255, 0, 0, 0.1); color: #ff4d4d; }
 .dash-item__type-badge[data-type="podcast"] { background-color: rgba(0, 255, 128, 0.1); color: #00ff80; }
 .dash-item__type-badge[data-type="atividade"] { background-color: rgba(0, 128, 255, 0.1); color: #4da6ff; }
-.dash-item__time { color: #888; font-size: 0.9rem; }
+.dash-item__time { color: #888; font-size: 0.9rem; margin-left: 5px; }
 .dash-item__right { margin-top: 1.5rem; width: 100%; }
 .dash-btn { background-color: #ff007f; color: #fff; border: none; border-radius: 6px; padding: 0.7rem 0; width: 100%; text-align: center; font-weight: 600; cursor: pointer; transition: 0.3s ease; margin-top: 1rem; display: block; font-family: inherit; font-size: 1rem;}
 .dash-btn:hover { background-color: #e60073; }

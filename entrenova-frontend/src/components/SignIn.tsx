@@ -4,7 +4,7 @@ import { supabase } from '../services/supabase';
 import { useNavigate } from 'react-router-dom';
 
 // 1. IMPORTAÇÕES DE ESTILO (NÃO IMPORTA MAIS O HEADER)
-import '../styles/SignIn.css'; 
+import '../styles/signin.css'; 
 // import Header from '../components/Header'; // <-- REMOVIDO
 
 const SignIn: React.FC = () => {
@@ -60,8 +60,8 @@ const SignIn: React.FC = () => {
   return (
     // 2. O FRAGMENT <> E O <Header /> FORAM REMOVIDOS
     // O <main> agora é o elemento raiz do componente
-    <main className="container">
-      <div className="login-card">
+    <main className="contender">
+      <div className="cartao-login">
         
         <h2>Login</h2>
         <p>Insira as credenciais fornecidas pelo seu RH.</p>

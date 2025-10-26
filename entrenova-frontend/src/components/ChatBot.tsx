@@ -287,13 +287,17 @@ export default function ChatBot() {
       )}
 
       {/* BOTÃO DE RESULTADO */}
-      {etapa === "fim" && (
-        <div className="chat-footer">
-          <button className="chat-button" onClick={irParaResultado}>
-            Ver Resultado
-          </button>
-        </div>
-      )}
+{etapa === "fim" && (
+  <div className="chat-footer">
+    <button
+      className="chat-button"
+      onClick={() => navigate("/checkout")} // 👈 nova rota
+    >
+      Ver Resultado
+    </button>
+  </div>
+)}
+
     </div>
   );
 }

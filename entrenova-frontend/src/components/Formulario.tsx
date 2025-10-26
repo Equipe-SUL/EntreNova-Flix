@@ -400,7 +400,7 @@ const Formulario = () => {
 
       {etapa === 'finalizado' && (
         <>
-          <h2>Parabéns! Você finalizou o diagnóstico.</h2>
+          <h2 id='h2parabens' >Parabéns! Você finalizou o diagnóstico.</h2>
           <button onClick={handleSubmitFinal}>{statusEnvio || 'Ver Resultado'}</button>
         </>
       )}

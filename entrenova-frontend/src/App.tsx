@@ -6,10 +6,11 @@ import DiagnosticoPage from './pages/DiagnosticoPage';
 import ChatbotPage from './pages/ChatbotPage';
 import ResultadoPage from './pages/ResultadoPage';
 import ResultadoPage2 from './pages/Resultadopage2';
+import CheckoutPage from './components/PaginaCheckout';
+
 
 import SignIn from './components/SignIn';
 import ProtectedRoute from './components/ProtectedRoute';
-import CheckoutPage from './components/PaginaCheckout';
 import Dashboard from './pages/Dashboard';
 import DashboardRH from './pages/DashboardRH'; 
 
@@ -48,7 +49,8 @@ function App() {
 
           <Route path="/signin" element={<SignIn />} />
 
-          <Route path="/checkout" element={<CheckoutPage />} /> 
+           <Route path="/checkout" element={<CheckoutPage />} />
+
 
           {/* Rota 1: Dashboard do Funcionário */}
           <Route path="/dashboard/funcionario" element={ 

@@ -1,30 +1,49 @@
-// src/components/PaginaCheckout.tsx
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../services/supabase'; // Certifique-se de que o caminho está correto
+import { supabase } from '../services/supabase'; 
+// Importe seus componentes
+import PlanSelection from './SelecaoPlano'; 
+import RhRegistrationForm from './RhRegistrationForm';
+import PaymentConfirmation from './PaymentConfirmation'; 
+// Assumindo que os tipos estão em '../types/types.pagamento'
+import { Plano, RhData, CheckoutData, PaymentMethod } from '../types/types.pagamento'; 
+
 
 // Obtém o URL base da API do ambiente (VITE_API_BASE_URL)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+const initialRhData: RhData = {
+    email: '',
+    password: '', 
+    full_name: '',
+    cnpj_empresa: '',
+};
+
 const CheckoutPage: React.FC = () => {
-    // ESTADOS PARA INFORMAÇÕES DE LOGIN E CADASTRO RH
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [full_name, setFullName] = useState(''); // NOVO: Nome Completo do RH
-    const [cnpj_empresa, setCnpjEmpresa] = useState(''); // NOVO: CNPJ da Empresa
-    const [plano, setPlano] = useState('BASICO'); // Exemplo de plano
+    // ESTADOS GLOBAIS
+    const [step, setStep] = useState(1);
+    const [plano, setPlano] = useState<Plano>('BASICO');
+    const [rhData, setRhData] = useState<RhData>(initialRhData);
     
-    // ESTADOS DE UI
+    // ESTADOS DE UI E NAVEGAÇÃO
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // HANDLERS DE NAVEGAÇÃO E DADOS
+    const handleNextStep = () => setStep(prev => prev + 1);
+    const handlePrevStep = () => setStep(prev => prev - 1);
+
+    const handleRhDataComplete = (data: RhData) => {
+        setRhData(data);
+        handleNextStep();
+    };
+    
+    // HANDLER PARA FINALIZAÇÃO DO PAGAMENTO E SUBMISSÃO DA API
+    const handleFinishPayment = async (paymentMethod: PaymentMethod) => {
         setLoading(true);
         setErrorMsg(null);
-
+        
         if (!API_BASE_URL) {
             setErrorMsg("Erro de configuração: VITE_API_BASE_URL não definida.");
             setLoading(false);
@@ -32,27 +51,28 @@ const CheckoutPage: React.FC = () => {
         }
 
         try {
-            // 1. Enviar TODOS OS DADOS (credenciais, nome e CNPJ) para o backend
+            // ⭐ 1. CHAMADA CENTRALIZADA PARA O BACKEND
+            // Envia todos os dados (RH, Plano e Método de Pagamento) para a rota que funcionava
             const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    email, 
-                    password, 
-                    plano,
-                    full_name, 
-                    cnpj_empresa 
+                    ...rhData,              // email, password, full_name, cnpj_empresa
+                    plano: plano,            // Plano selecionado
+                    paymentMethod: paymentMethod // Método de pagamento
                 }),
             });
 
-            const data = await response.json();
+            // Usamos a lógica de erro simples da sua versão anterior
+            const data = await response.json(); 
 
             if (!response.ok) {
                 // Se o backend retornou um erro (400, 409, 500, etc.)
                 setErrorMsg(data.message || 'Erro desconhecido no processamento do checkout.');
                 
             } else {
-                // Sucesso: Inicia a sessão no cliente usando a sessão retornada pelo backend
+                // ⭐ 2. SUCESSO: O backend cuidou de registrar o usuário/perfil no Supabase
+                // e de criar a assinatura/pagamento, retornando a sessão.
                 if (data.session) {
                     await supabase.auth.setSession(data.session);
                     // Como é um RH, redireciona para o dashboard RH
@@ -61,68 +81,71 @@ const CheckoutPage: React.FC = () => {
                     setErrorMsg('Checkout bem-sucedido, mas falha ao obter sessão de login.');
                 }
             }
-
+            
         } catch (e) {
-            console.error(e);
-            setErrorMsg('Falha na comunicação com o servidor. Tente novamente.');
+            console.error('Erro de Checkout Completo:', e);
+            // Captura erros de rede ou SyntaxError do .json()
+            setErrorMsg('Falha na comunicação com o servidor ou resposta inválida. Tente novamente.');
         } finally {
             setLoading(false);
         }
     };
 
-    return (
-        <div style={{ padding: '20px', maxWidth: '500px', margin: 'auto', textAlign: 'center' }}>
-            <h1>Escolha seu Plano e Crie sua Conta RH</h1>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                
-                {/* 1. Campos de Informações do Login */}
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email de Acesso (RH)"
-                    required
-                />
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Sua Senha"
-                    required
-                />
-                
-                {/* 2. CAMPOS DO PERFIL RH */}
-                <input
-                    type="text"
-                    value={full_name}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Nome Completo do RH"
-                    required
-                />
-                <input
-                    type="text"
-                    value={cnpj_empresa}
-                    onChange={(e) => setCnpjEmpresa(e.target.value)}
-                    placeholder="CNPJ da Empresa"
-                    required
-                />
-                
-                {/* 3. Escolha do Plano (Simples) */}
-                <select value={plano} onChange={(e) => setPlano(e.target.value)} style={{ padding: '10px' }}>
-                    <option value="BASICO">Plano Básico (R$19.90)</option>
-                    <option value="PREMIUM">Plano Premium (R$49.90)</option>
-                </select>
 
-                {/* Mensagens de Erro/Loading */}
-                {errorMsg && <p style={{ color: 'red', margin: '5px 0' }}>{errorMsg}</p>}
-                
-                <button type="submit" disabled={loading} style={{ padding: '10px 15px', marginTop: '10px' }}>
-                    {loading ? 'Processando...' : `Pagar e Criar Conta`}
-                </button>
-            </form>
+    const checkoutData: CheckoutData = {
+        plano: plano,
+        rhData: rhData,
+    };
+
+    const renderStep = () => {
+        switch (step) {
+            case 1:
+                return (
+                    <PlanSelection
+                        plano={plano}
+                        setPlano={setPlano}
+                        onNext={handleNextStep}
+                    />
+                );
+            case 2:
+                return (
+                    <RhRegistrationForm
+                        initialData={rhData}
+                        onNext={handleRhDataComplete}
+                        onBack={handlePrevStep}
+                    />
+                );
+            case 3:
+                return (
+                    // PaymentConfirmation precisa da prop onFinish
+                    <PaymentConfirmation
+                        checkoutData={checkoutData}
+                        onBack={handlePrevStep}
+                        onFinish={handleFinishPayment} // Função que agora faz a chamada final para o backend
+                    />
+                );
+            default:
+                return <div>Erro: Passo desconhecido.</div>;
+        }
+    };
+
+    return (
+        <div style={{maxWidth: '500px', margin: 'auto', textAlign: 'center', marginTop: '30px', marginBottom: '30px' }}>
+            <h1 style={{fontSize: '20px'}}>Checkout - Criação de Conta RH</h1>
+            
+            <p>Passo {step} de 3</p>
+
+            {/* Mensagens de Erro/Loading globais para o componente CheckoutPage */}
+            {loading && <p style={{ color: 'blue', margin: '5px 0' }}>Processando o checkout...</p>}
+            {errorMsg && <p style={{ color: 'red', margin: '5px 0' }}>Erro: {errorMsg}</p>}
+
+
+            <div>
+                {renderStep()}
+            </div>
             
           <Link to="/signin">
-          <button className="login-btn" style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer', marginTop: '10px' }}>
+          <button className="login-btn" style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer', marginTop: '20px' }}>
             Já possui uma conta?
           </button>
           </Link>

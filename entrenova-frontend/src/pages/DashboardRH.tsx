@@ -94,7 +94,7 @@ const DashboardRH: React.FC = () => {
           <div className="info-funcionario">
             <p className="empresa">Admin RH</p>
             <h2 className="nome">{rhName}</h2> 
-            <button className="cargo">Gerenciador de Equipe</button>
+            <a className="cargo">Gerenciador de Equipe</a>
           </div>
           <div className="avaliacao">
             <div className="nota">
@@ -102,10 +102,14 @@ const DashboardRH: React.FC = () => {
               <p>Acesso</p>
             </div>
             <div className="linha"></div>
+
+         <div id='divbtnfilho'>
             <button className="btn-filho">
               <span>▶</span>
-              <p>Meu Perfil</p>
             </button>
+            <p id='pmeuperfil'>Meu Perfil</p>
+         </div>
+   
           </div>
         </div>
       </section>

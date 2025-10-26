@@ -168,7 +168,6 @@ button {
   min-width: 8.5em;
   height: 2.6em;
   padding: 0 1.2em;
-  margin-top: 2rem;
   background: var(--accent-magenta);
   color: #ffffff;
   border: 1px solid var(--accent-magenta-strong);
@@ -236,4 +235,9 @@ button:disabled {
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(-15px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+
+#h2parabens{
+  margin-bottom: 15px;
 }

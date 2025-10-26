@@ -223,7 +223,7 @@
 
   background-color: #e60074;
 
-}/* Container principal */.container {
+}/* Container principal */.contender {
 
   flex: 1;
 
@@ -239,7 +239,7 @@
 
   padding-top: 4rem; 
 
-}/* Card de Login */.login-card {
+}/* Card de Login */.cartao-login {
 
   background-color: rgba(15, 15, 15, 0.9);
 
@@ -285,13 +285,13 @@
 
   }
 
-}.login-card h2 {
+}.cartao-login h2 {
 
   margin-bottom: 0.5em;
 
   font-size: 1.6em;
 
-}.login-card p {
+}.cartao-login p {
 
   font-size: 0.9em;
 
@@ -299,7 +299,7 @@
 
   margin-bottom: 1.5em;
 
-}/* Inputs */.login-card label {
+}/* Inputs */.cartao-login label {
 
   display: block;
 
@@ -309,7 +309,7 @@
 
   font-size: 1em;
 
-}.login-card input {
+}.cartao-login input {
 
   width: 100%;
 
@@ -329,7 +329,7 @@
 
   outline: none;
 
-}.login-card input::placeholder {
+}.cartao-login input::placeholder {
 
   color: #888;
 
