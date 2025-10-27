@@ -291,7 +291,7 @@ export default function ChatBot() {
   <div className="chat-footer">
     <button
       className="chat-button"
-      onClick={() => navigate("/checkout")} // 👈 nova rota
+      onClick={irParaResultado} // 👈 nova rota
     >
       Ver Resultado
     </button>

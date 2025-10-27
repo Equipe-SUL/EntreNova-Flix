@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import '../styles/ResultadoPage.css';
+import { useNavigate } from "react-router-dom";
+
 
 const Resultadopage2 = () => {
   const [resultadoFinal, setResultadoFinal] = useState<any>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Recupera os dados que salvamos no localStorage após o chatbot finalizar
     const data = localStorage.getItem('resultadoFinal');
@@ -46,6 +48,11 @@ const Resultadopage2 = () => {
           Para acertar o pagamento da sua trilha e receber os conteúdos, por favor, entre em contato com a Entrenova pelo e-mail{' '}
           <strong>entrenovaflix@gmail.com</strong>. Informe o CNPJ da sua empresa, e você receberá um retorno caso haja interesse real pela trilha.
         </p>
+        <br></br>
+        <p>Ou clique no botão abaixo para realizar o pagamento no nosso site</p>
+        <button
+          onClick={() => navigate("/checkout")}
+        >Acesse aqui</button>
       </div>
 
     </div>
