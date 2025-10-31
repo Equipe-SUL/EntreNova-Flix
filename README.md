@@ -47,7 +47,7 @@
 
 ---
 
-### 🕒 Sprint 2 (Atual)  
+### 🕒 Sprint 2 (Entregue) 
 
 | Rank | Prioridade | User Story | Story Points | Sprint | Status |
 | :--: | :--------: | ---------- | :----------: | :----: | :----: |
@@ -59,7 +59,7 @@
 
 ---
 
-### 📌 Sprint 3  
+### 📌 Sprint 3 (Atual)
 
 | Rank | Prioridade | User Story | Story Points | Sprint | Status |
 | :--: | :--------: | ---------- | :----------: | :----: | :----: |
