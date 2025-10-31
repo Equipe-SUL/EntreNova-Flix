@@ -1,4 +1,3 @@
-
 # API 3º Semestre ADS
 
 ## Entrenova Flix - EntreNova
@@ -22,12 +21,15 @@
 
 | Rank | User Story | Descrição | Valor de Produto | Estimativa | Prioridade |
 |------|------------|-----------|------------------|------------|------------|
-| 1 | US12 | Como funcionário, quero enviar feedback sobre a trilha que completei, para que a plataforma melhore minhas recomendações futuras. | Cria um ciclo de melhoria contínua do produto e aumenta engajamento do usuário. | 5 | 🔵 **Médio** |
-| 2 | US17 | Como RH, quero ter a opção de gerar novas trilhas a cada 2 meses, com base em atualização do padrão de 4 meses, para resolução de problemas e aceitação de novos desafios críticos identificados pela equipe. | Garante evolução contínua da equipe, mantendo as trilhas sempre atualizadas, relevantes e alinhadas aos desafios. | 5 | 🔵 **Médio** |
-| 3 | US14 | Como usuário, quero páginas mais claras e organizadas, para que a navegação seja mais intuitiva e agradável. | Aumenta a usabilidade e satisfação, reduz erros e facilita engajamento. | 8 | 🟢 **Baixo** |
-| 4 | US15 | Como usuário, quero navegar entre páginas e seções sem perder dados ou encontrar erros, para ter uma experiência contínua e confiável. | Reduz frustração do usuário e garante que todos os fluxos funcionem corretamente. | 8 | 🟢 **Baixo** |
-| 5 | US16 | Como administrador da Entrenova, quero que o feedback enviado seja usado para ajustar recomendações futuras, para que as trilhas fiquem cada vez mais personalizadas. | Aumenta relevância do conteúdo, melhora retenção de usuários e agrega valor ao produto. | 8 | 🟢 **Baixo** |
-| 6 | US13 | Como RH, quero enviar feedback sobre os relatórios de progresso dos funcionários, para acompanhar resultados e melhorias da plataforma. | Permite ajustes estratégicos no conteúdo e na gestão de funcionários. | 3 | 🟢 **Baixo** |
+| 1 | US01 | Como admin da Entrenova, quero um dashboard completo e intuitivo, para ter melhor controle e visualização de todas as operações, usuários e empresas. | Melhora o controle operacional e visão geral do sistema, centralizando informações estratégicas. | 10 | 🔴 **Alta** |
+| 2 | US02 | Como RH, quero que a interface da plataforma seja refeito com melhor usabilidade e layout, para ter uma visualização mais clara e profissional das informações. | Aumenta a clareza e eficiência no uso da plataforma, melhorando a experiência do usuário corporativo. | 8 | 🔴 **Alta** |
+| 3 | US03 | Como RH, quero que o dashboard seja personalizado para a minha empresa, para ter melhor controle dos dados corporativos. | Garante visualizações e métricas específicas por empresa, otimizando a tomada de decisão. | 8 | 🔴 **Alta** |
+| 4 | US04 | Como RH, quero que o relatório (resumo e geração de trilha) seja mais claro e detalhado, para entender melhor os resultados e tomar decisões. | Facilita a análise de desempenho e evolução dos colaboradores. | 8 | 🟡 **Média** |
+| 5 | US05 | Como usuário, quero que o dashboard seja adaptado à minha trilha e progresso, para visualizar e controlar melhor meu desenvolvimento. | Promove personalização da jornada do usuário e aumenta o engajamento. | 7 | 🟡 **Média** |
+| 6 | US06 | Como admin da Entrenova, quero que o chatbot (Íris) e a geração de trilhas ocorram após o pagamento, para aumentar o interesse e o valor percebido nas trilhas. | Incentiva conversões e agrega valor à experiência de pagamento. | 6 | 🟡 **Média** |
+| 7 | US07 | Como admin da Entrenova, quero remover a informação de “diagnóstico gratuito” e deixar claro que apenas a montagem da trilha é gratuita, para evitar confusão e aumentar o interesse no serviço completo. | Melhora a clareza da comunicação e reduz dúvidas de clientes. | 4 | 🟡 **Média** |
+| 8 | US08 | Como RH, quero entrar na Íris já logado com o CNPJ da empresa, para não precisar inserir os dados novamente. | Reduz tempo e atrito no login, otimizando a experiência corporativa. | 5 | 🟢 **Baixa** |
+| 9 | US09 | Como RH, quero ver exemplos de respostas nos campos de entrada da Íris, para entender o formato esperado e melhorar a qualidade das respostas. | Aumenta a precisão e qualidade dos dados coletados. | 3 | 🟢 **Baixa** |
 
 ## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
 
@@ -107,4 +109,3 @@ PDF com explicação do fluxo de leads e dimensões) está disponível.
     </tr>
   </table>
 </div>
-
