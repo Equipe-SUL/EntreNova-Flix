@@ -17,7 +17,7 @@
   <a href ="#equipe"> Equipe</a> |
 </p>
 
-> Status da Sprint: Em andamento 
+> Status da Sprint: Concluída ✅
 
 | Rank | User Story | Descrição | Valor de Produto | Estimativa | Prioridade |
 |------|------------|-----------|------------------|------------|------------|
