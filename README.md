@@ -51,24 +51,27 @@
 
 | Rank | Prioridade | User Story | Story Points | Sprint | Status |
 | :--: | :--------: | ---------- | :----------: | :----: | :----: |
-|  1   | Alta       | Como usuário, quero uma interface mais clara e intuitiva, para que eu consiga navegar sem fricções e acessar relatórios e trilhas de forma prática. | 10 | 2 | ⏳ |
-|  2   | Alta       | Como RH, quero que o relatório gerado pela IA seja claro, útil e aplicável, para que eu possa tomar decisões estratégicas com base nos dados. | 8 | 2 | ⏳ |
-|  3   | Alta       | Como RH, quero autenticar meu acesso via pagamento e gerar login, para ter acesso seguro ao sistema e às funcionalidades exclusivas. | 10 | 2 | ⏳ |
-|  4   | Alta       | Como RH, quero um dashboard onde eu possa registrar e gerenciar usuários, para controlar quem acessa a plataforma e visualizar relatórios globais. | 8 | 2 | ⏳ |
-|  5   | Alta       | Como Usuário, quero um dashboard pessoal, para acompanhar minhas trilhas, progresso e relatórios individuais. | 7 | 2 | ⏳ |
+|  1   | Alta       | Como usuário, quero uma interface mais clara e intuitiva, para que eu consiga navegar sem fricções e acessar relatórios e trilhas de forma prática. | 10 | 2 | ✅ |
+|  2   | Alta       | Como RH, quero que o relatório gerado pela IA seja claro, útil e aplicável, para que eu possa tomar decisões estratégicas com base nos dados. | 8 | 2 | ✅ |
+|  3   | Alta       | Como RH, quero autenticar meu acesso via pagamento e gerar login, para ter acesso seguro ao sistema e às funcionalidades exclusivas. | 10 | 2 | ✅ |
+|  4   | Alta       | Como RH, quero um dashboard onde eu possa registrar e gerenciar usuários, para controlar quem acessa a plataforma e visualizar relatórios globais. | 8 | 2 | ✅ |
+|  5   | Alta       | Como Usuário, quero um dashboard pessoal, para acompanhar minhas trilhas, progresso e relatórios individuais. | 7 | 2 | ✅ |
 
 ---
 
-### 📌 Sprint 3 (Planejada)  
+### 📌 Sprint 3  
 
 | Rank | Prioridade | User Story | Story Points | Sprint | Status |
 | :--: | :--------: | ---------- | :----------: | :----: | :----: |
-|  1   | Médio      | Como funcionário, quero enviar feedback sobre a trilha que completei, para que a plataforma melhore minhas recomendações futuras. | 5 | 3 | ⏳ |
-|  2   | Médio      | Como RH, quero ter a opção de gerar novas trilhas a cada 2 meses, além da atualização padrão, para acelerar resolução de problemas críticos. | 5 | 3 | ⏳ |
-|  3   | Baixo      | Como usuário, quero páginas mais claras e organizadas, para que a navegação seja mais intuitiva e agradável. | 8 | 3 | ⏳ |
-|  4   | Baixo      | Como usuário, quero navegar entre páginas e seções sem perder dados ou encontrar erros, para ter uma experiência contínua e confiável. | 8 | 3 | ⏳ |
-|  5   | Baixo      | Como administrador da Entrenova, quero que o feedback enviado seja usado para ajustar recomendações futuras, deixando trilhas mais personalizadas. | 8 | 3 | ⏳ |
-|  6   | Baixo      | Como RH, quero enviar feedback sobre relatórios e progresso dos funcionários, para acompanhar resultados e melhorias da plataforma. | 3 | 3 | ⏳ |
+| 1 | **Alta** | Como admin da Entrenova, quero um dashboard completo e intuitivo, para ter melhor controle e visualização de todas as operações, usuários e empresas. | 10 | 3 | ⏳ |
+| 2 | **Alta** | Como RH, quero que a interface da plataforma seja refeito com melhor usabilidade e layout, para ter uma visualização mais clara e profissional das informações. | 8 | 3 | ⏳ |
+| 3 | **Alta** | Como RH, quero que o dashboard seja personalizado para a minha empresa, para ter melhor controle dos dados corporativos. | 8 | 3 | ⏳ |
+| 4 | **Média** | Como RH, quero que o relatório (resumo e geração de trilha) seja mais claro e detalhado, para entender melhor os resultados e tomar decisões. | 8 | 3 | ⏳ |
+| 5 | **Média** | Como usuário, quero que o dashboard seja adaptado à minha trilha e progresso, para visualizar e controlar melhor meu desenvolvimento. | 7 | 3 | ⏳ |
+| 6 | **Média** | Como admin da Entrenova, quero que o chatbot (Íris) e a geração de trilhas ocorram após o pagamento, para aumentar o interesse e o valor percebido nas trilhas. | 6 | 3 | ⏳ |
+| 7 | **Média** | Como admin da Entrenova, quero remover a informação de “diagnóstico gratuito” e deixar claro que apenas a montagem da trilha é gratuita, para evitar confusão e aumentar o interesse no serviço completo. | 4 | 3 | ⏳ |
+| 8 | **Baixa** | Como RH, quero entrar na Íris já logado com o CNPJ da empresa, para não precisar inserir os dados novamente. | 5 | 3 | ⏳ |
+| 9 | **Baixa** | Como RH, quero ver exemplos de respostas nos campos de entrada da Íris, para entender o formato esperado e melhorar a qualidade das respostas. | 3 | 3 | ⏳ |
 
 ---
 
