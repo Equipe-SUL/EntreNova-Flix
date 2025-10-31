@@ -75,26 +75,6 @@
 
 ---
 
-## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
-
-* **Descrição clara:** A user story está escrita de forma compreensível. 
-* **Critérios de aceitação definidos:** Cada US tem critérios testáveis (como você já fez).
-* **Dependências identificadas:** Não existem bloqueios externos sem solução. 
-* **Estimativa feita:** Pontos de esforço foram atribuídos
-* **Prioridade definida:** O valor de negócio está claro para a equipe. 
-* **Material de referência disponível:** Qualquer documento extra necessário (ex.: PDF com explicação do fluxo de leads e dimensões) está disponível. 
-
-## 🏆 DoD - Definition of Done <a id="dod"></a>
-
-* Funcionalidade implementada  
-* Critérios de aceitação atendidos  
-* Testes realizados  
-* Documentação mínima atualizada  
-* Integração concluída  
-* Validação do PO ou responsável  
-
----
-
 ## 📅 Cronograma de Sprints <a id="sprint"></a>
 
 | Sprint          |    Período    | Documentação                                     |
