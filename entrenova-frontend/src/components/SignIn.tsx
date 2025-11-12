@@ -50,7 +50,10 @@ const SignIn: React.FC = () => {
         navigate('/dashboard/rh');
       } else if (role === 'funcionario') {
         navigate('/dashboard/funcionario');
-      } else {
+      } else if (role === 'admin') {
+        navigate('/dashboard/admin');
+      }
+       else {
         setMessage(`Sua conta tem um papel de usuário inválido: ${role}.`);
         await supabase.auth.signOut();
       }
