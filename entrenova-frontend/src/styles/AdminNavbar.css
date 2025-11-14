@@ -1,0 +1,23 @@
+.navbar-admin{
+    width: 100vw;
+    margin-top: 1rem;
+    padding: 0 60px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+.navbar-admin h6{
+    font-size: 14px;
+    color: #727272;
+}
+.btns-navbar{
+    height: 39.52px;
+    width: 40%;
+    display: flex;
+    gap: 20px;
+}
+.btns-navbar button{
+    width: 60%;
+    padding: 0;
+}
+
