@@ -1,5 +1,5 @@
 // controllers/empresaController.js
-import { verificarCnpjExistente, salvarRespostaChat } from '../services/supabaseServices.js';
+import { verificarCnpjExistente, salvarRespostaChat, buscarEmpresaPorCnpj } from '../services/supabaseServices.js';
 
 /**
  * Valida se o CNPJ informado já existe na base.
@@ -47,5 +47,28 @@ export const salvarResposta = async (req, res) => {
     console.error("!!!!!! ERRO CAPTURADO NO CATCH DO CONTROLLER !!!!!!");
     console.error(error); 
     res.status(500).json({ erro: error.message });
+  }
+};
+
+
+export const getEmpresa = async (req, res) => {
+  try {
+    // Pega o CNPJ do parâmetro da URL (ex: /api/empresa/12345)
+    const { cnpj } = req.params; 
+
+    if (!cnpj) {
+      return res.status(400).json({ erro: 'CNPJ é obrigatório na URL.' });
+    }
+
+    // Chama o serviço que busca no Supabase
+    const empresaData = await buscarEmpresaPorCnpj(cnpj);
+
+    // Retorna os dados da empresa como JSON
+    res.status(200).json(empresaData);
+
+  } catch (error) {
+    // Se o serviço der erro (ex: não encontrar), retorna 404
+    console.error("Erro no controller getEmpresa:", error.message);
+    res.status(404).json({ erro: error.message });
   }
 };

@@ -227,6 +227,25 @@ const buscarRelatorioPorId = async (id) => {
 };
 
 
+const buscarEmpresaPorCnpj = async (cnpj) => {
+  // Linha do cnpjLimpo REMOVIDA
+
+  const { data, error } = await supabase
+    .from('empresas') 
+    .select('nome, cnpj, email, telefone, setor') 
+    .eq('cnpj', cnpj) // Busca pelo CNPJ original
+    .single(); 
+
+  if (error || !data) {
+    console.error('Erro ao buscar empresa por CNPJ:', error);
+    // CORREÇÃO AQUI: Usar 'cnpj' na mensagem de erro, em vez de 'cnpjLimpo'
+    throw new Error(`Empresa com CNPJ ${cnpj} não encontrada.`); 
+  }
+
+  return data; 
+};
+
+
 
 
 
@@ -275,5 +294,6 @@ export {
   salvarPlanoChat,
   atualizarRelatorio,
   buscarConversaPorCnpj,
-  buscarRelatorioPorCnpj
+  buscarRelatorioPorCnpj,
+  buscarEmpresaPorCnpj
 };
