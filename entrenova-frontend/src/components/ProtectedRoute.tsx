@@ -113,7 +113,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     }
     
     // 4. Se logado, mas com função incorreta: redireciona para o dashboard correto
-    const redirectTo = userRole === 'rh' ? '/dashboard/rh' : '/dashboard/funcionario';
+    const redirectTo = userRole === 'admin' 
+    ? '/dashboard/admin' 
+    : userRole === 'rh' 
+        ? '/dashboard/rh' 
+        : '/dashboard/funcionario';
     
     // Redireciona para o dashboard correto do usuário, pois ele tentou acessar a rota errada.
     return <Navigate to={redirectTo} replace />;

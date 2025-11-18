@@ -13,6 +13,7 @@ import SignIn from './components/SignIn';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import DashboardRH from './pages/DashboardRH'; 
+import DashboardAdmin from './pages/DashboardAdmin';
 
 // Componente para rotas não encontradas (404)
 const NotFoundPage = () => <h1 style={{ textAlign: 'center' }}>404 - Página Não Encontrada</h1>;
@@ -64,6 +65,13 @@ function App() {
           <Route path="/dashboard/rh" element={ 
             <ProtectedRoute allowedRoles={['rh']}> 
               <DashboardRH/> 
+            </ProtectedRoute>
+          }
+          />
+
+          <Route path="/dashboard/admin" element={ 
+            <ProtectedRoute allowedRoles={['admin']}> 
+              <DashboardAdmin/> 
             </ProtectedRoute>
           }
           />

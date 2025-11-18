@@ -1,5 +1,5 @@
 // 1. Tipos para Planos
-export type Plano = 'BASICO' | 'INTERMEDIARIO' | 'PREMIUM'; 
+export type Plano = 'OURO' | 'DIAMANTE' | 'ESMERALDA'; 
 // Use apenas os nomes de planos que você realmente utiliza no seu componente SelecaoPlano
 
 // 2. Tipos para Dados de Cadastro RH (usado no RhRegistrationForm)
