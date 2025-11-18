@@ -65,10 +65,21 @@
   background: linear-gradient(180deg, rgba(230,0,122,0.16), rgba(0,191,255,0.12));
   color: var(--text-primary);
   border: 1px solid var(--accent-magenta);
-  padding: 12px 24px;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  font-weight: 700;
+
+  height: auto; /* Permite que o botão cresça conforme o texto */
+  min-height: 48px; /* Garante um tamanho mínimo clicável e bonito */
+  white-space: normal; /* Permite que o texto quebre linha se não couber */
+  
+  /* ALINHAMENTO */
+  display: inline-flex; 
+  align-items: center;
+  justify-content: center;
+  
+  /* ESPAÇAMENTO */
+  padding: 12px 24px; /* O padding que vai "empurrar" a altura do botão */
+  line-height: 1.2; /* Melhora o espaçamento entre linhas quando o texto quebrar */
+ 
+ 
   cursor: pointer;
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
   box-shadow: 0 0 12px rgba(230, 0, 122, 0.20);

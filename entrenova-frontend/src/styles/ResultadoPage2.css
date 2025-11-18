@@ -1,4 +1,3 @@
-/* --- ESTILOS DE BASE PARA O RELATÓRIO --- */
 .resultado-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -42,23 +41,33 @@
   padding-bottom: 0;
 }
 
+/* --- REQUISIÇÃO 1A: Título mais visível (MODIFICADO) --- */
 .relatorio-secao h3,
 .relatorio-metade h3 {
   color: #ff007f;
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
+  font-size: 1.8rem; /* Aumentado */
+  margin-bottom: 1.25rem; /* Mais espaço */
+  font-weight: 700; /* Mais forte */
+  letter-spacing: 0.5px;
+  /* Adiciona um brilho sutil para "pop" */
+  text-shadow: 0 0 8px rgba(255, 0, 127, 0.2); 
 }
+/* --- FIM DA REQUISIÇÃO 1A --- */
 
+
+/* --- REQUISIÇÃO 1B: Card de resumo com cor roxa (MODIFICADO) --- */
 .secao-destaque {
-  background-color: #222;
-  padding: 1.25rem;
+  padding: 1.25rem 1.5rem;
   border-radius: 8px;
-  border-left: 4px solid #ff007f;
-  color: #eee;
-  line-height: 1.6;
+  color: #e6edf3; /* Texto mais claro */
+  line-height: 1.7; /* Mais espaçamento */
   font-size: 1.05rem;
+  
+  /* Cor de fundo roxa sutil */
+  background-color: rgba(147, 51, 234, 0.1); /* roxo-700 com 10% opacidade */
+  border-left: 4px solid #9333ea; /* roxo-600 */
 }
+/* --- FIM DA REQUISIÇÃO 1B --- */
 
 .problema-item {
   margin-bottom: 1.5rem;
@@ -152,22 +161,89 @@
 .trilhas-recomendadas ul {
   list-style: none;
   padding-left: 0;
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; 
 }
+
+/* --- REQUISIÇÃO 2: Efeito "Netflix" (Baseado em Clique) --- */
 .trilhas-recomendadas li {
   background-color: #2a2a2a;
   border-left: 4px solid #ff007f;
-  padding: 1rem;
-  margin-bottom: 0.5rem;
+  padding: 1rem 1.25rem;
   color: #ccc;
+  cursor: pointer;
+  overflow: hidden; 
+  transition: all 0.3s ease-in-out;
+  position: relative; 
+  border-radius: 4px;
 }
 
+/* Efeito HOVER (Levantar o card) - AINDA ACONTECE AO PASSAR O MOUSE */
+.trilhas-recomendadas li:hover {
+  background-color: #333;
+  transform: scale(1.02); 
+  z-index: 5; /* Traz para frente */
+}
 
-/* ===================== INÍCIO DA CORREÇÃO ===================== */
-/* Esta regra remove o sublinhado do componente <Link> (tag <a>) */
+/* Efeito EXPANDED (Clicado) - Muda a cor da borda e mantém "levantado" */
+.trilhas-recomendadas li.expanded {
+  border-left-color: #00BFFF; /* Muda a cor no clique */
+  background-color: #333; 
+  transform: scale(1.02);
+  z-index: 5;
+}
+
+.trilha-texto {
+  position: relative;
+  z-index: 2; 
+  font-weight: 500;
+  color: #eee;
+  transition: color 0.3s ease;
+}
+
+/* Preview (thumbnail) - Fica escondido por padrão */
+.trilha-preview {
+  max-height: 0; /* Começa fechado */
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, opacity 0.3s ease-out 0.1s;
+
+  /* --- MUDANÇA (Centralizar) --- */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 12px; 
+  /* --- FIM DA MUDANÇA --- */
+}
+
+.trilha-preview img {
+    /* 1. Define a largura para 80% do card (mais larga) */
+  width: 80%; 
+  
+  /* 2. Remove o max-width para permitir que 80% funcione */
+  /* max-width: 350px; <-- REMOVIDO */
+
+  /* 3. Força a proporção de 16:9 (widescreen) */
+  aspect-ratio: 16 / 9;
+
+  /* 4. Faz a imagem (mesmo quadrada) preencher o espaço 16:9 sem distorcer */
+  object-fit: cover;
+  
+}
+
+/* ADICIONA a regra nova que expande com a CLASSE .expanded */
+.trilhas-recomendadas li.expanded .trilha-preview {
+  max-height: 300px; /* Expande para mostrar a imagem */
+  opacity: 1;
+}
+/* --- FIM DA REQUISIÇÃO 2 --- */
+
+
+/* Link Botão (para remover sublinhado) */
 .link-botao {
   text-decoration: none;
 }
-/* ====================== FIM DA CORREÇÃO ======================= */
 
 
 /* --- Botão "Próximo Passo" --- */
@@ -175,36 +251,31 @@
   background-color: #ff007f;
   color: white;
   border: none;
+  padding: 0.8rem 1.8rem;
   border-radius: 25px;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.3s;
   cursor: pointer;
   font-size: 1rem;
-
   display: block;
   margin: 0 auto;
-
   
-  width: auto;          /* Largura se ajusta ao conteúdo */
-  max-width: 90%;       
-  
-  height: auto;         
-  min-height: 50px;     
-  
-  padding: 15px 30px;   
-  line-height: 1.3;     
-  white-space: normal;  
-  text-align: center;   
+  /* Ajustes para texto longo */
+  width: auto;
+  max-width: 90%;
+  height: auto;
+  min-height: 50px;
+  padding: 15px 30px;
+  line-height: 1.3;
+  white-space: normal;
+  text-align: center;
 }
-
 .next-btn:hover {
   background-color: #e60074;
 }
 
-/* BALÃO DE FALA DA IRIS */
-
-/*  'advanced-cta-box' é o container flex */
+/* --- CSS DO CARD DE BAIXO (BALÃO DE FALA DA IRIS) --- */
 .advanced-cta-box {
   display: flex;
   align-items: center; 
@@ -213,21 +284,27 @@
   margin-bottom: 1.5rem;
 }
 
-/* O ícone (avatar) */
+/* O ícone (avatar) com efeito neon */
 .advanced-cta-icon {
-  width: 150px; /* <<< AUMENTADO DE 80px para 150px */
+  width: 150px; 
   height: auto;
   flex-shrink: 0;
+  /* Cor rosa/magenta padrão */
   filter: drop-shadow(0 0 5px #ff007f) drop-shadow(0 0 10px #ff007f);
   transition: filter 0.3s ease-in-out;
 }
+
+/* --- REQUISIÇÃO 3: Efeito hover Roxo (MODIFICADO) --- */
 .advanced-cta-icon:hover {
-  filter: drop-shadow(0 0 8px #ff007f) drop-shadow(0 0 15px #ff007f);
+  /* Cor roxa no hover */
+  filter: drop-shadow(0 0 8px #9333ea) drop-shadow(0 0 15px #a855f7);
 }
+/* --- FIM DA REQUISIÇÃO 3 --- */
 
 
+/* O 'advanced-cta-text' se torna o balão de fala */
 .advanced-cta-text {
-  flex-grow: 1; /* Isso faz ele encolher automaticamente */
+  flex-grow: 1; 
   background-color: #1a1a1a;
   border: 1px solid #333;
   border-radius: 16px;
@@ -236,7 +313,7 @@
   position: relative; 
 }
 
-/* linha rosa DENTRO do balão de texto */
+/* A linha rosa DENTRO do balão de texto */
 .advanced-cta-text::before {
   content: '';
   position: absolute;
@@ -248,11 +325,11 @@
   border-radius: 16px 0 0 16px; 
 }
 
-/*  'cauda' do balão (::after) apontando para a imagem */
+/* A 'cauda' do balão (::after) apontando para a imagem */
 .advanced-cta-text::after {
   content: '';
   position: absolute;
-  top: 50%; /* Continua centralizado no balão de texto */
+  top: 50%; 
   right: 100%; 
   transform: translateY(-50%); 
   width: 0;
@@ -315,7 +392,6 @@
     border-right-color: transparent;
     filter: none; 
   }
-  
   
   .advanced-cta-icon {
     width: 100px; 
