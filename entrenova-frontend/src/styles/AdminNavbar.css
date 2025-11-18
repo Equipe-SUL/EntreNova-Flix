@@ -18,6 +18,10 @@
 }
 .btns-navbar button{
     width: 60%;
+    background-color: #AF0D65;
     padding: 0;
 }
 
+.btns-navbar button.active-btn {
+    background-color: #FF1493; 
+}

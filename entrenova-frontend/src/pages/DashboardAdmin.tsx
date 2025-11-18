@@ -1,108 +1,102 @@
-import React, { useState, useEffect } from "react";
+// DashboardAdmin.tsx
+import React, { useState, useEffect, useCallback } from "react";
 import Header from "../components/Header"
 import AdminNavbar from "../components/DashboardAdminNavbar"
 import { supabase } from '../services/supabase';
-import LeadsChart from "../components/LeadsChart";
-import RevenueChart from "../components/RevenueChart";
+
+// Componentes de Seção
+import OverviewSection from "../components/OverviewSection"; 
+import CompaniesAndTracksMainSection from "../components/CompaniesAndTracksSection"; 
 
 
-interface RelatorioLead {
-    lead: string; // Ou o tipo correto da coluna 'lead'
-}
-
-interface ChartData {
-    name: string;
-    quantidade: number;
-}
-
-interface PlanoAtivo {
-    plano: string;
-    created_at: string; // Usaremos isto como data de ativação/primeiro pagamento
-}
-
-// Interface para os dados do gráfico de linha
-interface RevenueData {
-    month: string;
-    revenue: number;
-}
+// Interfaces de Dados
+interface RelatorioLead { lead: string; }
+interface ChartData { name: string; quantidade: number; }
+interface PlanoAtivo { plano: string; created_at: string; }
+interface RevenueData { month: string; revenue: number; }
 
 const PLAN_COSTS: { [key: string]: number } = {
-    'ouro': 29.90,
-    'diamante': 35.99,
-    'esmeralda': 45.99,
+    'ouro': 29.90, 'diamante': 35.99, 'esmeralda': 45.99,
 };
 
+// Funções de Processamento (Mantidas fora do componente para estabilidade)
+const processRevenue = (data: PlanoAtivo[]): RevenueData[] => {
+    const now = new Date();
+    const monthsToAnalyze = Array.from({ length: 4 }).map((_, index) => {
+        const date = new Date(now.getFullYear(), now.getMonth() + index - 1, 1);
+        return date.toISOString().substring(0, 7); 
+    });
+    // ... (Lógica de processamento de Receita) ...
+    const monthNames = monthsToAnalyze.map(monthKey => {
+        const date = new Date(monthKey + '-01');
+        return date.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
+    });
+
+    const monthlyRevenue: { [key: string]: number } = monthsToAnalyze.reduce((acc, month) => {
+        acc[month] = 0;
+        return acc;
+    }, {} as { [key: string]: number });
+
+    data.forEach(item => {
+        const cost = PLAN_COSTS[item.plano.toLowerCase()] || 0; 
+        const activationMonth = item.created_at.substring(0, 7);
+
+        monthsToAnalyze.forEach(targetMonth => {
+            if (targetMonth >= activationMonth && cost > 0) {
+                monthlyRevenue[targetMonth] += cost;
+            }
+        });
+    });
+
+    const processedData: RevenueData[] = monthsToAnalyze.map((monthKey, index) => ({
+        month: monthNames[index],
+        revenue: parseFloat(monthlyRevenue[monthKey].toFixed(2)),
+    }));
+
+    return processedData;
+};
+
+const processLeads = (data: RelatorioLead[]): ChartData[] => {
+    // ... (Lógica de processamento de Leads) ...
+    const leadCounts: { [key: string]: number } = {};
+    data.forEach(item => {
+        const leadName = item.lead;
+        leadCounts[leadName] = (leadCounts[leadName] || 0) + 1;
+    });
+
+    const processedData: ChartData[] = Object.keys(leadCounts).map(name => ({
+        name: name,
+        quantidade: leadCounts[name]
+    }));
+    
+    return processedData;
+};
+
+
 const DashboardAdmin: React.FC = () => {
+    // ESTADOS
+    const [activeView, setActiveView] = useState<'overview' | 'companies_and_tracks'>('overview');
+    
+    // Estados para dados de Leads
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Estados para definir a receita
+    // Estados para dados de Receita
     const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
     const [loadingRevenue, setLoadingRevenue] = useState(true);
     const [errorRevenue, setErrorRevenue] = useState<string | null>(null);
 
-    const processRevenue = (data: PlanoAtivo[]): RevenueData[] => {
-        const now = new Date();
-        // Define o intervalo de meses (M-1, M, M+1, M+2)
-        const monthsToAnalyze = Array.from({ length: 4 }).map((_, index) => {
-            const date = new Date(now.getFullYear(), now.getMonth() + index - 1, 1);
-            return date.toISOString().substring(0, 7); // Formato YYYY-MM
-        });
+    // ESTADO CHAVE: Flag de cache para a Visão Geral
+    const [isOverviewDataFetched, setIsOverviewDataFetched] = useState(false); 
 
-        // Mapeia o nome completo do mês para o eixo X do gráfico
-        const monthNames = monthsToAnalyze.map(monthKey => {
-            const date = new Date(monthKey + '-01');
-            return date.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
-        });
 
-        // 1. Inicializa o contador de receita mensal
-        const monthlyRevenue: { [key: string]: number } = monthsToAnalyze.reduce((acc, month) => {
-            acc[month] = 0;
-            return acc;
-        }, {} as { [key: string]: number });
+    // FUNÇÕES DE BUSCA: Envoltas em useCallback com Cache Check robusto
+    
+    const fetchRevenue = useCallback(async () => {
+        // Se já buscou e marcou o flag, retorna imediatamente.
+        if (isOverviewDataFetched) return; 
 
-        // 2. Calcula a receita gerada em cada mês analisado
-        data.forEach(item => {
-            const cost = PLAN_COSTS[item.plano.toLowerCase()] || 0; // Custo do plano
-            const activationMonth = item.created_at.substring(0, 7);
-
-            monthsToAnalyze.forEach(targetMonth => {
-                // Simula que o plano gera receita se já estiver ativo no mês alvo
-                if (targetMonth >= activationMonth && cost > 0) {
-                    monthlyRevenue[targetMonth] += cost;
-                }
-            });
-        });
-
-        // 3. Formata para o gráfico
-        const processedData: RevenueData[] = monthsToAnalyze.map((monthKey, index) => ({
-            month: monthNames[index],
-            revenue: parseFloat(monthlyRevenue[monthKey].toFixed(2)),
-        }));
-
-        return processedData;
-    };
-
-    const processLeads = (data: RelatorioLead[]): ChartData[] => {
-        const leadCounts: { [key: string]: number } = {};
-
-        // 1. Contar cada lead
-        data.forEach(item => {
-            const leadName = item.lead;
-            leadCounts[leadName] = (leadCounts[leadName] || 0) + 1;
-        });
-
-        // 2. Montar o array de objetos no formato { name: '...', quantidade: X }
-        const processedData: ChartData[] = Object.keys(leadCounts).map(name => ({
-            name: name,
-            quantidade: leadCounts[name]
-        }));
-        
-        return processedData;
-    };
-
-    const fetchRevenue = async () => {
         setLoadingRevenue(true);
         setErrorRevenue(null);
         try {
@@ -111,7 +105,6 @@ const DashboardAdmin: React.FC = () => {
                 .select('plano, created_at'); 
 
             if (error) {
-                console.error("Erro ao buscar planos:", error);
                 setErrorRevenue(error.message);
                 return;
             }
@@ -122,77 +115,81 @@ const DashboardAdmin: React.FC = () => {
             }
 
         } catch (err) {
-            console.error("Exceção ao buscar planos:", err);
             setErrorRevenue("Ocorreu um erro inesperado ao buscar a receita.");
         } finally {
             setLoadingRevenue(false);
         }
-    };
+    }, [isOverviewDataFetched]);
 
-    // Função para buscar os dados no Supabase
-    const fetchLeads = async () => {
+    const fetchLeads = useCallback(async () => {
+        // Se já buscou e marcou o flag, retorna imediatamente.
+        if (isOverviewDataFetched) return; 
+        
         setLoading(true);
         setError(null);
         try {
-            // Requisição para buscar a coluna 'lead' da tabela 'relatorios'
             const { data, error } = await supabase
                 .from('relatorios')
-                .select('lead'); // Puxa apenas a coluna 'lead'
+                .select('lead'); 
 
             if (error) {
-                console.error("Erro ao buscar leads:", error);
                 setError(error.message);
                 return;
             }
             
             if (data) {
-                // Processa os dados
                 const processed = processLeads(data as RelatorioLead[]);
                 setChartData(processed);
             }
 
+            // MARCA O CACHE COMO SUCESSO APÓS A PRIMEIRA BUSCA
+            setIsOverviewDataFetched(true); 
+
         } catch (err) {
-            console.error("Exceção ao buscar leads:", err);
             setError("Ocorreu um erro inesperado ao conectar ao banco de dados.");
         } finally {
             setLoading(false);
         }
+    }, [isOverviewDataFetched]);
+
+
+    // FUNÇÃO PARA MUDANÇA DE VIEW
+    const handleViewChange = (view: 'overview' | 'companies_and_tracks') => {
+        setActiveView(view);
     };
 
+    // EFEITO COLATERAL: Dispara as buscas quando a view é 'overview'
     useEffect(() => {
-        fetchLeads();
-        fetchRevenue();
-    }, []);
+        if (activeView === 'overview') {
+            fetchLeads();
+            fetchRevenue();
+        }
+    }, [activeView, fetchLeads, fetchRevenue]);
+
+
+    // RENDERIZAÇÃO
     return(
         <>
-        <Header />
-        <AdminNavbar />
-        <div style={{ padding: '40px', marginLeft: '20px' }}>
-                {loading && <p>Carregando dados de leads...</p>}
-                
-                {error && <p style={{ color: 'red' }}>Erro: {error}</p>}
-
-                {!loading && !error && chartData.length === 0 && (
-                    <p>Nenhum dado de lead encontrado.</p>
-                )}
-                
-                {!loading && !error && chartData.length > 0 && (
-                    // Inserir o componente do gráfico aqui
-                    // O LeadsChart será responsável por renderizar o gráfico
-                    <LeadsChart data={chartData} />
-                )}
-            </div>
-            <div style={{  padding: '40px', marginRight: '20px'  }}>
-                <h2>💰 Análise Financeira</h2>
-                
-                {loadingRevenue && <p>Carregando dados financeiros...</p>}
-                
-                {errorRevenue && <p style={{ color: 'red' }}>Erro financeiro: {errorRevenue}</p>}
-
-                {!loadingRevenue && !errorRevenue && revenueData.length > 0 && (
-                    <RevenueChart data={revenueData} /> 
-                )}
-            </div>
+            <Header />
+            
+            <AdminNavbar 
+                onViewChange={handleViewChange} 
+                activeView={activeView} 
+            />
+            
+            {/* Renderização Condicional da Seção Principal */}
+            {activeView === 'overview' ? (
+                <OverviewSection 
+                    chartData={chartData}
+                    loading={loading}
+                    error={error}
+                    revenueData={revenueData}
+                    loadingRevenue={loadingRevenue}
+                    errorRevenue={errorRevenue}
+                />
+            ) : (
+                <CompaniesAndTracksMainSection /> 
+            )}
         </>
     )
 }
