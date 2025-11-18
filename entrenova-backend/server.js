@@ -9,6 +9,8 @@ import chatbotRoutes from './src/routes/chatbotRoutes.js';
 import relatoriofinalRoutes from './src/routes/relatoriofinalRoutes.js';
 import pagamentoRoutes from './src/routes/pagamentoRoutes.js'
 
+import empresaRoutes from './src/routes/empresaRoutes.js';
+
 
 
 dotenv.config()
@@ -27,7 +29,8 @@ app.use('/api/diagnostico', diagnosticoRoutes);
 app.use('/api/relatorio', relatorioRoutes);
 app.use('/api', chatbotRoutes);
 app.use('/api/relatoriofinal', relatoriofinalRoutes);
-app.use('/api/payment', pagamentoRoutes); 
+app.use('/api/payment', pagamentoRoutes);
+app.use('/api/empresa', empresaRoutes);
 
 
 
