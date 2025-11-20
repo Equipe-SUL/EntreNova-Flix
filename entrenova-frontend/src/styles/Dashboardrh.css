@@ -133,7 +133,7 @@ body::after {
   border: 1px solid #ff007f;
   border-radius: 12px;
   padding: 20px 30px;
-  width: 100%; 
+  width: 50%; 
   min-height: 120px;
   box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
 }
@@ -473,4 +473,243 @@ body::after {
 
 #pmeuperfil{
   margin-top: 15px;
+}
+
+/* ======================================= */
+/* CARROSSEL DE TRILHAS */
+/* ======================================= */
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* Área de rolagem */
+.carousel-scroll-area {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 5px; /* Padding vertical para o efeito de hover não cortar */
+  
+  /* Esconde a barra de rolagem nativa */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.carousel-scroll-area::-webkit-scrollbar {
+  display: none; /* Chrome */
+}
+
+/* Botões de Navegação (Setas) */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  opacity: 0; /* Escondido por padrão */
+}
+
+.carousel-container:hover .carousel-btn {
+  opacity: 1; /* Aparece quando passa o mouse no carrossel */
+}
+
+.carousel-btn:hover {
+  background-color: #ff007f; /* Rosa Neon */
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn.left { left: -20px; }
+.carousel-btn.right { right: -20px; }
+
+/* O Card Individual */
+.track-card {
+  flex: 0 0 280px; /* Largura fixa do card */
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.track-card:hover {
+  transform: scale(1.05); /* Zoom no hover */
+  border-color: #ff007f;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.track-image-box {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background-color: #000;
+  position: relative;
+}
+
+.track-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.track-card:hover .track-image-box img {
+  opacity: 1;
+}
+
+.track-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: rgba(0,0,0,0.7);
+  color: #ff007f;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #ff007f;
+}
+
+.track-info {
+  padding: 12px;
+}
+
+.track-info h4 {
+  font-size: 1rem;
+  color: #fff;
+  margin: 0 0 5px 0;
+  line-height: 1.3;
+  /* Limita a 2 linhas */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.track-info p {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0;
+}
+
+/* Ajuste Mobile */
+@media (max-width: 768px) {
+  .carousel-btn { display: none; } /* Remove botões no mobile (usa touch) */
+  .track-card { flex: 0 0 240px; }
+}
+
+/* ======================================= */
+/* GRID DE COLABORADORES (SEÇÃO 3)         */
+/* ======================================= */
+
+.colaboradores-grid {
+  display: grid;
+  /* Em telas grandes, força 4 colunas iguais. 
+     Em telas menores, o auto-fit ajusta para não quebrar o layout */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 10px 0;
+}
+
+/* Força 4 colunas em monitores padrão (acima de 1200px) */
+@media (min-width: 1200px) {
+  .colaboradores-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* O Card do Colaborador */
+.colab-card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.colab-card:hover {
+  transform: scale(1.05); /* Zoom estilo Netflix */
+  border-color: #ff007f;  /* Borda Rosa Neon */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+/* Área da "Foto" (Avatar) */
+.colab-avatar-box {
+  width: 100%;
+  aspect-ratio: 16/9; /* Mantém o formato widescreen dos cards de trilha */
+  background-color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Texto ou Iniciais dentro do Avatar se não tiver foto */
+.colab-avatar-placeholder {
+  font-size: 3rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+}
+
+/* Badge de Status (Ativo/Inativo) */
+.colab-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #28a745; /* Verde (Ativo) */
+  box-shadow: 0 0 5px #28a745;
+}
+
+.colab-info {
+  padding: 15px;
+  flex-grow: 1;
+  background: linear-gradient(to bottom, #222, #1a1a1a);
+}
+
+.colab-info h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.colab-info p {
+  margin: 0;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.colab-info .setor {
+  color: #ff007f;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-top: 10px;
+  display: block;
 }
