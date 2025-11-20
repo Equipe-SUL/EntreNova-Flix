@@ -108,7 +108,7 @@ const LeadsChartJs: React.FC<LeadsChartProps> = ({ data }) => {
     };
 
     return (
-        <div style={{ width: '100%', maxWidth: '50%', height: '400px', background: '#111', padding: '30px', borderRadius: '12px' }}>
+        <div style={{ width: '100%', height: '400px', background: '#111', padding: '30px', borderRadius: '12px' }}>
             <Bar data={chartData} options={options} />
             {/* O círculo de 75% da imagem original não faz parte do Chart.js.
                 Você precisaria de um elemento React separado para replicá-lo. 
