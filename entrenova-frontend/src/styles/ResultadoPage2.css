@@ -1,404 +1,130 @@
-.resultado-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
+/* --- ESTILO GRID --- */
 
-.resultado-container h1 {
-  text-align: center;
-  color: #fff;
-  font-size: 2.2rem;
-  margin-bottom: 2.5rem;
-  font-weight: 600;
-}
-
-.loading-error-container {
-  text-align: center;
-  font-size: 1.2rem;
-  padding: 4rem;
-  color: #ccc;
-}
-.error-message {
-  color: #ff6b6b;
-}
-
-/* --- ESTILOS DO CARD DE CIMA (RELATÓRIO) --- */
-.relatorio-card {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 2.5rem;
-}
-
-.relatorio-secao {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #333;
-  padding-bottom: 2rem;
-}
-.relatorio-secao:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-/* --- REQUISIÇÃO 1A: Título mais visível (MODIFICADO) --- */
-.relatorio-secao h3,
-.relatorio-metade h3 {
-  color: #ff007f;
-  font-size: 1.8rem; /* Aumentado */
-  margin-bottom: 1.25rem; /* Mais espaço */
-  font-weight: 700; /* Mais forte */
-  letter-spacing: 0.5px;
-  /* Adiciona um brilho sutil para "pop" */
-  text-shadow: 0 0 8px rgba(255, 0, 127, 0.2); 
-}
-/* --- FIM DA REQUISIÇÃO 1A --- */
-
-
-/* --- REQUISIÇÃO 1B: Card de resumo com cor roxa (MODIFICADO) --- */
-.secao-destaque {
-  padding: 1.25rem 1.5rem;
-  border-radius: 8px;
-  color: #e6edf3; /* Texto mais claro */
-  line-height: 1.7; /* Mais espaçamento */
-  font-size: 1.05rem;
-  
-  /* Cor de fundo roxa sutil */
-  background-color: rgba(147, 51, 234, 0.1); /* roxo-700 com 10% opacidade */
-  border-left: 4px solid #9333ea; /* roxo-600 */
-}
-/* --- FIM DA REQUISIÇÃO 1B --- */
-
-.problema-item {
-  margin-bottom: 1.5rem;
-  color: #ccc;
-  line-height: 1.7;
-}
-
-.problema-item strong {
-  font-size: 1.1rem;
-  color: #fff;
-  font-weight: 600;
-}
-
-.problema-item .analise-consultiva {
-  color: #bbb;
-  margin-top: 0.5rem;
-}
-.problema-item .analise-consultiva strong {
-  color: #ff007f;
-}
-
-.classificacao { font-weight: 500; }
-.classificacao.crítico { color: #ff6b6b; }
-.classificacao.moderado { color: #ffae42; }
-.classificacao.baixo { color: #51cf66; }
-
-.cenarios-container {
+/* Container do Grid - Organiza os cards em colunas responsivas */
+.trilha-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  /* Cria colunas que têm no mínimo 260px e dividem o espaço restante */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem; /* Espaço entre os cards */
+  margin-top: 1.5rem;
 }
-.cenario-item {
-  padding: 1.25rem;
+
+/* O Card Individual */
+.trilha-card {
+  background-color: #222; /* Fundo ligeiramente mais claro que o card principal */
   border-radius: 8px;
-  line-height: 1.6;
-}
-.cenario-item strong {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-}
-.cenario-item.evolucao {
-  background-color: #1f3a33;
-  border: 1px solid #2d5749;
-  color: #a6f1d9;
-}
-.cenario-item.deterioracao {
-  background-color: #422a2a;
-  border: 1px solid #6b4040;
-  color: #ffc9c9;
-}
-
-.relatorio-secao-flex {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #333;
-  padding-bottom: 2rem;
-}
-.relatorio-metade {
-  flex: 1;
-}
-
-.relatorio-metade ul {
-  list-style-position: inside;
-  color: #ccc;
-  line-height: 1.8;
-}
-
-.indice-dho {
-  margin-bottom: 1.5rem;
-}
-.nota-dho {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #ff007f;
-  margin-left: 0.5rem;
-}
-.justificativa-dho {
-  color: #ccc;
-  line-height: 1.6;
-  margin-top: 0.5rem;
-}
-
-.trilhas-recomendadas strong {
-  display: block;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  color: #fff;
-}
-.trilhas-recomendadas ul {
-  list-style: none;
-  padding-left: 0;
-  display: flex; 
-  flex-direction: column; 
-  gap: 8px; 
-}
-
-/* --- REQUISIÇÃO 2: Efeito "Netflix" (Baseado em Clique) --- */
-.trilhas-recomendadas li {
-  background-color: #2a2a2a;
-  border-left: 4px solid #ff007f;
-  padding: 1rem 1.25rem;
-  color: #ccc;
-  cursor: pointer;
-  overflow: hidden; 
-  transition: all 0.3s ease-in-out;
-  position: relative; 
-  border-radius: 4px;
-}
-
-/* Efeito HOVER (Levantar o card) - AINDA ACONTECE AO PASSAR O MOUSE */
-.trilhas-recomendadas li:hover {
-  background-color: #333;
-  transform: scale(1.02); 
-  z-index: 5; /* Traz para frente */
-}
-
-/* Efeito EXPANDED (Clicado) - Muda a cor da borda e mantém "levantado" */
-.trilhas-recomendadas li.expanded {
-  border-left-color: #00BFFF; /* Muda a cor no clique */
-  background-color: #333; 
-  transform: scale(1.02);
-  z-index: 5;
-}
-
-.trilha-texto {
-  position: relative;
-  z-index: 2; 
-  font-weight: 500;
-  color: #eee;
-  transition: color 0.3s ease;
-}
-
-/* Preview (thumbnail) - Fica escondido por padrão */
-.trilha-preview {
-  max-height: 0; /* Começa fechado */
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-out, opacity 0.3s ease-out 0.1s;
-
-  /* --- MUDANÇA (Centralizar) --- */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 12px; 
-  /* --- FIM DA MUDANÇA --- */
-}
-
-.trilha-preview img {
-    /* 1. Define a largura para 80% do card (mais larga) */
-  width: 80%; 
-  
-  /* 2. Remove o max-width para permitir que 80% funcione */
-  /* max-width: 350px; <-- REMOVIDO */
-
-  /* 3. Força a proporção de 16:9 (widescreen) */
-  aspect-ratio: 16 / 9;
-
-  /* 4. Faz a imagem (mesmo quadrada) preencher o espaço 16:9 sem distorcer */
-  object-fit: cover;
-  
-}
-
-/* ADICIONA a regra nova que expande com a CLASSE .expanded */
-.trilhas-recomendadas li.expanded .trilha-preview {
-  max-height: 300px; /* Expande para mostrar a imagem */
-  opacity: 1;
-}
-/* --- FIM DA REQUISIÇÃO 2 --- */
-
-
-/* Link Botão (para remover sublinhado) */
-.link-botao {
-  text-decoration: none;
-}
-
-
-/* --- Botão "Próximo Passo" --- */
-.next-btn {
-  background-color: #ff007f;
-  color: white;
-  border: none;
-  padding: 0.8rem 1.8rem;
-  border-radius: 25px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.3s;
-  cursor: pointer;
-  font-size: 1rem;
-  display: block;
-  margin: 0 auto;
-  
-  /* Ajustes para texto longo */
-  width: auto;
-  max-width: 90%;
-  height: auto;
-  min-height: 50px;
-  padding: 15px 30px;
-  line-height: 1.3;
-  white-space: normal;
-  text-align: center;
-}
-.next-btn:hover {
-  background-color: #e60074;
-}
-
-/* --- CSS DO CARD DE BAIXO (BALÃO DE FALA DA IRIS) --- */
-.advanced-cta-box {
-  display: flex;
-  align-items: center; 
-  gap: 2.5rem; 
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
-}
-
-/* O ícone (avatar) com efeito neon */
-.advanced-cta-icon {
-  width: 150px; 
-  height: auto;
-  flex-shrink: 0;
-  /* Cor rosa/magenta padrão */
-  filter: drop-shadow(0 0 5px #ff007f) drop-shadow(0 0 10px #ff007f);
-  transition: filter 0.3s ease-in-out;
-}
-
-/* --- REQUISIÇÃO 3: Efeito hover Roxo (MODIFICADO) --- */
-.advanced-cta-icon:hover {
-  /* Cor roxa no hover */
-  filter: drop-shadow(0 0 8px #9333ea) drop-shadow(0 0 15px #a855f7);
-}
-/* --- FIM DA REQUISIÇÃO 3 --- */
-
-
-/* O 'advanced-cta-text' se torna o balão de fala */
-.advanced-cta-text {
-  flex-grow: 1; 
-  background-color: #1a1a1a;
+  overflow: hidden; /* Garante que a imagem não vaze as bordas arredondadas */
   border: 1px solid #333;
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  padding-left: 2.5rem; 
-  position: relative; 
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-/* A linha rosa DENTRO do balão de texto */
-.advanced-cta-text::before {
-  content: '';
+/* Efeito HOVER no Card (Estilo Netflix: cresce e destaca) */
+.trilha-card:hover {
+  transform: scale(1.05); /* Aumenta ligeiramente */
+  border-color: #ff007f; /* Borda rosa neon */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 0, 127, 0.3); /* Sombra com brilho rosa */
+  z-index: 2; /* Traz para frente dos outros */
+}
+
+/* Container da Imagem (para manter a proporção) */
+.trilha-card-image-container {
+  position: relative;
+  width: auto;
+  height: auto;
+  /*aspect-ratio: 16 / 9; /* Força o formato widescreen (vídeo) */
+  background-color: #00000000;
+  overflow: hidden;
+}
+
+/* A Imagem em si */
+.trilha-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Preenche o container sem distorcer */
+  opacity: 0.85; /* Um pouco escura por padrão para o texto brilhar mais */
+  transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+/* No hover, a imagem clareia e dá um leve zoom interno */
+.trilha-card:hover .trilha-thumbnail {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Badge (Etiqueta) do Tipo de Modelo (Vídeo, Curso, etc.) */
+.trilha-modelo-badge {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  background-color: #ff007f;
-  border-radius: 16px 0 0 16px; 
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7); /* Fundo semitransparente */
+  color: #ff007f; /* Texto rosa neon */
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ff007f;
+  z-index: 3;
 }
 
-/* A 'cauda' do balão (::after) apontando para a imagem */
-.advanced-cta-text::after {
-  content: '';
-  position: absolute;
-  top: 50%; 
-  right: 100%; 
-  transform: translateY(-50%); 
-  width: 0;
-  height: 0;
-  border: 15px solid transparent;
-  border-right-color: #1a1a1a; 
-  filter: drop-shadow(-1px 0 0 #1a1a1a);
+/* Overlay com Ícone de Play (opcional, aparece no hover) */
+.trilha-play-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.advanced-cta-text h3 {
-  color: #fff;
-  font-size: 1.35rem; 
-  margin-bottom: 0.5rem;
+.trilha-play-overlay span {
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 0 0 10px #ff007f;
 }
 
-.advanced-cta-text p {
-  color: #ccc;
-  font-size: 1rem; 
-  line-height: 1.6;
+/* Mostra o play no hover */
+.trilha-card:hover .trilha-play-overlay {
+    opacity: 1;
 }
 
-.advanced-cta-text strong {
-  color: #ff007f;
-  font-weight: 600;
+
+/* Área de Conteúdo (Título) abaixo da imagem */
+.trilha-card-content {
+  padding: 1rem;
+  flex-grow: 1; /* Ocupa o espaço restante se os títulos tiverem tamanhos diferentes */
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to bottom, #222, #1a1a1a);
 }
 
-/* --- Responsividade --- */
-@media (max-width: 768px) {
-  .cenarios-container { grid-template-columns: 1fr; }
-  .relatorio-secao-flex { flex-direction: column; }
+/* O Título do Card */
+.trilha-card-content h4 {
+  color: #eee;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.4;
+  
+  /* Limita o texto a 3 linhas e coloca "..." se for muito longo */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* --- Responsividade para o Grid --- */
 @media (max-width: 600px) {
-  /* No mobile, a imagem volta para cima do texto */
-  .advanced-cta-box {
-    flex-direction: column;
-    text-align: center;
-    gap: 1.5rem; 
-  }
-  
-  /* A linha rosa vira uma barra no topo do balão */
-  .advanced-cta-text::before {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: auto;
-    width: 100%;
-    height: 6px;
-    border-radius: 16px 16px 0 0; 
-  }
-  
-  /* A 'cauda' do balão agora aponta PARA CIMA */
-  .advanced-cta-text::after {
-    top: 0;
-    left: 50%;
-    right: auto;
-    transform: translate(-50%, -100%); 
-    border: 15px solid transparent;
-    border-bottom-color: #1a1a1a;
-    border-right-color: transparent;
-    filter: none; 
-  }
-  
-  .advanced-cta-icon {
-    width: 100px; 
-    margin-top: 0; 
-  }
-
-  .advanced-cta-text {
-    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+  /* No celular, talvez 2 colunas fiquem muito apertadas, força 1 coluna */
+  .trilha-grid {
+     grid-template-columns: 1fr;
   }
 }
+/* --- FIM DO NOVO ESTILO GRID --- */

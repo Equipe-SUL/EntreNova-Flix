@@ -129,69 +129,185 @@ const TracksSection: React.FC = () => {
         }
     };
 
-    // --- RENDERIZAÇÃO ---
+    // --- RENDERIZAÇÃO (ESTILOS ATUALIZADOS) ---
     
-    // Estilo básico para o container e modal (para fins funcionais)
     const containerStyle = { padding: '20px 0', color: 'white' };
-    const modalOverlayStyle = { position: 'fixed' as const, top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 };
-    const modalContentStyle = { backgroundColor: '#333', padding: '30px', borderRadius: '8px', width: '400px', boxShadow: '0 4px 8px rgba(0,0,0,0.5)', color: 'white' };
-    const inputStyle = { width: '100%', padding: '8px', margin: '5px 0 15px 0', boxSizing: 'border-box', border: '1px solid #555', backgroundColor: '#444', color: 'white' };
-    const btnStyle = { padding: '10px 15px', border: 'none', borderRadius: '4px', cursor: 'pointer', margin: '5px' };
+    
+    // Modal Styles
+    const modalOverlayStyle = { 
+        position: 'fixed' as const, top: 0, left: 0, right: 0, bottom: 0, 
+        backgroundColor: 'rgba(0,0,0,0.8)', // Mais escuro
+        backdropFilter: 'blur(5px)', // Efeito de desfoque no fundo
+        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 
+    };
+    
+    const modalContentStyle = { 
+        backgroundColor: '#1a1a1a', // Fundo Dark Padrão
+        border: '1px solid #333',
+        padding: '30px', 
+        borderRadius: '12px', 
+        width: '450px', 
+        boxShadow: '0 10px 30px rgba(0,0,0,0.5)', 
+        color: 'white' 
+    };
 
+    // Input Styles
+    const labelStyle = { display: 'block', marginBottom: '5px', color: '#ccc', fontSize: '0.9rem' };
+    
+    const inputStyle = { 
+        width: '100%', 
+        padding: '12px', 
+        margin: '0 0 15px 0', 
+        boxSizing: 'border-box' as const, 
+        border: '1px solid #333', 
+        borderRadius: '6px',
+        backgroundColor: '#222', // Input escuro
+        color: 'white',
+        outline: 'none',
+        fontFamily: 'inherit'
+    };
+
+    // Botões Gerais
+    const btnBaseStyle = { 
+        padding: '10px 20px', 
+        border: 'none', 
+        borderRadius: '6px', 
+        cursor: 'pointer', 
+        fontWeight: '600',
+        fontFamily: 'inherit',
+        transition: 'all 0.3s ease'
+    };
 
     const renderFormModal = () => (
         <div style={modalOverlayStyle}>
             <div style={modalContentStyle}>
-                <h3>{editingConteudo ? 'Editar Trilha' : 'Adicionar Nova Trilha'}</h3>
+                <h3 style={{ marginTop: 0, color: '#fff', borderBottom: '1px solid #333', paddingBottom: '15px' }}>
+                    {editingConteudo ? 'Editar Trilha' : 'Adicionar Nova Trilha'}
+                </h3>
                 <form onSubmit={handleSubmit}>
-                    <label style={{ display: 'block', marginBottom: '5px' }}>Modelo:</label>
-                    <input name="modelo" value={formData.modelo} onChange={handleInputChange} required />
+                    <label style={labelStyle}>Modelo (Ex: **Vídeo**):</label>
+                    <input name="modelo" value={formData.modelo} onChange={handleInputChange} style={inputStyle} required />
                     
-                    <label style={{ display: 'block', marginBottom: '5px' }}>Categoria:</label>
-                    <input name="categoria" value={formData.categoria} onChange={handleInputChange} required />
+                    <label style={labelStyle}>Categoria:</label>
+                    <input name="categoria" value={formData.categoria} onChange={handleInputChange} style={inputStyle} required />
 
-                    <label style={{ display: 'block', marginBottom: '5px' }}>Duração:</label>
-                    <input name="duracao" value={formData.duracao} onChange={handleInputChange} placeholder="Ex: 3h 20m" required />
+                    <label style={labelStyle}>Duração:</label>
+                    <input name="duracao" value={formData.duracao} onChange={handleInputChange} style={inputStyle} placeholder="Ex: 3h 20m" required />
 
-                    <label style={{ display: 'block', marginBottom: '5px' }}>Tags:</label>
-                    <input name="tags" value={formData.tags} onChange={handleInputChange} placeholder="Separadas por vírgula" />
+                    <label style={labelStyle}>Tags:</label>
+                    <input name="tags" value={formData.tags} onChange={handleInputChange} style={inputStyle} placeholder="Separadas por vírgula" />
 
-                    <label style={{ display: 'block', marginBottom: '5px' }}>Descrição:</label>
-                    <textarea name="descricao" value={formData.descricao} onChange={handleInputChange} style={{ minHeight: '80px' }} required />
+                    <label style={labelStyle}>Descrição:</label>
+                    <textarea name="descricao" value={formData.descricao} onChange={handleInputChange} style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' as const }} required />
 
-                    <button type="submit" style={{ ...btnStyle, backgroundColor: '#8a2be2', color: 'white' }} disabled={loading}>
-                        {loading ? 'Salvando...' : 'Salvar'}
-                    </button>
-                    <button type="button" onClick={() => setIsModalOpen(false)} style={{ ...btnStyle, backgroundColor: '#555', color: 'white' }}>
-                        Cancelar
-                    </button>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                         <button type="button" onClick={() => setIsModalOpen(false)} style={{ ...btnBaseStyle, backgroundColor: 'transparent', border: '1px solid #555', color: '#ccc' }}>
+                            Cancelar
+                        </button>
+                        <button type="submit" style={{ ...btnBaseStyle, backgroundColor: '#ff007f', color: 'white', boxShadow: '0 0 10px rgba(255, 0, 127, 0.3)' }} disabled={loading}>
+                            {loading ? 'Salvando...' : 'Salvar Trilha'}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     );
 
-    if (error) return <p style={{ padding: '20px 0', color: 'red' }}>{error}</p>;
+    if (error) return <p style={{ padding: '20px 0', color: '#ff6b6b' }}>{error}</p>;
 
     return (
         <div style={containerStyle}>
-            <h3>Gerenciar Trilhas (CRUD)</h3>
-            <button onClick={openCreateModal} style={{ ...btnStyle, backgroundColor: '#28a745', color: 'white', marginBottom: '20px' }} disabled={loading}>
-                + Adicionar Nova Trilha
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
+                <h3 style={{ margin: 0, color: '#ccc', fontWeight: 400 }}>Gerenciar Trilhas (CRUD)</h3>
+                
+                {/* BOTÃO ADICIONAR - ROSA NEON */}
+                <button 
+                    onClick={openCreateModal} 
+                    style={{ 
+                        ...btnBaseStyle, 
+                        backgroundColor: '#ff007f', 
+                        color: 'white', 
+                        borderRadius: '25px',
+                        padding: '12px 25px',
+                        boxShadow: '0 0 15px rgba(255, 0, 127, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                    }} 
+                    disabled={loading}
+                >
+                    <span style={{ fontSize: '1.2rem', lineHeight: 0 }}>+</span> Adicionar Nova Trilha
+                </button>
+            </div>
 
-            {loading && !conteudos.length ? <p>Carregando trilhas...</p> : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+            {loading && !conteudos.length ? <p style={{ color: '#aaa' }}>Carregando trilhas...</p> : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
                     {conteudos.map(c => (
-                        <div key={c.id} style={{ border: '1px solid #444', padding: '15px', borderRadius: '8px', backgroundColor: '#333', color: 'white' }}>
-                            <h4 style={{ margin: '0 0 5px 0' }}>{c.descricao.substring(0, 50)}...</h4>
-                            <p style={{ margin: '0' }}><small>Modelo: **{c.modelo}**</small></p>
-                            <p style={{ margin: '0 0 10px 0' }}><small>Categoria: **{c.categoria}** | Duração: **{c.duracao}**</small></p>
-                            <button onClick={() => openEditModal(c)} style={{ ...btnStyle, backgroundColor: '#ffc107', color: 'black', marginRight: '10px' }}>
-                                Editar
-                            </button>
-                            <button onClick={() => handleDelete(c.id)} style={{ ...btnStyle, backgroundColor: '#dc3545', color: 'white' }}>
-                                Apagar
-                            </button>
+                        // CARD ESTILIZADO
+                        <div key={c.id} style={{ 
+                            border: '1px solid #333', 
+                            padding: '25px', 
+                            borderRadius: '12px', 
+                            backgroundColor: '#1a1a1a', 
+                            color: 'white',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            minHeight: '200px',
+                            transition: 'transform 0.2s',
+                            boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
+                        }}>
+                            <div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                                    <span style={{ 
+                                        backgroundColor: '#333', color: '#ff007f', padding: '4px 10px', 
+                                        borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', border: '1px solid #ff007f' 
+                                    }}>
+                                        {c.modelo}
+                                    </span>
+                                    <span style={{ fontSize: '0.8rem', color: '#888' }}>{c.duracao}</span>
+                                </div>
+                                
+                                <h4 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', lineHeight: '1.4' }}>
+                                    {c.descricao.length > 60 ? c.descricao.substring(0, 60) + '...' : c.descricao}
+                                </h4>
+                                
+                                <p style={{ margin: '0 0 20px 0', fontSize: '0.9rem', color: '#aaa' }}>
+                                    {c.categoria}
+                                </p>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+                                {/* BOTÃO EDITAR (Ghost Pink) */}
+                                <button 
+                                    onClick={() => openEditModal(c)} 
+                                    style={{ 
+                                        ...btnBaseStyle, 
+                                        backgroundColor: 'transparent', 
+                                        border: '1px solid #ff007f', 
+                                        color: '#ff007f', 
+                                        padding: '8px 0',
+                                        flex: 1 
+                                    }}
+                                >
+                                    Editar
+                                </button>
+                                
+                                {/* BOTÃO APAGAR (Ghost Gray/Red Hover logic placeholder) */}
+                                <button 
+                                    onClick={() => handleDelete(c.id)} 
+                                    style={{ 
+                                        ...btnBaseStyle, 
+                                        backgroundColor: 'transparent', 
+                                        border: '1px solid #444', 
+                                        color: '#aaa', 
+                                        padding: '8px 0',
+                                        flex: 1 
+                                    }}
+                                >
+                                    Apagar
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>

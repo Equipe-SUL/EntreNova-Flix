@@ -92,7 +92,7 @@ const CompaniesSection: React.FC = () => {
 
         } catch (err) {
             console.error("Exceção geral ao buscar dados:", err);
-            setError(`Ocorreu um erro inesperado ao buscar os dados das empresas: ${err instanceof Error ? err.message : String(err)}`);
+            setError(`Ocorreu um erro inesperado: ${err instanceof Error ? err.message : String(err)}`);
         } finally {
             setLoading(false);
         }
@@ -106,44 +106,77 @@ const CompaniesSection: React.FC = () => {
         <div 
             key={company.cnpj} 
             style={{ 
-                border: '1px solid #444', 
-                padding: '20px', 
-                margin: '10px', 
-                borderRadius: '8px',
-                width: '300px',
-                backgroundColor: '#222',
-                color: 'white'
+                border: '1px solid #333', // Borda mais sutil
+                padding: '25px', 
+                // margin removido para usar o gap do grid
+                borderRadius: '12px', // Mais arredondado
+                backgroundColor: '#1a1a1a', // Fundo Padrão Dark
+                color: 'white',
+                boxShadow: '0 4px 10px rgba(0,0,0,0.3)', // Sombra suave
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'transform 0.3s ease, border-color 0.3s ease'
+            }}
+            // Adicionei um efeito simples inline de hover (opcional, via JS)
+            onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#ff007f';
+                e.currentTarget.style.transform = 'translateY(-5px)';
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#333';
+                e.currentTarget.style.transform = 'translateY(0)';
             }}
         >
-            <h3>{company.nome}</h3>
-            <small>CNPJ: {company.cnpj}</small>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
-                <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid #555' }}>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold', margin: '0' }}>{company.totalFuncionarios}</p>
-                    <small>Funcionários cadastrados</small>
+            <div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px', color: '#fff' }}>{company.nome}</h3>
+                <small style={{ color: '#888' }}>CNPJ: {company.cnpj}</small>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '25px', marginBottom: '25px' }}>
+                <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid #333' }}>
+                    <p style={{ fontSize: '2rem', fontWeight: '700', margin: '0', color: '#fff' }}>{company.totalFuncionarios}</p>
+                    <small style={{ color: '#aaa', fontSize: '0.8rem' }}>Funcionários</small>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold', margin: '0' }}>{company.trilhasConcluidasPercentual}%</p>
-                    <small>Trilhas concluídas</small>
+                    <p style={{ fontSize: '2rem', fontWeight: '700', margin: '0', color: '#fff' }}>{company.trilhasConcluidasPercentual}%</p>
+                    <small style={{ color: '#aaa', fontSize: '0.8rem' }}>Conclusão</small>
                 </div>
             </div>
-            <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#8a2be2', borderRadius: '4px', textAlign: 'center', textTransform: 'uppercase', fontWeight: 'bold' }}>
+
+            {/* Botão do Plano - Agora Rosa Neon */}
+            <div style={{ 
+                padding: '12px', 
+                backgroundColor: '#ff007f', // ROSA NEON
+                color: '#fff',
+                borderRadius: '25px', // Arredondado estilo pílula
+                textAlign: 'center', 
+                textTransform: 'uppercase', 
+                fontWeight: '700',
+                letterSpacing: '1px',
+                boxShadow: '0 0 15px rgba(255, 0, 127, 0.3)', // Brilho neon
+                fontSize: '0.9rem'
+            }}>
                 {company.plano}
             </div>
         </div>
     );
 
-    if (loading) return <p style={{ padding: '20px 0' }}>Carregando dados das empresas...</p>;
-    if (error) return <p style={{ padding: '20px 0', color: 'red' }}>Erro: {error}</p>;
+    if (loading) return <p style={{ padding: '20px 0', color: '#aaa' }}>Carregando dados das empresas...</p>;
+    if (error) return <p style={{ padding: '20px 0', color: '#ff6b6b' }}>Erro: {error}</p>;
 
     return (
         <div style={{ padding: '20px 0' }}>
-            <h3>Lista de Empresas</h3>
+            {/* Título removido pois já existe no componente pai "CompaniesAndTracksMainSection" */}
             
             {companies.length === 0 ? (
-                <p>Nenhuma empresa registrada.</p>
+                <p style={{color: '#aaa'}}>Nenhuma empresa registrada.</p>
             ) : (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', // Grid Responsivo
+                    gap: '20px' 
+                }}>
                     {companies.map(renderCompanyCard)}
                 </div>
             )}
