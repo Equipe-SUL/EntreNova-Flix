@@ -1,38 +1,45 @@
 // CompaniesAndTracksMainSection.tsx
 import React, { useState } from 'react';
 
-// Importa os componentes das sub-seções
-// OBS: Você precisará criar estes arquivos: CompaniesSection.tsx e TracksSection.tsx
 import CompaniesSection from "./CompaniesSection"; 
 import TracksSection from "./TracksSection"; 
 
-// Define as opções de sub-visualização
 type SubView = 'companies' | 'tracks';
 
 const CompaniesAndTracksMainSection: React.FC = () => {
-    // Estado interno para alternar entre "Empresas" e "Trilhas"
     const [subView, setSubView] = useState<SubView>('companies');
 
-    // Estilo simples para os botões de navegação interna
+    // Estilo atualizado para o padrão Neon/Dark
     const buttonStyle = (isActive: boolean) => ({
-        padding: '10px 15px',
+        padding: '12px 24px',
         border: 'none',
-        borderRadius: '4px 4px 0 0',
+        // Se ativo, fundo levemente rosado, senão transparente
+        backgroundColor: isActive ? 'rgba(255, 0, 127, 0.1)' : 'transparent', 
+        color: isActive ? '#fff' : '#aaa', // Texto branco se ativo, cinza se inativo
+        borderBottom: isActive ? '3px solid #ff007f' : '3px solid transparent', // Borda Rosa Neon
+        fontWeight: isActive ? '600' : '400',
+        fontSize: '1rem',
         cursor: 'pointer',
         marginRight: '5px',
-        backgroundColor: isActive ? '#333' : '#555',
-        color: 'white',
-        borderBottom: isActive ? '3px solid #8a2be2' : '3px solid transparent',
-        fontWeight: isActive ? 'bold' : 'normal',
-        transition: 'all 0.2s',
+        transition: 'all 0.3s ease',
+        fontFamily: '"Poppins", sans-serif', // Garante a fonte
+        borderRadius: '8px 8px 0 0', // Leve arredondamento no topo
     });
 
     return (
-        <div style={{ padding: '40px 20px' }}>
-            <h2>Empresas e Trilhas</h2>
+        // Ajustei o padding para alinhar com o resto do dashboard
+        <div style={{ padding: '0 2.5rem', marginTop: '2.5rem' }}>
+            
+            {/* Título da Seção com o detalhe rosa embaixo */}
+            <div style={{ marginBottom: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.8rem', fontWeight: '600', color: '#fff', margin: 0 }}>
+                    Empresas e Trilhas
+                </h3>
+                <div style={{ width: '50px', height: '3px', backgroundColor: '#ff007f', marginTop: '4px' }}></div>
+            </div>
 
             {/* Navegação Interna */}
-            <div style={{ marginBottom: '20px', borderBottom: '1px solid #444' }}>
+            <div style={{ marginBottom: '30px', borderBottom: '1px solid #333', display: 'flex' }}>
                 <button 
                     style={buttonStyle(subView === 'companies')} 
                     onClick={() => setSubView('companies')}
@@ -47,14 +54,11 @@ const CompaniesAndTracksMainSection: React.FC = () => {
                 </button>
             </div>
 
-            {/* Renderização Condicional do Conteúdo da Sub-seção */}
-            {subView === 'companies' && (
-                <CompaniesSection />
-            )}
-
-            {subView === 'tracks' && (
-                <TracksSection />
-            )}
+            {/* Conteúdo */}
+            <div>
+                {subView === 'companies' && <CompaniesSection />}
+                {subView === 'tracks' && <TracksSection />}
+            </div>
         </div>
     );
 }
