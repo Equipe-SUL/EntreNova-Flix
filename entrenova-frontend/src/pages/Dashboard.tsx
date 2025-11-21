@@ -28,6 +28,20 @@ import thumbProgresso2 from '../assets/2.jpg';
 
 import thumbProgresso3 from '../assets/3.jpg';
 
+import thumbProgresso4 from '../assets/4.jpg';
+
+import thumbProgresso5 from '../assets/5.jpg';
+
+import thumbProgresso6 from '../assets/6.jpg';
+
+import thumbProgresso7 from '../assets/7.jpg';
+
+import thumbProgresso8 from '../assets/8.jpg';
+
+import thumbProgresso9 from '../assets/9.jpg';
+
+import thumbProgresso10 from '../assets/10.jpg';
+
 
 
 // --- Estrutura dos cursos ---
@@ -59,6 +73,8 @@ export interface Curso {
   progress: number;
 
   score?: number; 
+
+  trilhaIdOriginal?: string; // ID original do banco de dados (trilha_id completo)
 
 }
 
@@ -609,14 +625,16 @@ const Dashboard: React.FC = () => {
 
 
 
-  const [allTrilhas, setAllTrilhas] = useState<Curso[]>(allCursos); 
+  const [allTrilhas, setAllTrilhas] = useState<Curso[]>([]); 
   const [loading, setLoading] = useState(true);
 
   const [userName, setUserName] = useState('João Sobrenome');
 
   const [userRole, setUserRole] = useState('Colaborador');
 
-  const [userCompany, setuserCompany] = useState('Entrenova Tech'); 
+  const [userCompany, setuserCompany] = useState('Entrenova Tech');
+
+  const [userId, setUserId] = useState<string | null>(null); 
 
 
 
@@ -626,7 +644,121 @@ const Dashboard: React.FC = () => {
 
   const [selectedCurso, setSelectedCurso] = useState<Curso | null>(null);
 
+  // Função para buscar trilhas do funcionário no banco de dados
+  const fetchTrilhasFromDB = async (userId: string) => {
+    try {
+      const { data: progressoData, error: progressoError } = await supabase
+        .from('progresso_funcionario')
+        .select('*')
+        .eq('user_id', userId)
+        .order('id', { ascending: true });
 
+      if (progressoError) {
+        console.error('Erro ao buscar progresso:', progressoError);
+        return [];
+      }
+
+      if (!progressoData || progressoData.length === 0) {
+        console.log('Nenhuma trilha encontrada para o usuário');
+        return [];
+      }
+
+      // Mapear dados do banco para o formato Curso
+      const trilhasMapeadas: Curso[] = progressoData.map((item, index) => {
+        // Parsear o trilha_id para extrair informações
+        const trilhaId = item.trilha_id || '';
+        const isConcluida = item.is_concluida || false;
+        
+        // Extrair modelo do texto (formato: "descrição - Modelo: modelo")
+        const modeloMatch = trilhaId.match(/Modelo:\s*(.+)/i);
+        const modelo = modeloMatch ? modeloMatch[1].trim() : 'video';
+        
+        // Determinar o tipo baseado no modelo
+        let type: 'video' | 'podcast' | 'atividade' = 'video';
+        const modeloLower = modelo.toLowerCase();
+        if (modeloLower.includes('podcast')) {
+          type = 'podcast';
+        } else if (modeloLower.includes('quiz') || modeloLower.includes('atividade') || modeloLower.includes('curso')) {
+          type = 'atividade';
+        }
+
+        // Extrair descrição (tudo antes de " - Modelo:")
+        const descricaoMatch = trilhaId.split(' - Modelo:')[0];
+        const descricao = descricaoMatch || trilhaId;
+
+        // Determinar status
+        const status: CursoStatus = isConcluida ? 'concluido' : 'progresso';
+
+        // Gerar um ID único baseado no índice e user_id
+        const id = item.id || index + 1;
+
+        // Determinar nível baseado na descrição ou padrão
+        let level = 'Intermediário';
+        if (descricao.toLowerCase().includes('básico') || descricao.toLowerCase().includes('iniciante')) {
+          level = 'Iniciante';
+        } else if (descricao.toLowerCase().includes('avançado') || descricao.toLowerCase().includes('expert')) {
+          level = 'Avançado';
+        }
+
+        // Estimar duração baseada no tipo
+        let time = '2h 00min';
+        if (type === 'podcast') {
+          time = '1h 30min';
+        } else if (type === 'atividade') {
+          time = '45min';
+        }
+
+        // Ícone baseado no tipo
+        let icon = '🚀';
+        if (type === 'podcast') {
+          icon = '🎧';
+        } else if (type === 'atividade') {
+          icon = '✅';
+        }
+
+        // Thumbnail padrão (pode ser melhorado depois)
+        const thumbnails = [
+          thumbProgresso1, 
+          thumbProgresso2, 
+          thumbProgresso3,
+          thumbProgresso4,
+          thumbProgresso5,
+          thumbProgresso6,
+          thumbProgresso7,
+          thumbProgresso8,
+          thumbProgresso9,
+          thumbProgresso10
+        ];
+        const thumbnailUrl = thumbnails[index % thumbnails.length];
+
+        // Progresso baseado no status
+        const progress = isConcluida ? 100 : Math.floor(Math.random() * 80) + 10; // 10-90% para em progresso
+
+        // Score apenas para concluídas
+        const score = isConcluida ? parseFloat((Math.random() * 2 + 7).toFixed(1)) : undefined;
+
+        return {
+          id: Number(id),
+          icon,
+          level,
+          title: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
+          time,
+          status,
+          type,
+          thumbnailUrl,
+          description: descricao,
+          progress,
+          score,
+          trilhaIdOriginal: trilhaId, // Salvar o trilha_id completo para atualizações
+        };
+      });
+
+      return trilhasMapeadas;
+    } catch (error) {
+      console.error('Erro ao buscar trilhas:', error);
+      return [];
+    }
+  };
 
   // Lógica de filtro 
 
@@ -687,24 +819,79 @@ const Dashboard: React.FC = () => {
     
 
 
-    const handleConcluirTrilhasSelecionadas = (ids: number[]) => {
+    const handleConcluirTrilhasSelecionadas = async (ids: number[]) => {
+        if (!userId) {
+            alert('Erro: Usuário não identificado.');
+            return;
+        }
 
-        setAllTrilhas(prevTrilhas => 
+        try {
+            // Buscar as trilhas correspondentes aos IDs selecionados
+            const trilhasParaAtualizar = allTrilhas.filter(curso => ids.includes(curso.id));
+            
+            // Atualizar cada trilha no banco de dados
+            const updatePromises = trilhasParaAtualizar.map(async (curso) => {
+                // Usar o trilha_id original se disponível, senão tentar montar a partir da descrição
+                const trilhaIdParaBusca = curso.trilhaIdOriginal || (curso.description ? `${curso.description} - Modelo: ${curso.type === 'podcast' ? 'Podcast' : curso.type === 'atividade' ? 'Atividade' : 'Video'}` : curso.title);
+                
+                // Buscar o registro no banco pelo user_id e trilha_id
+                const { data: progressoData, error: fetchError } = await supabase
+                    .from('progresso_funcionario')
+                    .select('id')
+                    .eq('user_id', userId)
+                    .eq('trilha_id', trilhaIdParaBusca)
+                    .maybeSingle();
 
-            prevTrilhas.map(curso => 
+                if (fetchError) {
+                    console.error(`Erro ao buscar progresso para trilha ${curso.id}:`, fetchError);
+                    return;
+                }
 
-                // Se o ID do curso estiver no array 'ids', marca como concluído
+                if (progressoData) {
+                    // Atualizar o registro existente
+                    const { error: updateError } = await supabase
+                        .from('progresso_funcionario')
+                        .update({ is_concluida: true })
+                        .eq('id', progressoData.id);
 
-                ids.includes(curso.id) ? { ...curso, status: 'concluido' } : curso
+                    if (updateError) {
+                        console.error(`Erro ao atualizar trilha ${curso.id}:`, updateError);
+                    }
+                } else {
+                    // Se não encontrar, criar um novo registro
+                    const trilhaIdParaInserir = curso.trilhaIdOriginal || (curso.description ? `${curso.description} - Modelo: ${curso.type === 'podcast' ? 'Podcast' : curso.type === 'atividade' ? 'Atividade' : 'Video'}` : curso.title);
+                    
+                    const { error: insertError } = await supabase
+                        .from('progresso_funcionario')
+                        .insert({
+                            user_id: userId,
+                            trilha_id: trilhaIdParaInserir,
+                            is_concluida: true
+                        });
 
-            )
+                    if (insertError) {
+                        console.error(`Erro ao inserir trilha ${curso.id}:`, insertError);
+                    }
+                }
+            });
 
-        );
+            await Promise.all(updatePromises);
 
-        // Garante que o carrossel recheque a rolagem após a atualização
+            // Atualizar o estado local
+            setAllTrilhas(prevTrilhas => 
+                prevTrilhas.map(curso => 
+                    ids.includes(curso.id) 
+                        ? { ...curso, status: 'concluido', progress: 100 } 
+                        : curso
+                )
+            );
 
-        setTimeout(checkScroll, 100); 
-
+            // Garante que o carrossel recheque a rolagem após a atualização
+            setTimeout(checkScroll, 100);
+        } catch (error) {
+            console.error('Erro ao concluir trilhas:', error);
+            alert('Erro ao salvar as alterações. Tente novamente.');
+        }
     };
 
 
@@ -743,6 +930,8 @@ const Dashboard: React.FC = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
 
       if (session) {
+        const currentUserId = session.user.id;
+        setUserId(currentUserId);
 
         supabase
 
@@ -750,11 +939,11 @@ const Dashboard: React.FC = () => {
 
           .select('full_name, role, cnpj_empresa') 
 
-          .eq('id', session.user.id)
+          .eq('id', currentUserId)
 
           .single()
 
-          .then(({ data, error }) => {
+          .then(async ({ data, error }) => {
 
             if (data) {
 
@@ -765,6 +954,15 @@ const Dashboard: React.FC = () => {
               if (data.cnpj_empresa) {
 
                   setuserCompany(`ENTRENOVA TECH`); 
+              }
+
+              // Buscar trilhas do banco de dados
+              const trilhasDB = await fetchTrilhasFromDB(currentUserId);
+              if (trilhasDB.length > 0) {
+                setAllTrilhas(trilhasDB);
+              } else {
+                // Se não houver trilhas no banco, usar dados fictícios como fallback
+                setAllTrilhas(allCursos);
               }
 
             } else if (error) {
