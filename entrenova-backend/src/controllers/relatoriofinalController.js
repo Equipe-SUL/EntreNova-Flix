@@ -66,18 +66,10 @@ export const gerarRelatorioTotal = async (req, res) => {
     }
 
     // 5️⃣ Determinar quantidade de conteúdos da trilha (7 para BÁSICO, 10 para PREMIUM)
-    let qtdConteudos;
+    let qtdConteudos = 13;
     const planoLower = plano?.toLowerCase();
-    
-    if (planoLower === "básico" || planoLower === "basico") {
-        qtdConteudos = 7; // Total de 7 trilhas para Básico
-    } else if (planoLower === "premium") {
-        qtdConteudos = 10; // Total de 10 trilhas para Premium
-    } else {
-        // Fallback para 7, se o plano for desconhecido
-        qtdConteudos = 7; 
-    }
-    console.log(`🔹 Quantidade total de conteúdos para o plano '${plano}': ${qtdConteudos}`);
+   
+    console.log(`🔹 Quantidade total fixa de conteúdos para qualquer plano : ${qtdConteudos}`);
 
     // 4️⃣ Gerar relatório2 com IA
     //

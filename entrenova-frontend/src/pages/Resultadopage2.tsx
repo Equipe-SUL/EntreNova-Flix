@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import '../styles/ResultadoPage2.css'; 
 import { Link } from "react-router-dom"; 
 
+
 import diagnosticoImg from '../assets/irisNeon3.png'; 
 
 // Importe suas imagens de thumbnail (certifique-se que os caminhos estão corretos)
