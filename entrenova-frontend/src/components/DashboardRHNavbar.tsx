@@ -11,14 +11,17 @@ interface DashboardRHNavbarProps {
 const DashboardRHNavbar: React.FC<DashboardRHNavbarProps> = ({ activeView, onViewChange, onOpenNewCollaborator, onOpenSearch }) => {
   
   const navbarStyle: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "space-between",
+    width: "100%",
+    maxWidth: "1300px", // Limita a largura do conteúdo (ajuste conforme necessário)
+    margin: "2rem auto 1rem auto", // Centraliza o bloco inteiro HORIZONTALMENTE (0 auto) e mantém as margens verticais.
+    display: "flex", 
+    justifyContent: "center", // Centraliza os dois grupos de elementos um perto do outro
     alignItems: "center",
     padding: "0 2.5rem",
     marginTop: "2rem",
     marginBottom: "1rem",
     flexWrap: "wrap",
-    gap: "20px"
+    gap: "30px",
   };
 
   const titleStyle: React.CSSProperties = {

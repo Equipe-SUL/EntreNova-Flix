@@ -94,15 +94,13 @@
 
 .dashboard-layout .dashboard-main .dash-header {
 
-  display: flex;
+  padding: 0 64px; 
+
+  display:flex;
 
   justify-content: space-between;
 
   align-items: center;
-
-  /* AUMENTANDO O PADDING VERTICAL PARA MAIOR ALTURA */
-
-  padding: 24px 64px; 
 
   background-color: rgba(10, 10, 10, 0.7);
 
@@ -114,13 +112,9 @@
 
   z-index: 10;
 
-  height: 80px; /* Altura fixa para melhor controle */
-
+  height: 88px;   
+  
 }
-
-
-
-/* ... (Restante do Header Mantido) ... */
 
 .dash-header__logo a {
 
@@ -327,8 +321,6 @@
   background-color: #ff007f;
 
   color: #fff;
-
-  /* REDUZINDO A LARGURA E AUMENTANDO O TAMANHO DA FONTE */
 
   padding: 0.5rem 1rem; 
 
@@ -602,7 +594,7 @@
 
 /* -------------------------------------- */
 
-/* SEÇÃO 2: TRILHAS (Carrossel)           */
+/* SEÇÃO 2: headers (Carrossel)           */
 
 /* -------------------------------------- */
 
@@ -730,7 +722,6 @@
 
     padding-right: 20px; 
 
-    
 
     /* REMOVIDO SCROLLBAR */
 
