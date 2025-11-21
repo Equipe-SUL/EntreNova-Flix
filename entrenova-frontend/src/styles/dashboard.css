@@ -1,273 +1,1265 @@
-/* Reset básico e Fontes */
 * {
+
   margin: 0;
+
   padding: 0;
+
   box-sizing: border-box;
+
   font-family: "Poppins", sans-serif;
+
 }
+
+
 
 /* Layout Principal */
+
 .dashboard-layout {
+
   display: flex;
+
   min-height: 100vh;
+
   background: #000;
+
   color: #fff;
+
   overflow-x: hidden;
+
+  position: relative;
+
 }
+
+
 
 .dashboard-main {
+
   flex-grow: 1;
+
   padding: 0;
+
   overflow-y: auto;
+
   position: relative;
+
   z-index: 1;
+
+  max-width: 100%; /* Garante que não ultrapasse 100% */
+
+  /* CORREÇÃO CRÍTICA: O padding-bottom é removido para que o Footer ancore corretamente */
+
+  padding-bottom: 0; 
+
 }
 
-/* Efeito de "chama" */
+
+
+/* Efeito de "chama" (Mantido) */
+
 .dashboard-main::before {
+
   content: "";
+
   position: absolute;
+
   bottom: 0;
+
   left: 0;
+
   width: 100%;
+
   height: 40vh;
+
   background: linear-gradient(to top, rgba(255, 0, 128, 0.6) 0%, transparent 100%);
+
   z-index: -1;
+
   filter: blur(50px);
+
   opacity: 0.8;
+
   pointer-events: none;
+
 }
 
-
 /* ======================================= */
+
 /* HEADER REFEITO (.dash-header)           */
+
+/* (MAIS ESPECÍFICO PARA EVITAR CONFLITOS) */
+
 /* ======================================= */
 
-.dash-header {
+
+
+.dashboard-layout .dashboard-main .dash-header {
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
-  padding: 1.5rem 2.5rem;
+
+  /* AUMENTANDO O PADDING VERTICAL PARA MAIOR ALTURA */
+
+  padding: 24px 64px; 
+
   background-color: rgba(10, 10, 10, 0.7);
+
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid #222;
+
   position: sticky;
+
   top: 0;
+
   z-index: 10;
+
+  height: 80px; /* Altura fixa para melhor controle */
+
 }
 
-/* Logo */
+
+
+/* ... (Restante do Header Mantido) ... */
+
 .dash-header__logo a {
+
   font-size: 1.5rem;
+
   font-weight: 700;
+
   color: #fff;
+
   text-decoration: none;
+
 }
+
 .dash-header__logo span {
+
   color: #ff007f;
+
 }
 
-/* Container Central */
+.dash-header__logo-img {
+
+    width: 150px;
+
+    height: auto;
+
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.18)) drop-shadow(0 0 20px rgba(230, 0, 122, 0.24));
+
+}
+
 .dash-header__center {
+
   display: flex;
+
   align-items: center;
+
   gap: 2rem;
+
 }
 
-/* Navegação */
 .dash-header__nav ul {
+
   display: flex;
+
   list-style: none;
+
   gap: 1.5rem;
-  align-items: center; /* <<< ALINHAMENTO VERTICAL */
+
+  align-items: center; 
+
   padding: 0;
+
   margin: 0;
+
 }
 
 .dash-header__nav li {
+
   display: flex;
+
   align-items: center;
+
 }
 
-/* Estilo Base para Links e Botões da Nav */
 .dash-header__nav a,
+
 .dash-header__nav-button {
+
   color: #ccc;
+
   text-decoration: none;
+
   font-weight: 500;
+
   font-size: 1rem;
-  font-family: "Poppins", sans-serif; /* Garante a mesma fonte */
+
+  font-family: "Poppins", sans-serif; 
+
   transition: color 0.3s ease;
+
   display: flex;
+
   align-items: center;
+
   min-height: 28px;
+
 }
 
-/* Estilo Específico do Botão (PARA PARECER LINK) */
 .dash-header__nav-button {
-  appearance: none; /* Remove estilo padrão */
-  background: transparent !important; /* FORÇA fundo transparente */
-  border: none !important; /* FORÇA sem borda */
-  padding: 0 !important; /* FORÇA sem padding */
+
+  appearance: none; 
+
+  background: transparent !important; 
+
+  border: none !important; 
+
+  padding: 0 !important; 
+
   margin: 0;
+
   cursor: pointer;
-  gap: 6px; /* Espaço para o badge */
+
+  gap: 6px; 
+
 }
 
-/* Hover para Links e Botão */
 .dash-header__nav a:hover,
+
 .dash-header__nav-button:hover {
+
   color: #ff007f;
+
 }
 
-/* Badge de Notificação */
 .dash-header__badge {
+
   background-color: #ff007f;
+
   color: #fff;
+
   font-size: 0.7rem;
+
   font-weight: 600;
+
   border-radius: 50%;
+
   width: 18px;
+
   height: 18px;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   line-height: 1;
+
 }
 
-/* Barra de Pesquisa */
 .dash-header__search {
+
   position: relative;
+
 }
+
 .dash-header__search input {
+
   background-color: #222;
+
   border: 1px solid #333;
+
   border-radius: 6px;
+
   color: #fff;
+
   padding: 0.5rem 1rem;
+
   padding-right: 2.5rem;
+
   font-size: 0.9rem;
+
   font-family: inherit;
+
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
   min-width: 250px;
+
 }
+
 .dash-header__search input::placeholder { color: #888; }
+
 .dash-header__search input:focus {
+
   border-color: #ff007f;
+
   outline: none;
+
   box-shadow: 0 0 0 2px rgba(255, 0, 127, 0.2);
+
 }
+
 .dash-header__search-icon {
+
   position: absolute;
+
   right: 0.75rem;
+
   top: 50%;
+
   transform: translateY(-50%);
+
   width: 18px;
+
   height: 18px;
+
   color: #888;
+
   pointer-events: none;
+
 }
 
-/* Botão Sair */
 .dash-header__logout-btn {
+
   background-color: #ff007f;
+
   color: #fff;
-  padding: 0.5rem 1rem;
+
+  /* REDUZINDO A LARGURA E AUMENTANDO O TAMANHO DA FONTE */
+
+  padding: 0.5rem 1rem; 
+
   border: none;
+
   border-radius: 6px;
+
   text-decoration: none;
+
   font-weight: 600;
+
   cursor: pointer;
+
   transition: background-color 0.3s ease;
-  font-family: inherit; /* Garante a fonte */
-  font-size: 1rem; /* Garante o tamanho */
+
+  font-family: inherit; 
+
+  font-size: 1rem; 
+
+  max-width: 120px;
+
 }
+
 .dash-header__logout-btn:hover {
+
   background-color: #e60073;
+
 }
 
-/* --- Responsividade do Header --- */
 @media (max-width: 900px) {
+
   .dash-header {
+
     flex-wrap: wrap;
+
     padding: 1rem 1.5rem;
+
     gap: 1rem;
+
   }
+
   .dash-header__center {
+
     order: 3;
+
     width: 100%;
+
     flex-direction: column;
+
     gap: 1rem;
+
   }
-  .dash-header__search { width: 100%; }
+
   .dash-header__search input { width: 100%; }
+
   .dash-header__logo { flex-grow: 1; }
+
 }
 
 
+
+
+
 /* ======================================= */
+
 /* ESTILOS DO CONTEÚDO DO DASHBOARD       */
-/* (Card Herói, Progresso, Trilhas, etc.) */
+
 /* ======================================= */
+
+
 
 .dash-section {
-  padding: 0 2.5rem;
+
+  padding: 0 64px; 
+
   margin-top: 2.5rem;
+
+  max-width: 1300px; /* Limita a largura das seções de conteúdo */
+
+  margin: 2.5rem auto; /* Centraliza a seção inteira */
+
 }
 
-.dash-section__header { margin-bottom: 1.5rem; }
-.dash-section__header h3 { font-size: 1.8rem; font-weight: 600; color: #fff; }
-.dash-section__header h3::after { content: ''; display: block; width: 50px; height: 3px; background-color: #ff007f; margin-top: 4px; }
-.dash-section__header p { color: #aaa; font-size: 0.9rem; margin-top: 5px; }
 
-/* Card Herói */
-.dash-card--hero { background-color: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 2rem; display: flex; align-items: center; box-shadow: 0 0 20px rgba(255, 0, 127, 0.1); }
-.dash-card__user-icon { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #ff007f; margin-right: 1.5rem; flex-shrink: 0; }
+
+.dash-section__title { 
+
+  font-size: 1.8rem; 
+
+  font-weight: 600; 
+
+  color: #fff;
+
+  margin-bottom: 1.5rem;
+
+}
+
+
+
+.dash-section__title::after,
+
+.dash-section__header h3::after { 
+
+  content: ''; 
+
+  display: block; 
+
+  width: 50px; 
+
+  height: 3px; 
+
+  background-color: #ff007f; 
+
+  margin-top: 4px; 
+
+}
+
+
+
+/* -------------------------------------- */
+
+/* Card Herói (SEÇÃO 1: Identificação) */
+
+/* -------------------------------------- */
+
+.dash-section--hero {
+
+  /* REMOVEMOS O PADDING LATERAL AQUI, JÁ QUE O CARD PAI VAI CUIDAR DA MARGEM AUTO */
+
+  padding: 2.5rem 0 0; 
+
+  margin-top: 0;
+
+  max-width: 100%; 
+
+}
+
+
+
+.dash-card--hero { 
+
+  background-color: #1a1a1a; 
+
+  border-radius: 12px; 
+
+  padding: 2rem; 
+
+  display: flex; 
+
+  align-items: center; 
+
+  /* GARANTE CONTORNO MAGENTA (Padronizado com RH) */
+
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.3); 
+
+  border: 1px solid #ff007f; 
+
+  width: 100%; 
+
+}
+
+/* REFORÇO DA CLASSE DE ÍCONE DO USUÁRIO */
+
+.dash-card__user-icon { 
+
+    width: 80px !important; /* Força largura */
+
+    height: 80px !important; /* Força altura */
+
+    border-radius: 50% !important; 
+
+    object-fit: cover !important; /* Evita esticar a imagem */
+
+    border: 3px solid #ff007f; 
+
+    margin-right: 1.5rem; 
+
+    flex-shrink: 0; 
+
+}
+
 .dash-card__header { flex-grow: 1; }
-.dash-card__header h2 { font-size: 2rem; font-weight: 700; color: #fff; margin: 0.25rem 0; }
+
+/* CORREÇÃO 3: Fixa o espaçamento do Hero Card */
+
+.dash-card__header h2 { 
+
+  font-size: 2rem; 
+
+  font-weight: 700; 
+
+  color: #fff; 
+
+  margin: 0.25rem 0 0.5rem; 
+
+}
+
 .dash-badge { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 4px; text-transform: uppercase; }
+
 .dash-badge--active { background-color: rgba(255, 0, 127, 0.1); color: #ff007f; }
+
 .dash-tag { background-color: #333; color: #ccc; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem; }
-.dash-card__score { text-align: center; padding-left: 1.5rem; }
-.dash-score { display: flex; flex-direction: column; align-items: center; }
-.dash-score__ring { width: 100px; height: 100px; border-radius: 50%; background-color: #222; border: 4px solid #ff007f; display: flex; align-items: center; justify-content: center; }
-.dash-score__ring span { font-size: 1.7rem; font-weight: 700; color: #fff; }
-.dash-score small { color: #aaa; margin-top: 0.5rem; text-transform: uppercase; font-size: 0.8rem; }
 
-/* Gráficos de Progresso (Seção e Cards) */
-/* (Assume que Progresso.css está importado no componente Progresso.tsx) */
-/* Se precisar dos estilos aqui, me avise */
+.dash-card__score { 
 
-/* Lista de Trilhas */
-.dash-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 350px)); gap: 20px; justify-content: center; }
-.dash-item { background-color: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 20px; transition: 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
-.dash-item:hover { border-color: #ff007f; transform: translateY(-5px); box-shadow: 0 4px 15px rgba(255, 0, 127, 0.2); }
-.dash-item__left { display: flex; gap: 12px; align-items: flex-start; }
-.dash-item__icon { font-size: 1.5rem; margin-top: 2px; flex-shrink: 0; }
-.dash-item__text-content { flex-grow: 1; }
-.dash-item__level { color: #999; font-size: 0.8rem; font-weight: 500; margin-bottom: 0.5rem; display: block; }
-.dash-item__title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 0.25rem; }
-.dash-item__type-badge { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-top: 8px; margin-bottom: 8px; text-transform: capitalize; background-color: #333; color: #ccc; }
-.dash-item__type-badge[data-type="video"] { background-color: rgba(255, 0, 0, 0.1); color: #ff4d4d; }
-.dash-item__type-badge[data-type="podcast"] { background-color: rgba(0, 255, 128, 0.1); color: #00ff80; }
-.dash-item__type-badge[data-type="atividade"] { background-color: rgba(0, 128, 255, 0.1); color: #4da6ff; }
-.dash-item__time { color: #888; font-size: 0.9rem; margin-left: 5px; }
-.dash-item__right { margin-top: 1.5rem; width: 100%; }
-.dash-btn { background-color: #ff007f; color: #fff; border: none; border-radius: 6px; padding: 0.7rem 0; width: 100%; text-align: center; font-weight: 600; cursor: pointer; transition: 0.3s ease; margin-top: 1rem; display: block; font-family: inherit; font-size: 1rem;}
-.dash-btn:hover { background-color: #e60073; }
-.dash-btn--outline { background-color: transparent; color: #ff007f; border: 1px solid #ff007f; }
-.dash-btn--outline:hover { background-color: rgba(255, 0, 127, 0.1); color: #ff007f; }
-.dash-progress { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-.dash-progress__track { flex-grow: 1; height: 6px; background-color: #333; border-radius: 3px; overflow: hidden; }
-.dash-progress__bar { height: 100%; background-color: #ff007f; border-radius: 3px; }
-.dash-progress__pct { color: #aaa; font-size: 0.8rem; }
-.dash-score-chip { background-color: #222; color: #ff007f; border: 1px solid #ff007f; padding: 0.25rem 0.5rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-block; }
-.dash-filters { display: flex; gap: 0.5rem; margin-top: 1rem; }
-.dash-chip { background-color: #222; color: #ccc; border: 1px solid #444; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem; cursor: pointer; transition: 0.3s ease; }
-.dash-chip:hover, .dash-chip--active { background-color: #ff007f; color: #fff; border-color: #ff007f; }
+    /* Remove o gap de 20px, pois haverá apenas 1 score */
 
-/* Footer */
-.dash-footer { background-color: #1a1a1a; border-top: 1px solid #333; padding: 2rem 2.5rem; margin-top: 3rem; position: relative; z-index: 1; }
-.dash-footercontent { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; color: #888; }
-.dash-footerlinks a { color: #aaa; text-decoration: none; margin-left: 1rem; transition: color 0.3s ease; }
-.dash-footerlinks a:hover { color: #ff007f; }
+    gap: 0; 
+
+    /* Garante que o score se alinie à direita do card */
+
+    display: block;
+
+    text-align: right; 
+
+    padding-left: 1.5rem; 
+
+}
+
+.dash-score { 
+
+    /* Garante que o score único continue alinhado ao centro */
+
+    margin-left: auto;
+
+    display: inline-flex;
+
+    flex-direction: column;
+
+    align-items: center; 
+
+}
+
+
+
+.dash-score__ring { 
+
+  width: 80px; 
+
+  height: 80px; 
+
+  border-radius: 50%; 
+
+  background-color: #222; 
+
+  border: 4px solid #ff007f; 
+
+  display: flex; 
+
+  align-items: center; 
+
+  justify-content: center; 
+
+  margin-bottom: 5px; 
+
+}
+
+.dash-score__ring span { font-size: 1.3rem; font-weight: 700; color: #fff; }
+
+.dash-score small { color: #aaa; margin-top: 0; text-transform: uppercase; font-size: 0.8rem; }
+
+/* REMOVENDO REGRAS DE NOTA MÉDIA QUE NÃO SERÃO MAIS USADAS */
+
+.dash-score--secondary .dash-score__ring { 
+
+    border-color: #00BFFF; 
+
+}
+
+
+
+/* -------------------------------------- */
+
+/* SEÇÃO 2: TRILHAS (Carrossel)           */
+
+/* -------------------------------------- */
+
+.dash-section--carousel {
+
+    /* CORREÇÃO 1: Remove o padding lateral da seção para permitir que as setas fiquem na margem */
+
+    padding: 2.5rem 0 2.5rem 0; 
+
+    position: relative; 
+
+}
+
+
+
+/* Wrapper para o Carrossel (A área onde as setas devem ficar na lateral) */
+
+.carousel-wrapper {
+
+    position: relative;
+
+    margin: 0; 
+
+    /* CORREÇÃO 2: Adiciona margem nos lados do wrapper para que as setas tenham espaço (Linha Amarela) */
+
+    /* Este padding é a margem de 80px que você quer fora dos cards. */
+
+    padding: 0 80px; 
+
+    /* NOVA CORREÇÃO: ADICIONANDO MARGEM DE SEGURANÇA PARA O HOVER */
+
+    margin-top: 25px; 
+
+}
+
+
+
+.dash-section__header { 
+
+    margin-bottom: 1.5rem; 
+
+    padding: 0 64px; /* Adiciona padding ao header para ele se alinhar com o herói */
+
+    padding-bottom: 1.5rem; 
+
+}
+
+
+
+
+
+/* Botões de Filtro - CORREÇÃO 1: Aumenta espaçamento entre os chips */
+
+.dash-filters { 
+
+    display: flex; 
+
+    /* Aumentado o gap para separar mais os botões */
+
+    gap: 20px; 
+
+    margin-top: 1rem; 
+
+} 
+
+.dash-chip { 
+
+  background-color: #222; 
+
+  color: #ccc; 
+
+  border: 1px solid #444; 
+
+  /* Aumentado o padding horizontal para dar mais corpo */
+
+  padding: 0.6rem 1.2rem; 
+
+  border-radius: 6px; 
+
+  font-size: 0.9rem; 
+
+  cursor: pointer; 
+
+  transition: 0.3s ease; 
+
+  flex-shrink: 0; 
+
+}
+
+.dash-chip:hover, .dash-chip--active { 
+
+    background-color: #ff007f; 
+
+    color: #fff; 
+
+    border-color: #ff007f; 
+
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.5); 
+
+}
+
+
+
+
+
+/* O Carrossel em si (Overflow horizontal) */
+
+.dash-carousel {
+
+    display: flex;
+
+    gap: 20px;
+
+    padding-bottom: 20px;
+
+    overflow-x: auto;
+
+    scroll-behavior: smooth; 
+
+    
+
+    /* Adicionado padding para o primeiro/último card não ficarem colados na seta/borda interna */
+
+    padding-left: 20px; 
+
+    padding-right: 20px; 
+
+    
+
+    /* REMOVIDO SCROLLBAR */
+
+    scrollbar-width: none; 
+
+    -ms-overflow-style: none;  
+
+}
+
+.dash-carousel::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+
+
+
+/* Item do Carrossel (o Card de cada Trilha) - MAIOR PROPORÇÃO */
+
+.dash-carousel-item {
+
+    /* CORREÇÃO: Adicionando box-shadow rosado e border color */
+
+    min-width: 380px; 
+
+    max-width: 380px; 
+
+    background-color: #1a1a1a; 
+
+    border: 1px solid #ff007f; /* Altera a cor da borda para magenta */
+
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.3); /* Adiciona o brilho magenta */
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+
+    cursor: pointer; /* Indica que o card inteiro é clicável */
+
+    /* Efeito de hover "eleva" o card e adiciona uma sombra */
+
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+
+}
+
+
+
+.dash-carousel-item:hover {
+
+    transform: translateY(-8px); /* Eleva o card */
+
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 0, 127, 0.5); /* Sombra mais intensa */
+
+}
+
+
+
+.dash-carousel-item__thumbnail {
+
+    width: 100%;
+
+    /* CORREÇÃO: Aumentando a altura para minimizar cortes na imagem que é mais quadrada. */
+
+    padding-top: 70%; 
+
+    /* Voltamos para 'cover' para que o fundo preencha todo o contêiner */
+
+    background-size: cover; 
+
+    background-repeat: no-repeat;
+
+    background-position: center;
+
+    position: relative;
+
+    /* Adiciona uma cor de fundo para preencher o espaço que a imagem não cobrirá */
+
+    background-color: #0d0d0d; 
+
+}
+
+
+
+.dash-carousel-item__content {
+
+    padding: 15px;
+
+}
+
+
+
+/* Novo estilo para o texto de meta/progresso */
+
+.dash-item__text-meta {
+
+    font-size: 0.9rem;
+
+    color: #ccc;
+
+    margin-top: 8px;
+
+}
+
+
+
+/* Removendo estilos de botões que não existem mais */
+
+.dash-actions {
+
+    display: none; /* Esconde o container de botões */
+
+}
+
+
+
+/* ======================================= */
+
+/* ESTILOS DE NAVEGAÇÃO DO CARROSSEL (SETAS) */
+
+/* CORREÇÃO DA APARÊNCIA e POSIÇÃO (fora dos cards) */
+
+/* ======================================= */
+
+
+
+.carousel-nav-btn {
+
+    position: absolute;
+
+    top: 50%; 
+
+    
+
+    /* CORREÇÃO 1: Mantém o translateY no transform E na transição de hover */
+
+    transform: translateY(-50%) !important;
+
+    
+
+    /* CORREÇÃO DA APARÊNCIA (APENAS ÍCONE) */
+
+    background-color: transparent !important; 
+
+    border: none !important; 
+
+    box-shadow: none !important; 
+
+    border-radius: 0 !important; 
+
+    width: auto !important; 
+
+    height: auto !important;
+
+    padding: 0 10px !important; 
+
+    
+
+    color: #ff007f !important; /* Cor da Seta: Magenta/Rosa */
+
+    font-size: 2.5rem !important; /* Tamanho do Ícone (a seta) */
+
+    
+
+    z-index: 100 !important; 
+
+    cursor: pointer;
+
+    /* CORREÇÃO 1: Reintroduzo o 'transform' na transição para que o hover:scale funcione suavemente */
+
+    transition: color 0.2s ease, transform 0.2s ease, opacity 0.3s; 
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    
+
+    opacity: 0;
+
+    pointer-events: none;
+
+}
+
+
+
+.carousel-nav-btn:hover {
+
+    background-color: transparent !important;
+
+    color: #e60074 !important; /* Hover escurece a seta */
+
+    /* CORREÇÃO 1: O hover deve manter o translateY E adicionar o scale. */
+
+    transform: translateY(-50%) scale(1.2) !important; 
+
+}
+
+
+
+/* Seta visível */
+
+.carousel-nav-btn.visible {
+
+    opacity: 1;
+
+    pointer-events: auto;
+
+}
+
+
+
+/* Posição da Seta Esquerda: Move a seta para dentro da margem de 80px, perto da borda da tela */
+
+.carousel-nav-btn--prev {
+
+    left: 0.5rem; /* Posição dentro do padding de 80px, mais próximo da borda */
+
+}
+
+
+
+/* Posição da Seta Direita: Move a seta para dentro da margem de 80px, perto da borda da tela */
+
+.carousel-nav-btn--next {
+
+    right: 0.5rem; /* Posição dentro do padding de 80px, mais próximo da borda */
+
+}
+
+
+
+/* Icone SVG */
+
+.carousel-nav-btn svg {
+
+    width: 25px !important; 
+
+    height: 25px !important;
+
+    stroke: currentColor !important; 
+
+    stroke-width: 2; 
+
+}
+
+
+
+
+
+/* -------------------------------------- */
+
+/* SEÇÃO 3: CHECKLIST DAS TRILHAS        */
+
+/* -------------------------------------- */
+
+/* [LAYOUT FINAL] Container para os 2 cards lado a lado */
+
+.checklist-avatar-container {
+
+    /* CORREÇÃO CRÍTICA: MUDANÇA PARA FLEX (Mais previsível) */
+
+    display: flex; 
+
+    gap: 30px;
+
+    max-width: 1200px; /* Largura ajustada */
+
+    margin: 0 auto 100px auto; /* Centraliza horizontalmente e adiciona margem inferior */
+
+    align-items: stretch; /* Garante que os cards tenham a mesma altura */
+
+}
+
+
+
+.checklist-card {
+
+    /* CORREÇÃO CRÍTICA: Base Flexível */
+
+    flex-basis: 50%;
+
+    width: auto;
+
+    
+
+    min-width: 350px; /* Mantém um mínimo de largura */
+
+    
+
+    /* Garante que o Card se estique em altura */
+
+    height: auto; 
+
+    
+
+    /* Estilos do PendenciasCard */
+
+    background-color: #1a1a1a;
+
+    border: 1px solid #ff007f; /* Borda magenta */
+
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+
+    border-radius: 8px;
+
+    padding: 20px;
+
+    
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+}
+
+
+
+.concluidas-card {
+
+    /* CORREÇÃO CRÍTICA: Base Flexível */
+
+    flex-basis: 50%;
+
+    width: auto;
+
+    
+
+    /* Estilos do PendenciasCard (diferente) */
+
+    background-color: #1a1a1a;
+
+    border: 1px solid #00BFFF; /* Borda azul */
+
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+
+    border-radius: 8px;
+
+    padding: 20px;
+
+
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+}
+
+
+
+/* Estilos de Lista (Pendências) */
+
+.pendencias-list {
+
+  list-style: none;
+
+  padding: 0;
+
+  margin: 0;
+
+  flex-grow: 1;
+
+}
+
+.pendencias-list-item {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px dashed #333;
+
+}
+
+.pendencias-list li:last-child { border-bottom: none; }
+
+.pendencias-list .item-title { flex-grow: 1; margin: 0; font-size: 0.95rem; }
+
+.pendencias-list .list-empty { color: #aaa; text-align: center; padding: 10px 0; }
+
+.pendencias-subtext { color: #aaa; font-size: 0.9rem; margin-bottom: 15px; }
+
+
+
+
+
+/* --- ESTILOS DA ÍRIS E BALÃO (REMOVIDOS) --- */
+
+/* (Remoção total para garantir estabilidade) */
+
+.fixed-iris-container,
+
+.iris-avatar-box, 
+
+.iris-avatar-box::before, 
+
+.iris-avatar-box::after,
+
+.iris-avatar,
+
+.iris-speech-bubble-bottom,
+
+.iris-speech-bubble-bottom::before,
+
+.iris-speech-bubble-bottom::after,
+
+.iris-simple-bubble {
+
+    display: none !important; 
+
+    visibility: hidden;
+
+}
+
+
+
+
+
+/* -------------------------------------- */
+
+/* FOOTER ALINHADO (footer-stream)        */
+
+/* -------------------------------------- */
+
+
+
+.footer-stream {
+
+  background: #010409; 
+
+  border-top: 1px solid rgba(255,255,255,0.06); 
+
+  padding: 24px 64px;
+
+  margin-top: 3rem; 
+
+  position: relative; 
+
+  z-index: 10; 
+
+  width: 100%;
+
+}
+
+
+
+/* Responsividade para empilhar no mobile */
+
+@media (max-width: 900px) {
+
+    .checklist-avatar-container {
+
+        flex-direction: column;
+
+        display: flex; /* Volta para flex no mobile para empilhar */
+
+        gap: 20px;
+
+        align-items: center;
+
+        padding: 0 20px;
+
+        margin-bottom: 50px;
+
+    }
+
+    .checklist-card, .concluidas-card {
+
+        flex-basis: auto;
+
+        min-width: unset;
+
+        width: 100%;
+
+    }
+
+    
+
+    .dash-section, .footer-stream {
+
+        padding: 0 20px; 
+
+    }
+
+    .dash-section--hero {
+
+        padding: 0 20px;
+
+    }
+
+    .dash-section--carousel {
+
+        padding: 0;
+
+    }
+
+    .dash-card--hero {
+
+        flex-direction: column;
+
+        text-align: center;
+
+        gap: 1rem;
+
+    }
+
+    .dash-card__user-icon { margin: 0 0 1rem 0; }
+
+    .dash-card__header h2 { font-size: 1.5rem; }
+
+    .dash-card__score { padding: 0; margin-top: 1rem; }
+
+    .dash-score { margin: 0 10px; } 
+
+    .pendencias-container { grid-template-columns: 1fr; }
+
+    .dash-carousel { padding-left: 20px; padding-right: 20px; } 
+
+}

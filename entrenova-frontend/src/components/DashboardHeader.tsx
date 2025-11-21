@@ -16,6 +16,12 @@ const DashboardHeader: React.FC = () => {
         await supabase.auth.signOut();
         navigate('/signin');
     };
+    
+    // NOVO HANDLER: Rola a página para o topo
+    const handleScrollToTop = (e: React.MouseEvent) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const handleOpenNotificacoes = () => setIsNotificacoesOpen(true);
     const handleCloseNotificacoes = () => setIsNotificacoesOpen(false);
@@ -25,7 +31,8 @@ const DashboardHeader: React.FC = () => {
             <header className="dash-header"> {/* Mudança de classe para evitar conflitos */}
                 {/* Logo */}
                 <div className="dash-header__logo">
-                    <Link to="/dashboard/funcionario">DASH<span>BOARD</span></Link>
+                    {/* APLICANDO O NOVO HANDLER PARA O LINK DO LOGO */}
+                    <Link to="/dashboard/funcionario" onClick={handleScrollToTop}>DASH<span>BOARD</span></Link>
                 </div>
 
                 {/* Centro: Navegação + Pesquisa */}
@@ -33,7 +40,8 @@ const DashboardHeader: React.FC = () => {
                     <nav className="dash-header__nav">
                         <ul>
                             <li>
-                                <Link to="/dashboard/funcionario">Início</Link>
+                                {/* APLICANDO O NOVO HANDLER PARA O LINK 'INÍCIO' */}
+                                <Link to="/dashboard/funcionario" onClick={handleScrollToTop}>Início</Link>
                             </li>
                             <li>
                                 {/* Botão para abrir o modal */}
