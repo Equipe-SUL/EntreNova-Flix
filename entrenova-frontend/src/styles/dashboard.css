@@ -46,7 +46,7 @@
 
   max-width: 100%; /* Garante que não ultrapasse 100% */
 
-  /* CORREÇÃO CRÍTICA: Remove o padding-bottom que era necessário para a Íris fixa */
+  /* CORREÇÃO CRÍTICA: O padding-bottom é removido para que o Footer ancore corretamente */
 
   padding-bottom: 0; 
 
@@ -381,8 +381,6 @@
     gap: 1rem;
 
   }
-
-  .dash-header__search { width: 100%; }
 
   .dash-header__search input { width: 100%; }
 
@@ -990,27 +988,25 @@
 
 /* -------------------------------------- */
 
-/* SEÇÃO 3: PENDÊNCIAS (Novo Layout)      */
+/* SEÇÃO 3: CHECKLIST DAS TRILHAS        */
 
 /* -------------------------------------- */
 
-/* [ATUALIZAÇÃO DE LAYOUT] Container Flexível para Checklist + Avatar */
+/* [LAYOUT FINAL] Container para os 2 cards lado a lado */
 
 .checklist-avatar-container {
 
-    display: flex;
+    /* CORREÇÃO CRÍTICA: MUDANÇA PARA FLEX (Mais previsível) */
+
+    display: flex; 
 
     gap: 30px;
 
-    /* Centraliza o conteúdo se o container for menor que 1300px */
+    max-width: 1200px; /* Largura ajustada */
 
-    max-width: 1300px;
+    margin: 0 auto 100px auto; /* Centraliza horizontalmente e adiciona margem inferior */
 
-    margin: 0 auto;
-
-    align-items: flex-start; /* Alinha o conteúdo ao topo */
-
-    margin-bottom: 100px; 
+    align-items: stretch; /* Garante que os cards tenham a mesma altura */
 
 }
 
@@ -1018,235 +1014,147 @@
 
 .checklist-card {
 
-    /* Ocupa a maior parte do espaço e garante a largura do card */
+    /* CORREÇÃO CRÍTICA: Base Flexível */
 
-    min-width: 450px;
-
-    flex-grow: 1.5; /* Prioriza a largura do checklist */
-
-    margin: 0; 
-
-}
-
-
-
-/* --- Balão de Fala Simples (AO LADO DO CHECKLIST) --- */
-
-.iris-simple-bubble {
-
-    /* CORREÇÃO 1: Balão duplicado é removido do fluxo da página */
-
-    display: none; 
-
-}
-
-
-
-
-
-/* --- ESTILOS DA ÍRIS GRANDE FIXA (CANTO INFERIOR) --- */
-
-
-
-.fixed-iris-container {
-
-    /* CORREÇÃO: MUDANÇA PARA FIXED (âncora na viewport) */
-
-    position: fixed; 
-
-    /* CORREÇÃO 1: Alinha a Íris com o topo do Footer */
-
-    bottom: 0; 
-
-    right: 50px; 
-
-    /* CORREÇÃO 2: Z-INDEX ALTO para ela flutuar acima do Footer */
-
-    z-index: 15; 
+    flex-basis: 50%;
 
     width: auto;
 
-    max-width: 500px; 
+    
 
-    align-items: flex-end; 
-
-    /* Ajuste para que a Íris apareça SOBRE o Footer, não abaixo dele */
-
-    padding-bottom: 50px; 
-
-    pointer-events: none; 
-
-    display: flex;
-
-}
-
-
-
-/* Imagem da Íris (Maior) */
-
-.fixed-iris-img {
-
-    width: 100%;
-
-    height: auto;
-
-    object-fit: contain;
-
-    max-width: 150px; 
-
-    transform: scaleX(-1); /* Espelhado para apontar para o checklist */
+    min-width: 350px; /* Mantém um mínimo de largura */
 
     
 
-    /* CORREÇÃO: Aumenta a margem para separar do balão */
+    /* Garante que o Card se estique em altura */
 
-    margin-left: 20px; 
+    height: auto; 
 
-    pointer-events: auto; 
+    
 
-}
-
-
-
-/* Balão de Fala (posicionado à esquerda da Íris) */
-
-.iris-speech-bubble-bottom {
+    /* Estilos do PendenciasCard */
 
     background-color: #1a1a1a;
 
-    color: #fff;
+    border: 1px solid #ff007f; /* Borda magenta */
 
-    padding: 15px 20px;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
 
-    border-radius: 30px 50px 30px 30px; 
+    border-radius: 8px;
 
-    border: 1px solid #ff007f;
-
-    box-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
-
-    position: relative;
+    padding: 20px;
 
     
 
-    /* CORREÇÃO: Adiciona margem para separação do Íris */
+    display: flex;
 
-    margin-right: 20px; 
+    flex-direction: column;
+
+    justify-content: space-between;
+
+}
+
+
+
+.concluidas-card {
+
+    /* CORREÇÃO CRÍTICA: Base Flexível */
+
+    flex-basis: 50%;
+
+    width: auto;
 
     
 
-    min-width: 150px;
+    /* Estilos do PendenciasCard (diferente) */
 
-    max-width: 250px;
+    background-color: #1a1a1a;
 
-    font-size: 0.95rem;
+    border: 1px solid #00BFFF; /* Borda azul */
 
-    line-height: 1.4;
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
 
-    text-align: left;
+    border-radius: 8px;
 
-    pointer-events: auto;
-
-    
-
-    animation: neon-pulse 3s infinite alternate; 
-
-}
+    padding: 20px;
 
 
 
-/* Flecha do Balão (apontando para a Íris) */
+    display: flex;
 
-.iris-speech-bubble-bottom::after {
+    flex-direction: column;
 
-    content: '';
-
-    position: absolute;
-
-    bottom: 15px; 
-
-    right: -10px; 
-
-    width: 0;
-
-    height: 0;
-
-    border: 10px solid transparent;
-
-    border-left-color: #1a1a1a; /* Cor do balão */
-
-    border-right: 0;
-
-    transform: translateY(0);
-
-}
-
-/* Contorno da Flecha */
-
-.iris-speech-bubble-bottom::before {
-
-    content: '';
-
-    position: absolute;
-
-    bottom: 13px;
-
-    right: -12px; 
-
-    width: 0;
-
-    height: 0;
-
-    border: 12px solid transparent;
-
-    border-left-color: #ff007f; /* Cor da borda magenta */
-
-    border-right: 0;
-
-    transform: translateY(0);
-
-    z-index: -1;
-
-    animation: neon-pulse-border 3s infinite alternate; 
+    justify-content: space-between;
 
 }
 
 
 
-@keyframes neon-pulse {
+/* Estilos de Lista (Pendências) */
 
-    0% {
+.pendencias-list {
 
-        border-color: #ff007f; /* Magenta */
+  list-style: none;
 
-        box-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
+  padding: 0;
 
-    }
+  margin: 0;
 
-    100% {
-
-        border-color: #00BFFF; /* Azul/Ciano */
-
-        box-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
-
-    }
+  flex-grow: 1;
 
 }
 
+.pendencias-list-item {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px dashed #333;
+
+}
+
+.pendencias-list li:last-child { border-bottom: none; }
+
+.pendencias-list .item-title { flex-grow: 1; margin: 0; font-size: 0.95rem; }
+
+.pendencias-list .list-empty { color: #aaa; text-align: center; padding: 10px 0; }
+
+.pendencias-subtext { color: #aaa; font-size: 0.9rem; margin-bottom: 15px; }
 
 
-@keyframes neon-pulse-border {
 
-    0% {
 
-        border-left-color: #ff007f; /* Magenta */
 
-    }
+/* --- ESTILOS DA ÍRIS E BALÃO (REMOVIDOS) --- */
 
-    100% {
+/* (Remoção total para garantir estabilidade) */
 
-        border-left-color: #00BFFF; /* Azul/Ciano */
+.fixed-iris-container,
 
-    }
+.iris-avatar-box, 
+
+.iris-avatar-box::before, 
+
+.iris-avatar-box::after,
+
+.iris-avatar,
+
+.iris-speech-bubble-bottom,
+
+.iris-speech-bubble-bottom::before,
+
+.iris-speech-bubble-bottom::after,
+
+.iris-simple-bubble {
+
+    display: none !important; 
+
+    visibility: hidden;
 
 }
 
@@ -1263,8 +1171,6 @@
 
 
 .footer-stream {
-
-  /* CORREÇÃO FINAL: Garante que o Footer cubra a Íris (z-index 10) e seja sólido */
 
   background: #010409; 
 
@@ -1292,45 +1198,25 @@
 
         flex-direction: column;
 
+        display: flex; /* Volta para flex no mobile para empilhar */
+
+        gap: 20px;
+
         align-items: center;
 
         padding: 0 20px;
 
+        margin-bottom: 50px;
+
     }
 
-    .checklist-card {
+    .checklist-card, .concluidas-card {
+
+        flex-basis: auto;
 
         min-width: unset;
 
         width: 100%;
-
-    }
-
-    
-
-    /* Oculta os elementos fixos no mobile para evitar poluir a tela */
-
-    .fixed-iris-container {
-
-        display: none;
-
-    }
-
-
-
-    .iris-avatar-box, 
-
-    .iris-avatar-box::before, 
-
-    .iris-avatar-box::after,
-
-    .iris-avatar-box p,
-
-    .iris-avatar {
-
-        all: unset;
-
-        display: none;
 
     }
 
@@ -1375,15 +1261,5 @@
     .pendencias-container { grid-template-columns: 1fr; }
 
     .dash-carousel { padding-left: 20px; padding-right: 20px; } 
-
-
-
-    /* Setas no Mobile */
-
-    .carousel-nav-btn--prev { left: 5px; }
-
-    .carousel-nav-btn--next { right: 5px; }
-
-    .carousel-wrapper { margin: 0; }
 
 }
