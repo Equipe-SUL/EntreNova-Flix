@@ -1,0 +1,131 @@
+/* Estilos para o novo componente Pendencias.tsx */
+
+/* Container principal da seção */
+.pendencias-section {
+  padding: 0 64px; /* Alinhado com o dash-section */
+  margin-top: 2.5rem;
+}
+
+.pendencias-section h3 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.pendencias-section h3::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #ff007f;
+  margin-top: 4px;
+}
+
+/* Grid para os dois cards */
+.pendencias-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 20px;
+}
+
+/* Card individual (com o novo estilo do Hero Card) */
+.pendencias-card {
+  background-color: #1a1a1a; 
+  border-radius: 12px;
+  padding: 20px;
+  /* Estilo visual padronizado com o Hero Card */
+  border: 1px solid #ff007f; 
+  box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.pendencias-card h4 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #eee;
+  margin-bottom: 5px;
+}
+.pendencias-subtext {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+/* --- Lista de Itens --- */
+.pendencias-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; /* Permite que o botão fique na parte inferior */
+}
+.pendencias-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px dashed #333;
+}
+.pendencias-list-item:last-child {
+    border-bottom: none;
+}
+
+.pendencias-list .list-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.pendencias-list .item-title {
+  flex-grow: 1;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+}
+.pendencias-list small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Estilos para Status Textual */
+.pendencias-list small[data-status="progresso"], 
+.pendencias-list small[data-status="novo"] {
+  color: #ff007f; /* Cor magenta para Pendente */
+}
+
+.pendencias-list small[data-status="concluido"] {
+  color: #00ff80; /* Cor verde/cyan para Concluída */
+}
+
+.pendencias-list .item-score {
+    color: #00BFFF; /* Cor azul para a Nota */
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-left: 5px;
+}
+
+.pendencias-list .list-more,
+.pendencias-list .list-empty {
+  color: #aaa;
+  text-align: center;
+  padding: 10px 0;
+  border-bottom: none !important;
+}
+
+/* Ajuste no Botão (sempre na base do card) */
+.pendencias-card .dash-btn--primary {
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .pendencias-container {
+    grid-template-columns: 1fr; /* Empilha no mobile */
+  }
+  .pendencias-section {
+      padding: 0 20px;
+  }
+}

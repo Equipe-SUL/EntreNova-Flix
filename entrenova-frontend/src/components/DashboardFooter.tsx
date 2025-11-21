@@ -2,7 +2,8 @@ import React from 'react';
 
 const DashboardFooter: React.FC = () => {
   return (
-    <footer className="dash-footer">
+    // Usa a nova classe
+    <footer className="footer-stream"> 
       <div className="dash-footercontent">
         <small>© {new Date().getFullYear()} Entrenova • Todos os direitos reservados</small>
         <nav className="dash-footerlinks" aria-label="Links legais">
