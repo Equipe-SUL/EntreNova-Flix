@@ -1,0 +1,130 @@
+/* --- ESTILO GRID --- */
+
+/* Container do Grid - Organiza os cards em colunas responsivas */
+.trilha-grid {
+  display: grid;
+  /* Cria colunas que têm no mínimo 260px e dividem o espaço restante */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem; /* Espaço entre os cards */
+  margin-top: 1.5rem;
+}
+
+/* O Card Individual */
+.trilha-card {
+  background-color: #222; /* Fundo ligeiramente mais claro que o card principal */
+  border-radius: 8px;
+  overflow: hidden; /* Garante que a imagem não vaze as bordas arredondadas */
+  border: 1px solid #333;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Efeito HOVER no Card (Estilo Netflix: cresce e destaca) */
+.trilha-card:hover {
+  transform: scale(1.05); /* Aumenta ligeiramente */
+  border-color: #ff007f; /* Borda rosa neon */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 0, 127, 0.3); /* Sombra com brilho rosa */
+  z-index: 2; /* Traz para frente dos outros */
+}
+
+/* Container da Imagem (para manter a proporção) */
+.trilha-card-image-container {
+  position: relative;
+  width: auto;
+  height: auto;
+  /*aspect-ratio: 16 / 9; /* Força o formato widescreen (vídeo) */
+  background-color: #00000000;
+  overflow: hidden;
+}
+
+/* A Imagem em si */
+.trilha-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Preenche o container sem distorcer */
+  opacity: 0.85; /* Um pouco escura por padrão para o texto brilhar mais */
+  transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+/* No hover, a imagem clareia e dá um leve zoom interno */
+.trilha-card:hover .trilha-thumbnail {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Badge (Etiqueta) do Tipo de Modelo (Vídeo, Curso, etc.) */
+.trilha-modelo-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7); /* Fundo semitransparente */
+  color: #ff007f; /* Texto rosa neon */
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ff007f;
+  z-index: 3;
+}
+
+/* Overlay com Ícone de Play (opcional, aparece no hover) */
+.trilha-play-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.trilha-play-overlay span {
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 0 0 10px #ff007f;
+}
+
+/* Mostra o play no hover */
+.trilha-card:hover .trilha-play-overlay {
+    opacity: 1;
+}
+
+
+/* Área de Conteúdo (Título) abaixo da imagem */
+.trilha-card-content {
+  padding: 1rem;
+  flex-grow: 1; /* Ocupa o espaço restante se os títulos tiverem tamanhos diferentes */
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to bottom, #222, #1a1a1a);
+}
+
+/* O Título do Card */
+.trilha-card-content h4 {
+  color: #eee;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.4;
+  
+  /* Limita o texto a 3 linhas e coloca "..." se for muito longo */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Responsividade para o Grid --- */
+@media (max-width: 600px) {
+  /* No celular, talvez 2 colunas fiquem muito apertadas, força 1 coluna */
+  .trilha-grid {
+     grid-template-columns: 1fr;
+  }
+}
+/* --- FIM DO NOVO ESTILO GRID --- */

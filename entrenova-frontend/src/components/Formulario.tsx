@@ -1,11 +1,19 @@
 import { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Formulario.css';
-import api from '../services/api';
-import { validarCNPJ } from '../services/api'
+// --- CORREÇÃO: Combinando as duas importações do 'api' em uma linha ---
+import api, { validarCNPJ } from '../services/api';
 
-import { IEmpresa, IPergunta, IPerguntasPorDimensao, IRespostas } from '../types/empresa.types';
-import { IPerguntaLead, IRespostasLead, IScoreLead } from '../types/empresa.types';
+// --- CORREÇÃO: Combinando as duas importações de 'types' em uma linha ---
+import { 
+  IEmpresa, 
+  IPergunta, 
+  IPerguntasPorDimensao, 
+  IRespostas,
+  IPerguntaLead, 
+  IRespostasLead, 
+  IScoreLead 
+} from '../types/empresa.types';
 
 
 const perguntasPorDimensao: IPerguntasPorDimensao = {
@@ -313,8 +321,11 @@ const Formulario = () => {
       console.error("Erro detalhado ao enviar diagnóstico:", error);
       // Mostra a mensagem de erro vinda do backend, se disponível
       const errorMsg = error.response?.data?.erro || error.message || 'Ocorreu um erro desconhecido.';
-      setStatusEnvio(`Erro: ${errorMsg}. Tente novamente.`);
-      alert(`Erro ao enviar: ${errorMsg}`); // Alerta para o usuário
+      
+      // ***** ALTERAÇÃO AQUI *****
+      // Seta APENAS a mensagem de erro, sem texto extra
+      setStatusEnvio(errorMsg); 
+      // alert(`Erro ao enviar: ${errorMsg}`); // Alert é opcional, a mensagem no CSS é melhor
     }
   };
 
@@ -398,11 +409,30 @@ const Formulario = () => {
         </>
       )}
 
+      {/* ***** BLOCO FINAL ATUALIZADO (OPÇÃO 2) ***** */}
       {etapa === 'finalizado' && (
-        <>
+        <div className="finalizacao-container">
           <h2 id='h2parabens' >Parabéns! Você finalizou o diagnóstico.</h2>
-          <button onClick={handleSubmitFinal}>{statusEnvio || 'Ver Resultado'}</button>
-        </>
+          
+          {/* Mostra o erro se statusEnvio NÃO for 'Enviando...' e NÃO estiver vazio.
+          */}
+          {statusEnvio && statusEnvio !== 'Enviando...' && (
+            <p className="mensagem-erro-envio">
+              Erro: {statusEnvio}
+            </p>
+          )}
+
+          <button onClick={handleSubmitFinal} disabled={statusEnvio === 'Enviando...'}>
+            {/* Verifica o estado:
+              1. Se tiver erro (statusEnvio preenchido e != 'Enviando...') -> "Tentar Novamente"
+              2. Se estiver carregando (statusEnvio === 'Enviando...') -> "Enviando..."
+              3. Se estiver limpo (inicial) -> "Ver Resultado"
+            */}
+            {statusEnvio && statusEnvio !== 'Enviando...'
+              ? 'Tentar Novamente'
+              : (statusEnvio === 'Enviando...' ? 'Enviando...' : 'Ver Resultado')}
+          </button>
+        </div>
       )}
     </div>
   );

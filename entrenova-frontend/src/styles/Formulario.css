@@ -9,7 +9,6 @@
   --border-color: rgba(255, 255, 255, 0.1); /* Cor para bordas */
 }
 
-
 .formulario-container {
   max-width: 900px;
   margin: 5rem auto;
@@ -40,7 +39,6 @@
   margin-bottom: 10px;
 }
 
-
 .h2form, .h3form, .titulo-lead {
   color: var(--text-primary); 
   font-weight: 600;
@@ -53,7 +51,6 @@
   border-bottom: 2px solid var(--accent-magenta-strong); /* BORDINHA */
   padding-bottom: 5px;
 }
-
 
 .empresa-form input {
   width: 100%;
@@ -78,44 +75,21 @@
   opacity: 1;
 }
 
-/* ==================================================================
-   INÍCIO DA CORREÇÃO 
-   Isso corrige o fundo branco do AUTOFILL do navegador (Chrome, etc.)
-  ==================================================================
-*/
+/* CORREÇÃO AUTOFILL (Fundo branco do navegador) */
 .empresa-form input:-webkit-autofill,
 .empresa-form input:-webkit-autofill:hover, 
 .empresa-form input:-webkit-autofill:focus, 
 .empresa-form input:-webkit-autofill:active {
-    /* Define a cor do TEXTO para a cor primária */
     -webkit-text-fill-color: var(--text-primary) !important;
-    
-    /* Truque para SOBRESCREVER o fundo branco do autofill. 
-      Isso cria uma sombra interna gigante da cor do seu fundo.
-    */
     -webkit-box-shadow: 0 0 0 30px var(--background-dark) inset !important;
-    
-    /* Garante que a cor de fundo também seja a correta */
     background-color: var(--background-dark) !important; 
-    
-    /* Mantém a borda original */
     border-color: var(--border-color);
 }
 
-/* Garante que o seu estilo de :focus (com a borda rosa) 
-  funcione MESMO QUANDO o campo está em autofill.
-*/
 .empresa-form input:-webkit-autofill:focus {
-    /* Combina a sombra do autofill com a sombra do seu focus */
     -webkit-box-shadow: 0 0 0 30px var(--background-dark) inset, 0 0 0 3px rgba(230, 0, 122, 0.25) !important;
-    /* Aplica a borda rosa do focus */
     border-color: var(--accent-magenta) !important;
 }
-/* ==================================================================
-   FIM DA CORREÇÃO
-  ==================================================================
-*/
-
 
 label {
   display: flex;
@@ -137,7 +111,6 @@ input[type="radio"] {
   accent-color: var(--accent-magenta); 
   transform: scale(1.2);
 }
-
 
 .pergunta-bloco {
   animation: slideIn 0.5s ease;
@@ -162,12 +135,27 @@ input[type="radio"] {
   transition: all 0.3s ease;
 }
 
-
+/* ==================================================================
+   BOTAO ATUALIZADO (FLEXÍVEL)
+   ==================================================================
+*/
 button {
   width: auto;
   min-width: 8.5em;
-  height: 2.6em;
-  padding: 0 1.2em;
+  
+  /* REMOVIDO height fixo e adicionado auto para flexibilidade */
+  height: auto;           
+  min-height: 2.6em;      
+  padding: 12px 24px;     /* Mais espaço interno */
+  
+  /* Alinhamento e Quebra de Texto */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: normal;    /* Permite quebra de linha se necessário */
+  line-height: 1.2;       /* Espaçamento entre linhas */
+  text-align: center;
+
   background: var(--accent-magenta);
   color: #ffffff;
   border: 1px solid var(--accent-magenta-strong);
@@ -196,7 +184,32 @@ button:disabled {
   box-shadow: none;
 }
 
+/* ==================================================================
+   NOVAS CLASSES PARA OPÇÃO 2 (MENSAGEM DE ERRO FORA DO BOTÃO)
+   Use estas classes no seu TSX na etapa 'finalizado'
+   ==================================================================
+*/
 
+.finalizacao-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.mensagem-erro-envio {
+  color: #ff4d4d; /* Vermelho claro para erro */
+  font-weight: 600;
+  text-align: center;
+  max-width: 100%;
+  padding: 10px;
+  background: rgba(255, 77, 77, 0.1); /* Fundo vermelho bem suave */
+  border: 1px solid rgba(255, 77, 77, 0.3);
+  border-radius: 6px;
+}
+
+/* ================================================================== */
 
 @media (max-width: 768px) {
   .formulario-container {
@@ -209,7 +222,7 @@ button:disabled {
   }
 
   .formulario-header h1 {
-    font-size: 0.5rem;
+    font-size: 1.8rem; /* Ajustei pois estava 0.5rem no seu original */
   }
 
   .formulario-header .linha {
@@ -222,7 +235,7 @@ button:disabled {
   
   button {
     width: 100%;
-    height: 3em;
+    min-height: 3em;
     font-size: 1rem;
   }
 }
@@ -237,7 +250,7 @@ button:disabled {
   to { opacity: 1; transform: translateX(0); }
 }
 
-
 #h2parabens{
   margin-bottom: 15px;
+  text-align: center; /* Garante centralização */
 }

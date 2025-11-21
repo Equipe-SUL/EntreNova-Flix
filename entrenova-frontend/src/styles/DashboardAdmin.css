@@ -1,0 +1,156 @@
+.graficos-admin{
+    display: flex;
+    margin-top: 40px;
+    padding: 0 40px;
+    gap: 40px;
+    width: 100vw;
+}
+.graficos-admin .grafico{
+    width: 50%;
+}
+
+.Highlights-container {
+    margin-top: 30px;
+    padding: 20px;
+    color: white;
+    width: 100%;
+    /* Garante que o container esteja alinhado com o restante do dashboard, 
+       ajuste o max-width e padding conforme seu layout pai */
+}
+
+.highlights-header h3 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.highlights-header p {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas em cima */
+    gap: 20px;
+}
+
+.highlight-card {
+    background-color: #111; /* Fundo bem escuro */
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.highlight-card:hover {
+    border-color: #ff007f; /* Efeito de borda rosa (Accent Color) */
+    transition: border-color 0.3s ease;
+}
+
+.highlight-card h2 {
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: 800;
+    color: #fff;
+}
+
+.highlight-card p {
+    color: #ccc;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+/* Icone Estrela (Accent Color) */
+.star-icon {
+    color: #ff007f;
+    margin-top: 15px;
+    font-size: 1.2rem;
+}
+
+/* Estilo para o CARD 4 (largo) */
+.wide-card {
+    grid-column: 1 / -1; /* Ocupa todas as 3 colunas */
+    flex-direction: row; /* Layout horizontal */
+    justify-content: space-between;
+    text-align: left;
+    padding: 20px 40px;
+    border: 1px solid #ff007f; /* Borda rosa fixa conforme imagem */
+}
+
+.track-info h4 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.track-name {
+    font-size: 1.2rem;
+    color: #ddd !important;
+    font-weight: bold;
+    margin-bottom: 15px !important;
+}
+
+.track-meta {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* Estatísticas Circulares dentro do Card 4 */
+.track-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stat-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle-content {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #ff007f; /* Borda circular rosa */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.stat-circle span {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.stat-separator {
+    width: 1px;
+    height: 40px;
+    background-color: #444;
+}
+
+/* Badge L (Laranja/Vermelho) do Card 3 */
+.badge-l {
+    background-color: #ff4400; /* Cor Laranja/Vermelha */
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}

@@ -16,7 +16,7 @@ export const validarCNPJ = (cnpj: string) => api.post('/validar-cnpj', { cnpj })
 export const salvarResposta = (cnpj: string, pergunta: string, resposta: string) =>
   api.post('/salvar-resposta', { cnpj, pergunta, resposta });
 
-// 🔹 nova função para salvar o plano
+// 🔹 nova função para salvar o plano--n estamos utilzando no chatbot mais
 export const salvarPlano = (cnpj: string, plano: string) =>
   api.post('/salvar-plano', { cnpj, plano });
 

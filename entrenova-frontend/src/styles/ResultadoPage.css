@@ -175,32 +175,45 @@
   background-color: #ff007f;
   color: white;
   border: none;
-  padding: 0.8rem 1.8rem;
   border-radius: 25px;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.3s;
   cursor: pointer;
   font-size: 1rem;
+
   display: block;
   margin: 0 auto;
+
+  
+  width: auto;          /* Largura se ajusta ao conteúdo */
+  max-width: 90%;       
+  
+  height: auto;         
+  min-height: 50px;     
+  
+  padding: 15px 30px;   
+  line-height: 1.3;     
+  white-space: normal;  
+  text-align: center;   
 }
+
 .next-btn:hover {
   background-color: #e60074;
 }
 
-/* --- CSS DO CARD DE BAIXO (BALÃO DE FALA DA IRIS) --- */
+/* BALÃO DE FALA DA IRIS */
 
-/* 1. O 'advanced-cta-box' é o container flex (invisível) */
+/*  'advanced-cta-box' é o container flex */
 .advanced-cta-box {
   display: flex;
-  align-items: center; /* Isso mantém o alinhamento vertical */
+  align-items: center; 
   gap: 2.5rem; 
   margin-top: 2.5rem;
   margin-bottom: 1.5rem;
 }
 
-/* 2. O ícone (avatar) com efeito neon --- MUDANÇA AQUI --- */
+/* O ícone (avatar) */
 .advanced-cta-icon {
   width: 150px; /* <<< AUMENTADO DE 80px para 150px */
   height: auto;
@@ -212,7 +225,7 @@
   filter: drop-shadow(0 0 8px #ff007f) drop-shadow(0 0 15px #ff007f);
 }
 
-/* 3. O 'advanced-cta-text' se torna o balão de fala */
+
 .advanced-cta-text {
   flex-grow: 1; /* Isso faz ele encolher automaticamente */
   background-color: #1a1a1a;
@@ -223,7 +236,7 @@
   position: relative; 
 }
 
-/* 4. A linha rosa DENTRO do balão de texto */
+/* linha rosa DENTRO do balão de texto */
 .advanced-cta-text::before {
   content: '';
   position: absolute;
@@ -235,7 +248,7 @@
   border-radius: 16px 0 0 16px; 
 }
 
-/* 5. A 'cauda' do balão (::after) apontando para a imagem */
+/*  'cauda' do balão (::after) apontando para a imagem */
 .advanced-cta-text::after {
   content: '';
   position: absolute;
@@ -303,9 +316,9 @@
     filter: none; 
   }
   
-  /* --- MUDANÇA AQUI --- */
+  
   .advanced-cta-icon {
-    width: 100px; /* <<< AUMENTADO DE 60px para 100px */
+    width: 100px; 
     margin-top: 0; 
   }
 

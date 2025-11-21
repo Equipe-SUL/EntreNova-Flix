@@ -22,7 +22,7 @@ const initialRhData: RhData = {
 const CheckoutPage: React.FC = () => {
     // ESTADOS GLOBAIS
     const [step, setStep] = useState(1);
-    const [plano, setPlano] = useState<Plano>('BASICO');
+    const [plano, setPlano] = useState<Plano>('OURO');
     const [rhData, setRhData] = useState<RhData>(initialRhData);
     
     // ESTADOS DE UI E NAVEGAÇÃO

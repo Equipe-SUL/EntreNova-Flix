@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import "../styles/Chatbot.css";
 import IrisAvatar from "../assets/Iris.jpg";
-import { validarCNPJ, salvarResposta, salvarPlano, gerarRelatorioTotal } from "../services/api";
+import { validarCNPJ, salvarResposta, gerarRelatorioTotal } from "../services/api";
 import { Message } from '../types/message';
 import { useNavigate } from "react-router-dom";
 
@@ -11,22 +11,21 @@ import { useNavigate } from "react-router-dom";
 const mensagensIniciais = [
   "Gostaria que me contasse, de forma resumida, os desafios ou situações que você tem percebido na empresa.",
   "Assim consigo entender melhor o que acontece e como podemos refletir sobre isso juntos para gerar uma trilha totalmente personalizada dedicada ao seu problema!",
-  "(Este processo leva menos de 10 minutos.)",
   "Antes de começarmos confirme o seu CNPJ. (Exemplo: 01.234.567/0001-89)."
 ];
 
 const perguntas = [
-  "Quais resultados de negócio vocês esperam alcançar ao contratar esse serviço?",
-  "O que você acredita que funciona bem atualmente na empresa?",
-  "Quais são as maiores urgências percebidas pela liderança?",
-  "Pode compartilhar uma fala ou situação que represente como a empresa se vê hoje?",
-  "Há alguma área ou aspecto que vocês não consideravam prioritário, mas que tem sido afetado por outras questões na empresa?",
-  "Em uma escala de 1 a 10, qual o impacto desse problema?",
-  "Pode dar um exemplo prático que mostre esse problema acontecendo?",
-  "Como esse problema aparece no dia a dia?",
-  "Quais comportamentos recorrentes ou estruturas estão faltando?",
-  "Qual é o maior prejuízo que esses comportamentos geram?",
-  "Que habilidade ou competência humana você acha que está em falta?",
+  "Para começar, qual é o maior orgulho que você tem da sua equipe ou da cultura da empresa atualmente?",
+  "Se você pudesse resolver um único 'gargalo' que mais trava a rotina da empresa hoje, qual seria?",
+  "Pode me dar um exemplo prático ou contar uma breve história de como esse 'gargalo' acontece no dia a dia?",
+  "O que já foi tentado no passado para resolver esse problema e, na sua opinião, por que não funcionou?",
+  "Qual é o maior prejuízo (financeiro, cultural ou de tempo) que esse problema gera para a empresa?",
+  "Pensando nas equipes, qual competência humana (comunicação, feedback, delegação, etc.) você acha que mais precisa ser desenvolvida?",
+  "Além das competências, o que mais falta em termos de processos claros ou ferramentas para a equipe performar melhor?",
+  "O que motivou vocês a buscar uma solução para isso exatamente agora?",
+  "Na sua opinião, qual é o 'ponto cego' da liderança? Ou seja, algo sobre esse problema que eles talvez ainda não tenham percebido.",
+  "Imagine que esse problema foi 100% resolvido. Qual seria o resultado de negócio mais importante que vocês alcançariam?",
+  "Para fechar: há alguma área ou aspecto que parecia não prioritário, mas que tem sido muito afetado por esses desafios?",
   "Por fim, ao gerar as trilhas, qual tipo de conteúdo você prefere ver na maioria delas? Digite o número correspondente: 1 - Vídeos; 2 - Podcasts; 3 - Cursos Curtos; 4 - Artigos;"
 ];
 
@@ -44,8 +43,8 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [inputDisabled, setInputDisabled] = useState(false);
   const [etapa, setEtapa] = useState<
-  "iniciais" | "nome" | "cnpj" | "confirmar" | "perguntas" | "confirmarResposta" | "plano" | "fim"
->("iniciais");
+    "iniciais" | "nome" | "cnpj" | "confirmar" | "perguntas" | "confirmarResposta" | "plano" | "fim"
+  >("iniciais");
   const [perguntaIndex, setPerguntaIndex] = useState(0);
   const [respostaTemp, setRespostaTemp] = useState("");
   const [respostaCNPJ, setRespostaCNPJ] = useState("");
@@ -54,7 +53,7 @@ export default function ChatBot() {
   const [botTyping, setBotTyping] = useState(false);
   const [inputBloqueado, setInputBloqueado] = useState(false);
   const endRef = useRef<HTMLDivElement | null>(null);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,21 +63,21 @@ export default function ChatBot() {
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   const irParaResultado = async () => {
-  try {
-    // Chama o endpoint do backend para gerar relatorio2, resumo2 e trilha
-    const response = await gerarRelatorioTotal(cnpjConfirmado);
-    const { relatorio2, resumo2, trilha } = response.data;
+    try {
+      // Chama o endpoint do backend para gerar relatorio2, resumo2 e trilha
+      const response = await gerarRelatorioTotal(cnpjConfirmado);
+      const { relatorio2, resumo2, trilha } = response.data;
 
-    // Salva localmente para a Resultadopage2
-    localStorage.setItem("resultadoFinal", JSON.stringify({ relatorio2, resumo2, trilha }));
+      // Salva localmente para a Resultadopage2
+      localStorage.setItem("resultadoFinal", JSON.stringify({ relatorio2, resumo2, trilha, cnpj: cnpjConfirmado }));
 
-    // Navega para a página de resultado
-    navigate("/resultadopage2"); // substitua pela rota correta
-  } catch (error) {
-    console.error("Erro ao gerar relatório final:", error);
-    alert("Ocorreu um erro ao gerar o relatório. Tente novamente.");
-  }
-};
+      // Navega para a página de resultado
+      navigate("/resultadopage2"); // substitua pela rota correta
+    } catch (error) {
+      console.error("Erro ao gerar relatório final:", error);
+      alert("Ocorreu um erro ao gerar o relatório. Tente novamente.");
+    }
+  };
 
   const addBotMessage = async (text: string, ms = 1000, opcoes?: string[]) => {
     setBotTyping(true);
@@ -117,67 +116,59 @@ export default function ChatBot() {
     clearLastMessageOptions();
     setMessages(prev => [...prev, { text: opcao, sender: "user" }]);
 
-  if (etapa === "confirmar") {
-  if (opcao === "Sim") {
-    try {
-      const { data } = await validarCNPJ(respostaCNPJ);
-      if (data.valido) {
-        setCnpjConfirmado(respostaCNPJ); // ✅ aqui salvamos o CNPJ que o usuário confirmou
-        await addBotMessage("CNPJ válido! Vamos começar o questionário.");
-        await addBotMessage(perguntas[0]);
-        setEtapa("perguntas");
+    if (etapa === "confirmar") {
+      if (opcao === "Sim") {
+        try {
+          const { data } = await validarCNPJ(respostaCNPJ);
+          if (data.valido) {
+            setCnpjConfirmado(respostaCNPJ);
+            await addBotMessage("CNPJ válido! Vamos começar o questionário.");
+            await addBotMessage(perguntas[0]);
+            setEtapa("perguntas");
+          } else {
+            await addBotMessage("CNPJ não cadastrado. Procure o suporte.");
+            setInputBloqueado(true);
+          }
+        } catch {
+          await addBotMessage("Erro ao validar CNPJ. Tente novamente.");
+        }
       } else {
-        await addBotMessage("CNPJ não cadastrado. Procure o suporte.");
-        setInputBloqueado(true);
+        await addBotMessage("Digite o CNPJ novamente.");
+        setEtapa("cnpj");
       }
-    } catch {
-      await addBotMessage("Erro ao validar CNPJ. Tente novamente.");
-    }
-  } else {
-    await addBotMessage("Digite o CNPJ novamente.");
-    setEtapa("cnpj");
-  }
-} else if (etapa === "confirmarResposta") {
+
+    } else if (etapa === "confirmarResposta") {
       if (opcao === "Correto") {
-  try {
-    // ✅ Usa o CNPJ confirmado, não o digitado
-    await salvarResposta(cnpjConfirmado, perguntas[perguntaIndex], respostaTemp);
+        try {
+          // ✅ Usa o CNPJ confirmado
+          await salvarResposta(cnpjConfirmado, perguntas[perguntaIndex], respostaTemp);
 
-    if (perguntaIndex + 1 < perguntas.length) {
-      const proximoIndex = perguntaIndex + 1;
-      setPerguntaIndex(proximoIndex);
-      await addBotMessage(perguntas[proximoIndex]);
-      setEtapa("perguntas");
-    } else {
-      await addBotMessage(
-        "Para finalizarmos, qual plano você prefere contratar?",
-        500,
-        ["Básico", "Premium"]
-      );
-      setEtapa("plano");
+          if (perguntaIndex + 1 < perguntas.length) {
+            // Se ainda tem perguntas, continua o fluxo normal
+            const proximoIndex = perguntaIndex + 1;
+            setPerguntaIndex(proximoIndex);
+            await addBotMessage(perguntas[proximoIndex]);
+            setEtapa("perguntas");
+          } else {
+            // --- ALTERAÇÃO AQUI ---
+            // ACABARAM AS PERGUNTAS: Não perguntamos mais do plano.
+            // Vamos direto para a mensagem final e encerramos.
+
+            await addBotMessage(mensagemFinal(nome));
+            setEtapa("fim");
+          }
+        } catch {
+          await addBotMessage("Erro ao salvar resposta. Tente novamente.");
+        }
+      } else {
+        // Se o usuário escolheu "Editar", repete a pergunta
+        await addBotMessage(perguntas[perguntaIndex]);
+        setEtapa("perguntas");
+      }
     }
-  } catch {
-    await addBotMessage("Erro ao salvar resposta. Tente novamente.");
-  }
-} else {
-  await addBotMessage(perguntas[perguntaIndex]);
-  setEtapa("perguntas");
-} 
-}
- else if (etapa === "plano") {
-  try {
-    console.log("vai enviar plano:", opcao, "para o CNPJ:", cnpjConfirmado);
-    await salvarPlano(cnpjConfirmado, opcao); // ✅ Aqui também
-    console.log("plano enviado para o backend");
-    await addBotMessage(mensagemFinal(nome));
 
-    setEtapa("fim");
-  } catch (error) {
-    console.error("erro ao salvar plano:", error);
-    await addBotMessage("Erro ao salvar plano. Tente novamente.");
-  }
-}
   };
+
 
   const sendMessage = async () => {
     if (!input.trim() || inputDisabled) return;
@@ -263,7 +254,7 @@ export default function ChatBot() {
         <div ref={endRef} />
       </div>
 
-            {/* INPUT */}
+      {/* INPUT */}
       {!inputBloqueado && etapa !== "fim" && (
         <div className="chat-footer">
           <div className="chat-input-container">
@@ -287,16 +278,16 @@ export default function ChatBot() {
       )}
 
       {/* BOTÃO DE RESULTADO */}
-{etapa === "fim" && (
-  <div className="chat-footer">
-    <button
-      className="chat-button"
-      onClick={irParaResultado} // 👈 nova rota
-    >
-      Ver Resultado
-    </button>
-  </div>
-)}
+      {etapa === "fim" && (
+        <div className="chat-footer">
+          <button
+            className="chat-button"
+            onClick={irParaResultado} // 👈 nova rota
+          >
+            Ver Resultado
+          </button>
+        </div>
+      )}
 
     </div>
   );

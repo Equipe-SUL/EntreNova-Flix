@@ -2,10 +2,7 @@
 
 import {validateUserAuthentication} from '../services/supabaseAuthServices.js' 
 
-/**
- * Middleware para exigir autenticação E o papel 'RH'.
- * O objeto do perfil completo do RH (com id, role e cnpj_empresa) é anexado a req.user.
- */
+
 const requireAuthAndRole = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 

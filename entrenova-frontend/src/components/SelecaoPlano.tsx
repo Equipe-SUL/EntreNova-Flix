@@ -4,19 +4,19 @@ import '../styles/Checkout.css'
 
 // Mapeamento dos planos lógicos para os nomes e valores visuais
 const PLAN_DETAILS: Record<Plano, { titulo: string; precoMensal: string; quantTrilhas: string; totalAnual: string; }> = {
-    BASICO: { // Corresponde a 'Ouro'
+    OURO: { // Corresponde a 'Ouro'
         titulo: 'Ouro',
         precoMensal: '29,90',
         quantTrilhas: '7',
         totalAnual: '358,80',
     },
-    INTERMEDIARIO: { // Corresponde a 'Diamante'
+    DIAMANTE: { // Corresponde a 'Diamante'
         titulo: 'Diamante',
         precoMensal: '35,99',
         quantTrilhas: '10',
         totalAnual: '431,88',
     },
-    PREMIUM: { // Corresponde a 'Esmeralda'
+    ESMERALDA: { // Corresponde a 'Esmeralda'
         titulo: 'Esmeralda',
         precoMensal: '45,99',
         quantTrilhas: '13',
@@ -40,9 +40,9 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({ plano, setPlano, onNext }
 
     // Array de planos para facilitar a renderização
     const plans: { key: Plano, details: typeof PLAN_DETAILS[Plano] }[] = [
-        { key: 'BASICO', details: PLAN_DETAILS.BASICO },
-        { key: 'INTERMEDIARIO', details: PLAN_DETAILS.INTERMEDIARIO },
-        { key: 'PREMIUM', details: PLAN_DETAILS.PREMIUM },
+        { key: 'OURO', details: PLAN_DETAILS.OURO },
+        { key: 'DIAMANTE', details: PLAN_DETAILS.DIAMANTE },
+        { key: 'ESMERALDA', details: PLAN_DETAILS.ESMERALDA },
     ];
 
     return (
