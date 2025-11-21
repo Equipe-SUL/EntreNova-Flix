@@ -14,7 +14,7 @@ if (!process.env.GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // Usando um modelo mais recente e eficiente do Gemini!
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
 // =================================================================
 
@@ -199,7 +199,7 @@ export async function gerarNovoRelatorio(dadosEmpresa, dadosQuizChatbot, plano, 
     .join("\n\n");
 
   // Formatando a preferência para o prompt
-  const prefConteudo = preferenciaConteudo 
+  const prefConteudo = preferenciaConteudo
     ? `A preferência do cliente para o conteúdo da trilha é: "${preferenciaConteudo}". A trilha terá uma prioridade de 75% deste conteúdo.`
     : `O cliente não especificou uma preferência de conteúdo (digitou '5' ou 'Outro'). A trilha será diversa.`;
 
@@ -233,7 +233,7 @@ export async function gerarNovoRelatorio(dadosEmpresa, dadosQuizChatbot, plano, 
     const response = await result.response;
     const text = response.text();
     // Limpa marcadores JSON e novas linhas para garantir que o JSON.parse funcione
-    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').replace(/\n/g, '').trim(); 
+    const jsonText = text.replace(/```json/g, '').replace(/```/g, '').replace(/\n/g, '').trim();
 
     console.log("✅ Análise do Relatório 2 recebida do Gemini!");
     return JSON.parse(jsonText);
