@@ -1,14 +1,10 @@
-import { useEffect, useState, useRef } from 'react'; // Corrigido: Importando apenas Hooks
+import { useEffect, useState, useRef } from 'react'; 
 
 import DashboardHeader from '../components/DashboardHeader';
 
 import DashboardFooter from '../components/DashboardFooter';
 
-// import Progresso from '../components/Progresso'; // REMOVIDO: Gráficos
-
 import DetalhesModal from '../components/DetalhesModal'; 
-
-// import Pendencias from '../components/Pendencias'; // REMOVIDO (a seção 3 não será usada)
 
 import '../styles/dashboard.css';
 
@@ -24,7 +20,7 @@ import { supabase } from '../services/supabase';
 
 
 
-// Usando os caminhos de imagem que você forneceu no último ciclo (1.jpg, 2.jpg, 3.jpg)
+// CAPAS FEITAS PELO UANDS (1.jpg, 2.jpg, 3.jpg)
 
 import thumbProgresso1 from '../assets/1.jpg';
 
@@ -68,7 +64,7 @@ export interface Curso {
 
 
 
-// lista de cards das trilhas
+// lista de cards das trilhas FICTICIAS 
 
 const allCursos: Curso[] = [
 
@@ -332,11 +328,6 @@ const allCursos: Curso[] = [
 
 
 
-// =======================================================
-
-// NOVO MODAL: HistoricoModal (Para lista de concluídas)
-
-// =======================================================
 
 interface HistoricoModalProps {
 
@@ -395,12 +386,6 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ trilhas, onClose }) => 
 
 
 
-
-// =======================================================
-
-// TrilhaConclusaoCard (Checklist + Concluídas Lado a Lado)
-
-// =======================================================
 
 interface TrilhaConclusaoCardProps {
 
@@ -478,7 +463,7 @@ const TrilhaConclusaoCard: React.FC<TrilhaConclusaoCardProps> = ({ cursos, onCon
 
             
 
-            {/* CORREÇÃO: Usando a classe grid-template-columns: 1fr 1fr no CSS para o lado a lado */}
+      
 
             <div className="checklist-avatar-container"> 
 
@@ -614,7 +599,7 @@ const TrilhaConclusaoCard: React.FC<TrilhaConclusaoCardProps> = ({ cursos, onCon
 
 const Dashboard: React.FC = () => {
 
-  // --- Refs para o Carrossel ---
+
 
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -624,8 +609,7 @@ const Dashboard: React.FC = () => {
 
 
 
-  const [allTrilhas, setAllTrilhas] = useState<Curso[]>(allCursos); // Usa estado para gerenciar trilhas
-
+  const [allTrilhas, setAllTrilhas] = useState<Curso[]>(allCursos); 
   const [loading, setLoading] = useState(true);
 
   const [userName, setUserName] = useState('João Sobrenome');
@@ -644,7 +628,7 @@ const Dashboard: React.FC = () => {
 
 
 
-  // Lógica de filtro (permanece a mesma, mas usa allTrilhas)
+  // Lógica de filtro 
 
   const filteredCursos = allTrilhas.filter(curso => {
 
@@ -686,7 +670,7 @@ const Dashboard: React.FC = () => {
 
     if (carouselRef.current) {
 
-        const scrollAmount = 320; // 300px (card) + 20px (gap)
+        const scrollAmount = 320; 
 
         carouselRef.current.scrollBy({
 
@@ -702,7 +686,6 @@ const Dashboard: React.FC = () => {
 
     
 
-    // NOVO HANDLER DE CONCLUSÃO DE TRILHA MÚLTIPLA
 
     const handleConcluirTrilhasSelecionadas = (ids: number[]) => {
 
@@ -750,11 +733,10 @@ const Dashboard: React.FC = () => {
 
   }, [filteredCursos, loading]);
 
-  // ------------------------------------------
+ 
 
 
-
-  // ... (Lógica de autenticação e scores) ...
+  // ... (Lógica de autenticação e scores DE TRILHAS REALIZADAS EX: 2/10) ...
 
   useEffect(() => {
 
@@ -782,8 +764,7 @@ const Dashboard: React.FC = () => {
 
               if (data.cnpj_empresa) {
 
-                  setuserCompany(`ENTRENOVA TECH`); // Mantido o texto fixo para o badge
-
+                  setuserCompany(`ENTRENOVA TECH`); 
               }
 
             } else if (error) {
@@ -856,12 +837,11 @@ const Dashboard: React.FC = () => {
 
 
 
-        {/* --- 1. SEÇÃO 1: IDENTIFICAÇÃO DO USUÁRIO --- */}
+        {/* SEÇÃO 1: IDENTIFICAÇÃO DO USUÁRIO --- */}
 
         <section className="dash-section dash-section--hero">
 
-          {/* INÍCIO DO WRAPPER DE LARGURA MÁXIMA (800PX) */}
-
+  
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
 
             <div className="dash-card dash-card--hero">
@@ -886,7 +866,7 @@ const Dashboard: React.FC = () => {
 
               </div>
 
-              {/* REMOVIDO: dash-score--secondary (Nota Média) */}
+             
 
               <div className="dash-card__score">
 
@@ -912,7 +892,7 @@ const Dashboard: React.FC = () => {
 
         
 
-        {/* --- 2. SEÇÃO 2: TRILHAS PERSONALIZADAS (Carrossel) --- */}
+        {/*  SEÇÃO 2: TRILHAS PERSONALIZADAS (Carrossel) --- */}
 
         <section className="dash-section dash-section--carousel">
 
@@ -968,8 +948,7 @@ const Dashboard: React.FC = () => {
 
 
 
-          {/* NOVO WRAPPER PARA POSICIONAR AS SETAS */}
-
+          
           <div className="carousel-wrapper">
 
              
@@ -998,7 +977,7 @@ const Dashboard: React.FC = () => {
 
 
 
-            {/* Carrossel de Trilhas */}
+            {/* SECTION 2: Carrossel de Trilhas */}
 
             <div className="dash-carousel" ref={carouselRef}>
 
@@ -1012,7 +991,7 @@ const Dashboard: React.FC = () => {
 
 
 
-              {filteredCursos.map(curso => ( // USANDO filteredCursos PARA APLICAR OS FILTROS
+              {filteredCursos.map(curso => ( 
 
                 <article 
 
@@ -1020,7 +999,7 @@ const Dashboard: React.FC = () => {
 
                     key={curso.id}
 
-                    onClick={() => handleDetalhesClick(curso)} // TORNANDO O CARD INTEIRO CLICÁVEL
+                    onClick={() => handleDetalhesClick(curso)} 
 
                 >
 
@@ -1114,11 +1093,10 @@ const Dashboard: React.FC = () => {
 
         
 
-        {/* --- 3. SEÇÃO 3: ATIVIDADES E PENDÊNCIAS (REMOVIDO) --- */}
 
 
 
-        {/* --- 4. SEÇÃO 4: CHECKLIST DAS TRILHAS (LADO A LADO) --- */}
+        {/*SEÇÃO 3: CHECKLIST DAS TRILHAS  */}
 
         <TrilhaConclusaoCard cursos={allTrilhas} onConcluirSelecionadas={handleConcluirTrilhasSelecionadas} />
 
