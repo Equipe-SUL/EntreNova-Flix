@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Plano } from '../types/types.pagamento';
 import '../styles/Checkout.css';
+import click from "../assets/click.png";
+import form from "../assets/form.png";
+import pay from "../assets/pagamento.png";
+
 
 // Mapeamento dos planos com limites de trilhas
 const PLAN_DETAILS: Record<Plano, { titulo: string; precoMensal: string; quantTrilhas: string; totalAnual: string; limitTrilhas: number }> = {
@@ -87,6 +91,24 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({ plano, setPlano, onNext, 
 
     return (
         <div className="pagina">
+
+           {/* barra de progresso */}
+        <div className="progress-bar">
+             <div className="progress-line" />
+
+             <div className="progress-step active">
+                <img src={click} alt="Mão com o indicador levantado" className="icon-click" />
+             </div>
+
+            <div className="progress-step">
+               <img src={form} alt="Formulario" className="icon-click" />
+            </div>
+
+            <div className="progress-step">
+                <img src={pay} alt="Pagamento" className="icon-click" />
+             </div>
+        </div>
+
             <h2 id='h2planos'>1. Selecione seu Plano</h2>
             
             <section className="planos-container">
@@ -100,7 +122,7 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({ plano, setPlano, onNext, 
                         <h3 className="plano-tipo">Plano Anual</h3>
                         <p className="preco"><span>12x</span> R$ <strong>{details.precoMensal}</strong></p>
                         <p className="total">Total de R$ {details.totalAnual}</p>
-                        <p>Acesso a {details.quantTrilhas}</p>
+                        <p style={{marginBottom: '10px',}}>Acesso a {details.quantTrilhas}</p>
                         
                         <button onClick={() => handlePlanSelectAndNext(key)}>
                             {plano === key ? 'Continuar' : 'Quero esse!'}
@@ -122,12 +144,6 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({ plano, setPlano, onNext, 
             {showModal && modalContent && (
                 <div style={modalOverlayStyle} onClick={() => setShowModal(false)}>
                     <div style={modalBoxStyle} onClick={(e) => e.stopPropagation()}>
-                        <button 
-                            onClick={() => setShowModal(false)}
-                            style={{ position: 'absolute', top: '15px', right: '15px', background: 'transparent', border: 'none', color: '#888', fontSize: '1.5rem', cursor: 'pointer', padding: 0, width: 'auto' }}
-                        >
-                            ×
-                        </button>
                         <h3 style={{ color: '#ff007f', marginTop: 0, borderBottom: '1px solid #333', paddingBottom: '10px' }}>
                             {modalContent.titulo}
                         </h3>

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { CheckoutData } from '../types/types.pagamento'; // Assumindo o caminho para seus tipos
 
+import click from "../assets/click.png";
+import form from "../assets/form.png";
+import pay from "../assets/pagamento.png";
+
 type PaymentMethod = 'GOOGLE' | 'APPLE' | 'PAYPAL' | 'PIX'; // Tipos de pagamento para o checkout
 
 interface PaymentMethodSelectionProps {
@@ -92,6 +96,26 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({ checkou
 
     return (
         <div id="sec1registro"> 
+           
+                    {/* barra de progresso */}
+        <div style={{ marginTop: '-35px',}} className="progress-bar2">
+            <div className="progress-line4" />
+             <div className="progress-line2" />
+
+             <div className="progress-step active2">
+                <img src={click} alt="Mão com o indicador levantado" className="icon-click2" />
+             </div>
+
+            <div className="progress-step active4">
+               <img src={form} alt="Formulario" className="icon-click2" />
+            </div>
+
+            <div className="progress-step3">
+                <img src={pay} alt="Pagamento" className="icon-click2" />
+             </div>
+        </div>
+
+
             <section id="secplanos"> 
                 <article id="artpagamento">
                     
@@ -131,6 +155,8 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({ checkou
                             <p>Total a Pagar: <strong>R$ XX,XX</strong> (Exemplo)</p>
                         </div>
                         
+
+                        <div className='alinhar'> 
                         {/* Botão de Confirmação com estado de carregamento */}
                         <button 
                             type="submit" 
@@ -152,9 +178,9 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({ checkou
                                 marginTop: '10px' 
                             }}
                         >
-                            Voltar para Cadastro
+                            Voltar
                         </button>
-
+                    </div>
                     </form>
                 </article>
             </section>

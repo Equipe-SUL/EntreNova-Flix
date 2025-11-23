@@ -461,6 +461,8 @@ nav ul li a:hover::after {
         margin-left: 0;
 
         margin-right: 0;
+        position: relative;
+        z-index: 9999;
 
     }
 
@@ -633,6 +635,11 @@ nav ul li a:hover::after {
     }
 
 
+nav ul li:last-child {
+
+  margin-left: 0px; /* pequeno espacio respecto al item anterior */
+
+}
 
     nav ul.show .login-btn,
 
@@ -676,7 +683,7 @@ nav ul li .btn-entrar {
 
 nav ul li:last-child {
 
-  margin-left: 8px; /* pequeno espacio respecto al item anterior */
+  margin-left: 0px; /* pequeno espacio respecto al item anterior */
 
 }
 

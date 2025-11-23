@@ -35,7 +35,7 @@ const CompaniesAndTracksMainSection: React.FC = () => {
                 <h3 style={{ fontSize: '1.8rem', fontWeight: '600', color: '#fff', margin: 0 }}>
                     Empresas e Trilhas
                 </h3>
-                <div style={{ width: '50px', height: '3px', backgroundColor: '#ff007f', marginTop: '4px' }}></div>
+                <div style={{ width: '270px', height: '3px', backgroundColor: '#ff007f', marginTop: '4px' }}></div>
             </div>
 
             {/* Navegação Interna */}
@@ -46,6 +46,7 @@ const CompaniesAndTracksMainSection: React.FC = () => {
                 >
                     Lista de Empresas
                 </button>
+                
                 <button 
                     style={buttonStyle(subView === 'tracks')} 
                     onClick={() => setSubView('tracks')}
