@@ -1,33 +1,110 @@
 // src/components/ColaboradoresGrid.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../services/supabase';
 
-// Dados Fictícios (Mock)
-const mockColaboradores = [
-  { id: 1, nome: "Ana Silva", cargo: "Analista de Marketing", setor: "Marketing", status: "active" },
-  { id: 2, nome: "Carlos Souza", cargo: "Desenvolvedor Senior", setor: "Tech", status: "active" },
-  { id: 3, nome: "Beatriz Lima", cargo: "Gerente de Vendas", setor: "Comercial", status: "active" },
-  { id: 4, nome: "João Pedro", cargo: "Estagiário", setor: "Design", status: "active" },
-  { id: 5, nome: "Fernanda Costa", cargo: "RH Business Partner", setor: "Recursos Humanos", status: "active" },
-  { id: 6, nome: "Rafael Alves", cargo: "Engenheiro de Dados", setor: "Tech", status: "active" },
-  { id: 7, nome: "Mariana Dias", cargo: "Coordenadora", setor: "Financeiro", status: "inactive" },
-  { id: 8, nome: "Lucas Pereira", cargo: "Suporte Técnico", setor: "Operações", status: "active" },
-];
+interface Colaborador {
+  id: string;
+  nome: string;
+  email: string;
+  status: 'active' | 'inactive';
+}
 
 const ColaboradoresGrid: React.FC = () => {
+  const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchColaboradores = async () => {
+      try {
+        // Busca a sessão do usuário RH
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          console.error('Usuário não autenticado');
+          setLoading(false);
+          return;
+        }
+
+        // Busca o perfil do RH para obter o CNPJ
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('cnpj_empresa')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profileError || !profile?.cnpj_empresa) {
+          console.error('Erro ao buscar perfil ou CNPJ não encontrado:', profileError);
+          setLoading(false);
+          return;
+        }
+
+        // Busca os funcionários da empresa na tabela profiles
+        // Filtra por role = 'funcionario' e cnpj_empresa igual ao do RH
+        const { data: funcionariosData, error: funcionariosError } = await supabase
+          .from('profiles')
+          .select('id, full_name, email')
+          .eq('role', 'funcionario')
+          .eq('cnpj_empresa', profile.cnpj_empresa)
+          .order('full_name', { ascending: true });
+
+        if (funcionariosError) {
+          console.error('Erro ao buscar funcionários:', funcionariosError);
+          setLoading(false);
+          return;
+        }
+
+        if (funcionariosData && funcionariosData.length > 0) {
+          // Transforma os dados do banco em formato de colaboradores
+          const colaboradoresFormatados: Colaborador[] = funcionariosData.map((func) => ({
+            id: func.id,
+            nome: func.full_name || 'Sem nome',
+            email: func.email || '',
+            status: 'active' // Por padrão, todos os funcionários estão ativos
+          }));
+
+          setColaboradores(colaboradoresFormatados);
+        } else {
+          setColaboradores([]);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar colaboradores:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchColaboradores();
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ padding: '20px', color: '#fff', textAlign: 'center' }}>
+        Carregando colaboradores...
+      </div>
+    );
+  }
+
+  if (colaboradores.length === 0) {
+    return (
+      <div style={{ padding: '20px', color: '#888', textAlign: 'center' }}>
+        Nenhum colaborador cadastrado ainda
+      </div>
+    );
+  }
+
   return (
     <div className="colaboradores-grid">
-      {mockColaboradores.map((colab) => (
+      {colaboradores.map((colab) => (
         <div key={colab.id} className="colab-card">
           
           {/* Área Visual (Avatar/Topo) */}
           <div className="colab-avatar-box" style={{
-              // Gera um gradiente aleatório sutil para cada card ficar visualmente interessante
               background: `linear-gradient(135deg, #222 0%, #333 100%)`,
               borderBottom: '1px solid #333'
           }}>
             {/* Iniciais do Nome */}
             <span className="colab-avatar-placeholder">
-                {colab.nome.substring(0, 2)}
+                {colab.nome.substring(0, 2).toUpperCase()}
             </span>
             
             {/* Bolinha de Status */}
@@ -37,8 +114,8 @@ const ColaboradoresGrid: React.FC = () => {
           {/* Informações */}
           <div className="colab-info">
             <h4>{colab.nome}</h4>
-            <p>{colab.cargo}</p>
-            <span className="setor">{colab.setor}</span>
+            <p>{colab.email}</p>
+            <span className="setor">Funcionário</span>
           </div>
 
         </div>
