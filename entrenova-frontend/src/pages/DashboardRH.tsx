@@ -106,6 +106,8 @@ const DashboardRH: React.FC = () => {
     border: 'none',            // Remove borda
     outline: 'none',           // Remove contorno azul de foco
     boxShadow: 'none',         // Remove sombras
+    width: 'auto', 
+    minWidth: 'unset',
     color: '#888',
     fontSize: '2rem', 
     cursor: 'pointer', 

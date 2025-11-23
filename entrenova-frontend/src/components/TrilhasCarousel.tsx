@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-// Se quiser usar as imagens reais, importe-as aqui. 
-// Vou usar placeholder colorido para funcionar direto.
+import "../styles/Dashboardrh.css"
 
 const mockTrilhas = [
   { id: 1, titulo: "Liderança Ágil 2.0", tipo: "Vídeo", duracao: "45 min", cor: "#4a148c" },

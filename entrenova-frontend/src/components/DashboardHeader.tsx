@@ -2,10 +2,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-// Importa o Modal E SEU CSS (Assumindo que estão corretos)
 import NotificacoesModal from './NotificacoesModal';
 import '../styles/NotificacoesModal.css';
-// Importa o CSS principal do Dashboard (que vamos refazer abaixo)
 import '../styles/dashboard.css';
 
 const DashboardHeader: React.FC = () => {
