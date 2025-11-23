@@ -68,14 +68,14 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
             },
             title: {
                 display: true,
-                text: 'Análise financeira',
+                text: 'Análise financeira (Por Mês)', 
                 color: '#fff',
                 font: {
                     size: 24
                 },
                 align: 'start',
                 padding: {
-                    bottom: 10
+                    bottom: 30
                 }
             },
             subtitle: {
@@ -123,11 +123,9 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
     };
 
     return (
-        <div style={{ width: '100%', maxWidth: '800px', height: '400px', background: '#111', padding: '30px', borderRadius: '12px', position: 'relative' }}>
+
+        <div style={{ width: '100%', height: '400px', background: '#111', padding: '50px', borderRadius: '12px', position: 'relative' }}>
             {/* Simulação do botão de filtro */}
-            <div style={{ position: 'absolute', top: '50px', right: '30px', background: '#ff007f', padding: '5px 15px', borderRadius: '8px', color: '#fff', fontWeight: 'bold' }}>
-                Mês
-            </div>
             
             <Line data={chartData} options={options} />
         </div>

@@ -26,7 +26,7 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ onViewChange, activeView }) =
                     onClick={() => onViewChange('companies_and_tracks')}
                     className={activeView === 'companies_and_tracks' ? 'active-btn' : ''}
                 >
-                    **Empresas e Trilhas** </button>
+                    Empresas e Trilhas </button>
             </div>
         </nav>
     )

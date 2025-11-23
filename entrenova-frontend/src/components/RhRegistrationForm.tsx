@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { RhData } from '../types/types.pagamento'; // Certifique-se de que o caminho e o tipo estão corretos
 import '../styles/Checkout.css'
+
+import click from "../assets/click.png";
+import form from "../assets/form.png";
+import pay from "../assets/pagamento.png";
 interface RhRegistrationFormProps {
     initialData: RhData;
     onNext: (data: RhData) => void;
@@ -26,12 +30,31 @@ const RhRegistrationForm: React.FC<RhRegistrationFormProps> = ({ initialData, on
     return (
         // O ID #sec1registro é o container de centralização
         <div id="sec1registro"> 
+        
+                    {/* barra de progresso */}
+        <div style={{ marginTop: '-35px',}} className="progress-bar2">
+            <div className="progress-line3" />
+             <div className="progress-line2" />
+
+             <div className="progress-step active2">
+                <img src={click} alt="Mão com o indicador levantado" className="icon-click2" />
+             </div>
+
+            <div className="progress-step active3">
+               <img src={form} alt="Formulario" className="icon-click2" />
+            </div>
+
+            <div className="progress-step2">
+                <img src={pay} alt="Pagamento" className="icon-click2" />
+             </div>
+        </div>
+
             <form className="form" onSubmit={handleSubmit}>
                 
                 {/* Título e Mensagem do Formulário (Visual do index.html) */}
                 <p className="title">2. Cadastro de Usuário RH</p> 
                 <p className="message">Preencha os dados para finalizar seu cadastro.</p>
-                
+
                 {/* 1. CNPJ da Empresa */}
                 {/* O input deve ter um valor ou ser preenchido para a classe :valid ativar o span flutuante */}
                 <label>
@@ -84,7 +107,7 @@ const RhRegistrationForm: React.FC<RhRegistrationFormProps> = ({ initialData, on
                     />
                     <span>Sua Senha</span>
                 </label>
-                
+            <article id='artorganiza'>
                 {/* Botão Voltar (Estilo Secundário Escuro) */}
                 <button 
                     type="button" 
@@ -104,13 +127,14 @@ const RhRegistrationForm: React.FC<RhRegistrationFormProps> = ({ initialData, on
                         transition: '0.3s ease'
                     }}
                 >
-                    Voltar para Planos
+                    Voltar
                 </button>
 
                 {/* Botão Principal (Usa a classe .submit) */}
                 <button type="submit" className="submit">
-                    Próximo: Confirmação e Pagamento
+                    Avançar
                 </button>
+                </article>
             </form>
         </div>
     );

@@ -78,7 +78,13 @@
 
 }
 
+@media (max-width: 768px) {
 
+  .chat-title {
+    font-size: 0.8rem;
+  }
+
+}
 
 .chat-status {
 
