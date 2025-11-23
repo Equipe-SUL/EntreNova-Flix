@@ -234,12 +234,7 @@ body::after {
 /* -------------------------------------- */
 /* 5. Seção de Conteúdo (Métricas)      */
 /* -------------------------------------- */
-.trilhas {
-  color: #fff;
-  padding: 40px 5%; 
-  width: 100%;
-  
-}
+
 .trilhas h2 {
   font-size: 1.6rem;
   font-weight: 600;
@@ -252,7 +247,6 @@ body::after {
   color: #aaa;
   font-size: 0.9rem;
   margin-top: 5px;
-  margin-bottom: 25px;
   text-align: center; 
 }
 
@@ -504,23 +498,27 @@ body::after {
 
 /* Botões de Navegação (Setas) */
 .carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  transition: all 0.3s ease;
-  opacity: 0; /* Escondido por padrão */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    width: 60px !important;      
+    height: 60px !important;     
+    min-width: 40px;             
+    min-height: 40px;            
+    padding: 0;                  
+    line-height: 0;              
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    opacity: 0;
 }
 
 .carousel-container:hover .carousel-btn {

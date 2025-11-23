@@ -8,7 +8,7 @@ import { supabaseAdmin } from '../services/supabaseAuthServices.js'
  */
 export const handleCheckout = async (req, res) => {
     // Recebe as informações completas do RH do frontend
-    const { email, password, plano, full_name, cnpj_empresa } = req.body; 
+    const { email, password, plano, full_name, cnpj_empresa, trilhas } = req.body; 
 
     if (!email || !password || !plano || !full_name || !cnpj_empresa) {
         return res.status(400).json({ message: 'Todos os dados do usuário (email, senha, nome, CNPJ) e plano são obrigatórios.' });
@@ -51,13 +51,19 @@ export const handleCheckout = async (req, res) => {
              throw new Error(`Falha ao criar perfil: ${profileError.message}. Usuário deletado.`);
         }
         
-        // ⭐ 4. **INSERÇÃO NA NOVA TABELA (public.plano_empresa)**
-        // A tabela 'plano_empresa' deve ter as colunas 'cnpj_empresa' e 'plano'.
+        // ⭐ 4. **INSERÇÃO NA TABELA (public.plano_empresa)**
+        // A tabela 'plano_empresa' tem as colunas 'cnpj_empresa', 'plano' e 'trilhas' (JSON)
+        // Salva o plano e as trilhas selecionadas no campo JSON 'trilhas'
+        const trilhasFormatadas = trilhas && Array.isArray(trilhas) && trilhas.length > 0
+            ? trilhas.map(trilha => trilha.trim()).filter(t => t !== '')
+            : [];
+
         const { error: planoEmpresaError } = await supabaseAdmin
             .from('plano_empresa')
             .insert({
                 cnpj_empresa: cnpj_empresa,
-                plano: plano
+                plano: plano,
+                trilhas: trilhasFormatadas // Salva como JSON array
             });
 
         if (planoEmpresaError) {
@@ -65,6 +71,10 @@ export const handleCheckout = async (req, res) => {
              await supabaseAdmin.auth.admin.deleteUser(newUserId);
              await supabaseAdmin.from('profiles').delete().eq('id', newUserId);
              throw new Error(`Falha ao registrar o plano da empresa: ${planoEmpresaError.message}. Usuário e Perfil deletados.`);
+        }
+
+        if (trilhasFormatadas.length > 0) {
+            console.log(`✅ ${trilhasFormatadas.length} trilhas salvas para a empresa ${cnpj_empresa} no campo JSON`);
         }
 
 

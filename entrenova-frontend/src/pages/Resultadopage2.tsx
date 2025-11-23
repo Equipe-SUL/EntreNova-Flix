@@ -45,6 +45,7 @@ const Resultadopage2 = () => {
   // Pega os dados do localStorage
   const resumo2Texto = resultadoFinal.relatorio2?.resumo2 || 'Resumo do diagnóstico avançado não disponível.';
   const trilha = resultadoFinal.trilha || [];
+  const cnpj = resultadoFinal.cnpj;
 
   return (
     <div className="resultado-container">
@@ -129,7 +130,7 @@ const Resultadopage2 = () => {
       </div>
 
       {/* Botão de ação */}
-      <Link to="/checkout" className="link-botao">
+      <Link to="/checkout"  state={{ cnpj: cnpj }}  className="link-botao">
         <button className="next-btn">Ver Planos</button>
       </Link>
 
