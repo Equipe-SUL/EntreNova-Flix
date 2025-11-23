@@ -56,6 +56,41 @@ export const createFuncionario = async (req, res) => {
              throw new Error(`Falha ao criar perfil: ${profileError.message}. Usuário deletado.`);
         }
 
+        // 3. **INSERIR TRILHAS DA EMPRESA NA TABELA progresso_funcionario**
+        // Busca as trilhas da empresa no campo JSON 'trilhas' da tabela plano_empresa
+        const { data: planoData, error: planoError } = await supabaseAdmin
+            .from('plano_empresa')
+            .select('trilhas')
+            .eq('cnpj_empresa', cnpj_empresa)
+            .single();
+
+        if (planoError) {
+            console.error("Erro ao buscar trilhas da empresa:", planoError);
+            // Não vamos falhar a criação do funcionário se as trilhas não forem encontradas
+            // Apenas logamos o erro
+        } else if (planoData && planoData.trilhas && Array.isArray(planoData.trilhas) && planoData.trilhas.length > 0) {
+            // Prepara os dados para inserir na tabela progresso_funcionario
+            // Cada trilha do array JSON é inserida como um registro separado
+            const progressosParaInserir = planoData.trilhas.map(trilhaId => ({
+                user_id: newUserId,
+                trilha_id: String(trilhaId).trim(), // Garante que é string e remove espaços
+                is_concluida: false // Inicialmente, nenhuma trilha está concluída
+            }));
+
+            const { error: progressoError } = await supabaseAdmin
+                .from('progresso_funcionario')
+                .insert(progressosParaInserir);
+
+            if (progressoError) {
+                console.error("Erro ao inserir trilhas no progresso_funcionario:", progressoError);
+                // Não vamos falhar a criação do funcionário, apenas logamos o erro
+            } else {
+                console.log(`✅ ${planoData.trilhas.length} trilhas inseridas para o funcionário ${newUserId}`);
+            }
+        } else {
+            console.log(`⚠️ Nenhuma trilha encontrada para a empresa ${cnpj_empresa}`);
+        }
+
         return res.status(200).json({
             status: 'SUCCESS',
             message: `Funcionário ${full_name} criado com sucesso!`,

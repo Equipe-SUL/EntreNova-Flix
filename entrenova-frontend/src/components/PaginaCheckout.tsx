@@ -1,7 +1,7 @@
 // EntreNova-Flix-Sprint3/entrenova-frontend/src/components/PaginaCheckout.tsx 
  
 import React, { useState, useEffect } from 'react'; 
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // Importe useLocation 
+import { useNavigate, useLocation } from 'react-router-dom'; // Importe useLocation 
 import { supabase } from '../services/supabase'; 
 import PlanSelection from './SelecaoPlano'; 
 import RhRegistrationForm from './RhRegistrationForm'; 
@@ -26,6 +26,7 @@ const CheckoutPage: React.FC = () => {
     
     // Novos estados para as trilhas
     const [trilhasGeradas, setTrilhasGeradas] = useState<string[]>([]);
+    const [trilhasSelecionadas, setTrilhasSelecionadas] = useState<string[]>([]);
     
     const navigate = useNavigate();
     const location = useLocation(); // Hook para pegar o state da navegação
@@ -63,12 +64,30 @@ const CheckoutPage: React.FC = () => {
         }
     }, [location.state]);
 
+    // Efeito para atualizar trilhas selecionadas quando o plano ou trilhas disponíveis mudarem
+    useEffect(() => {
+        const limites: Record<Plano, number> = {
+            OURO: 7,
+            DIAMANTE: 10,
+            ESMERALDA: 13
+        };
+        
+        const limite = limites[plano];
+        const selecionadas = trilhasGeradas.slice(0, limite);
+        setTrilhasSelecionadas(selecionadas);
+    }, [plano, trilhasGeradas]);
+
     const handleNextStep = () => setStep(prev => prev + 1);
     const handlePrevStep = () => setStep(prev => prev - 1);
 
     const handleRhDataComplete = (data: RhData) => {
         setRhData(data);
         handleNextStep();
+    };
+
+    // Função para atualizar o plano (as trilhas serão atualizadas automaticamente pelo useEffect)
+    const handlePlanoChange = (novoPlano: Plano) => {
+        setPlano(novoPlano);
     };
     
     const handleFinishPayment = async (paymentMethod: PaymentMethod) => {
@@ -84,14 +103,15 @@ const CheckoutPage: React.FC = () => {
 
         try {
             // ⭐ 1. CHAMADA CENTRALIZADA PARA O BACKEND
-            // Envia todos os dados (RH, Plano e Método de Pagamento) para a rota que funcionava
+            // Envia todos os dados (RH, Plano, Método de Pagamento e Trilhas Selecionadas) para a rota
             const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     ...rhData,              // email, password, full_name, cnpj_empresa
                     plano: plano,            // Plano selecionado
-                    paymentMethod: paymentMethod // Método de pagamento
+                    paymentMethod: paymentMethod, // Método de pagamento
+                    trilhas: trilhasSelecionadas // Trilhas selecionadas baseadas no plano
                 }),
             });
 
@@ -134,7 +154,7 @@ const CheckoutPage: React.FC = () => {
                 return (
                     <PlanSelection
                         plano={plano}
-                        setPlano={setPlano}
+                        setPlano={handlePlanoChange}
                         onNext={handleNextStep}
                         trilhasDisponiveis={trilhasGeradas} // Passamos as trilhas aqui!
                     />
@@ -164,9 +184,19 @@ const CheckoutPage: React.FC = () => {
         <div style={{maxWidth: '900px', margin: 'auto', textAlign: 'center', marginTop: '110px', marginBottom: '30px' }}>
             <h1 style={{fontSize: '20px',}}>Checkout - Criação de Conta RH</h1>
             <p>Passo {step} de 3</p>
-            {/* ... mensagens de erro ... */}
+            {errorMsg && (
+                <div style={{ 
+                    padding: '15px', 
+                    margin: '20px 0', 
+                    backgroundColor: '#ff4444', 
+                    color: 'white', 
+                    borderRadius: '8px',
+                    border: '1px solid #cc0000'
+                }}>
+                    {errorMsg}
+                </div>
+            )}
             <div>{renderStep()}</div>
-            {/* ... botão login ... */}
         </div>
     );
 };
